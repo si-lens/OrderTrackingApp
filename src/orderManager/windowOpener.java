@@ -1,4 +1,4 @@
-package main.java.orderManager;
+package orderManager;
 
 import java.io.IOException;
 

@@ -1,4 +1,4 @@
-package main.java.orderManager;
+package orderManager;
 
 import javafx.application.Application;
 import javafx.stage.Stage;

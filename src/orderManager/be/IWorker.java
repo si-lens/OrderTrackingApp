@@ -1,4 +1,4 @@
-package main.java.orderManager.be;
+package orderManager.be;
 
 //Defines the name of the given production worker.
 interface IWorker {

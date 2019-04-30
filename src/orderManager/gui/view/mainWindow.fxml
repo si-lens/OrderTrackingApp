@@ -12,7 +12,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="525.0" prefWidth="631.0" stylesheets="@../css/orderManager.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.orderManager.gui.controller.mainWindowController">
+<AnchorPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="525.0" prefWidth="631.0" stylesheets="@../css/orderManager.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="orderManager.gui.controller.mainWindowController">
    <children>
       <Label fx:id="dateLabel" alignment="CENTER" layoutX="463.0" layoutY="36.0" prefHeight="13.0" prefWidth="140.0" text="Time " textAlignment="CENTER">
          <font>

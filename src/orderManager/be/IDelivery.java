@@ -1,4 +1,4 @@
-package main.java.orderManager.be;
+package orderManager.be;
 
 import java.util.Date;
 

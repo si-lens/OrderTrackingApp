@@ -1,4 +1,4 @@
-package main.java.orderManager.be;
+package orderManager.be;
 
 //Defines a customer.
 public interface ICustomer {
