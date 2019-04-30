@@ -19,21 +19,21 @@ public class mainWindowController implements Initializable {
     private ScheduledExecutorService executor;
 
     @Override
-    public void initialize(final URL location, final ResourceBundle resources) {
-        this.displayTime();
+    public void initialize(URL location, ResourceBundle resources) {
+        displayTime();
     }
 
     public void displayTime() {
-        final Runnable thread = () -> {
-            this.setTime();
+        Runnable thread = () -> {
+            setTime();
         };
-        this.executor = Executors.newScheduledThreadPool(1);
-        this.executor.scheduleAtFixedRate(thread, 0, 1, TimeUnit.SECONDS);
+        executor = Executors.newScheduledThreadPool(1);
+        executor.scheduleAtFixedRate(thread, 0, 1, TimeUnit.SECONDS);
     }
 
     public void setTime() {
         Platform.runLater(() -> {
-            this.dateLabel.setText(String.valueOf(Calendar.getInstance().getTime()));
+            dateLabel.setText(String.valueOf(Calendar.getInstance().getTime()));
         });
 
     }
