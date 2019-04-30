@@ -1,4 +1,4 @@
-package orderManager.be;
+package main.java.orderManager.be;
 
 //Defines an interface of data from multiple data-sources.
 //This interface acts as an adapter for BelMaker models such as Order and Customer.

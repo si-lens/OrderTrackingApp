@@ -1,4 +1,4 @@
-package orderManager;
+package main.java.orderManager;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -6,12 +6,12 @@ import javafx.stage.Stage;
 public class orderManager extends Application {
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(final Stage primaryStage) throws Exception {
         new windowOpener("gui/view/mainWindow.fxml");
     }
 
-  public static void main(String[] args) {
-    launch(args);
+  public static void main(final String[] args) {
+    Application.launch(args);
   }
 
 

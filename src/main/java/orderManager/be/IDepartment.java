@@ -1,4 +1,4 @@
-package orderManager.be;
+package main.java.orderManager.be;
 
 //Defines a department.
 interface IDepartment {

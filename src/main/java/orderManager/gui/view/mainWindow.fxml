@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXProgressBar?>
+<?import com.jfoenix.controls.JFXTabPane?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="525.0" prefWidth="631.0" stylesheets="@../css/orderManager.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.orderManager.gui.controller.mainWindowController">
+   <children>
+      <Label fx:id="dateLabel" alignment="CENTER" layoutX="463.0" layoutY="36.0" prefHeight="13.0" prefWidth="140.0" text="Time " textAlignment="CENTER">
+         <font>
+            <Font size="13.0" />
+         </font>
+      </Label>
+      <JFXTabPane layoutY="-1.0" prefHeight="37.0" prefWidth="631.0">
+         <tabs>
+            <Tab text="Halvfab">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+              </content>
+            </Tab>
+            <Tab text="Bælg">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+              </content>
+            </Tab>
+            <Tab text="Mont">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+              </content>
+            </Tab>
+         </tabs>
+      </JFXTabPane>
+      <JFXProgressBar layoutX="31.0" layoutY="406.0" prefHeight="25.0" prefWidth="573.0" progress="0.72" />
+      <Label layoutX="33.0" layoutY="386.0" prefHeight="17.0" prefWidth="102.0" text="Start Date - 29/04" />
+      <Label alignment="BASELINE_RIGHT" layoutX="503.0" layoutY="386.0" prefHeight="17.0" prefWidth="100.0" text="End date - 1/06" />
+      <Label layoutX="258.0" layoutY="386.0" text="Estimated progress" />
+      <ListView layoutX="344.0" layoutY="98.0" prefHeight="258.0" prefWidth="259.0" />
+      <Text layoutX="427.0" layoutY="94.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Active employees" />
+      <Line endX="421.0" layoutX="212.0" layoutY="367.0" startX="-210.0" />
+      <StackPane layoutY="32.0" prefHeight="496.0" prefWidth="28.0" />
+      <Label alignment="BASELINE_RIGHT" layoutX="34.0" layoutY="97.0" prefHeight="25.0" prefWidth="100.0" text="Customer:">
+         <font>
+            <Font size="15.0" />
+         </font>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+      </Label>
+      <Label alignment="BASELINE_RIGHT" layoutX="34.0" layoutY="122.0" prefHeight="25.0" prefWidth="100.0" text="Order number:">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Label>
+      <Label alignment="BASELINE_RIGHT" layoutX="34.0" layoutY="147.0" prefHeight="25.0" prefWidth="100.0" text="Delivery date:">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Label>
+      <JFXProgressBar layoutX="31.0" layoutY="470.0" prefHeight="25.0" prefWidth="573.0" progress="0.06" />
+      <Label layoutX="259.0" layoutY="453.0" text="Real-time progress" />
+      <Text layoutX="33.0" layoutY="466.0" strokeType="OUTSIDE" strokeWidth="0.0" text="0%" />
+      <Label layoutX="574.0" layoutY="453.0" text="100%" />
+      <Text fx:id="estimatedProgressLabel" layoutX="301.0" layoutY="424.0" strokeType="OUTSIDE" strokeWidth="0.0" text="77%">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Text>
+      <Text fx:id="estimatedProgressLabel1" layoutX="303.0" layoutY="488.0" strokeType="OUTSIDE" strokeWidth="0.0" text="14%">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Text>
+   </children>
+</AnchorPane>
