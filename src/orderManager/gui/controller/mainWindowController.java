@@ -1,5 +1,6 @@
 package orderManager.gui.controller;
 
+import java.io.IOException;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -16,6 +17,7 @@ import java.util.concurrent.TimeUnit;
 import java.time.temporal.ChronoUnit;
 
 import com.jfoenix.controls.JFXProgressBar;
+import com.microsoft.sqlserver.jdbc.SQLServerException;
 import javafx.application.Platform;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
@@ -39,7 +41,13 @@ public class mainWindowController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         displayTime();
-        jsonReader.readFile();
+        try {
+            jsonReader.readFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (SQLServerException e) {
+            e.printStackTrace();
+        }
         try {
             calculateEstimatedProgress();
         } catch (ParseException e) {
