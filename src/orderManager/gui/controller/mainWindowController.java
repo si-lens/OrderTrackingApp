@@ -1,5 +1,7 @@
 package orderManager.gui.controller;
 
+import com.microsoft.sqlserver.jdbc.SQLServerException;
+import java.io.IOException;
 import java.net.URL;
 import java.util.Calendar;
 import java.util.ResourceBundle;
@@ -21,7 +23,11 @@ public class mainWindowController implements Initializable {
   @Override
   public void initialize(URL location, ResourceBundle resources) {
     displayTime();
-    jsonReader.readFile();
+    try {
+      jsonReader.readFile();
+    } catch (SQLServerException|IOException e) {
+      e.printStackTrace();
+    }
   }
 
   public void displayTime() {
