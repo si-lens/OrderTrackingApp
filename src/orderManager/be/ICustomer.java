@@ -5,5 +5,5 @@ public interface ICustomer {
 
   String getName();
 
-  String setName();
+  void setName(String name);
 }

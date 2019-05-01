@@ -1,6 +1,9 @@
 package orderManager.be;
 
 import java.util.Date;
+import java.util.List;
+
+import javafx.concurrent.Worker;
 import javafx.event.EventHandler;
 
 //Defines a task for a given department.
@@ -19,10 +22,10 @@ public interface IDepartmentTask {
   Date getEndDate();
 
   //Adds a worker as an active worker on this department task.
-  void addWorker(IWorker worker);
+  void addWorker(Worker worker);
 
   //Removes a worker form this department task active workers.
-  void removeWorker(IWorker worker);
+  void removeWorker(Worker worker);
 
   //Raised when a worker has been added to this order.
   EventHandler workerAdded();
@@ -31,5 +34,5 @@ public interface IDepartmentTask {
   EventHandler workerRemoved();
 
   //Defines the active workers on this given production order.
-  IWorker[] getActiveWorkers();
+  List<Worker> getActiveWorkers();
 }
