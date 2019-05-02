@@ -1,9 +1,21 @@
 package orderManager.be;
 
 public class Worker implements IWorker {
-    private String name;
+    private String type;
     private String initials;
-    private int salary;
+    private String name;
+    private long salary;
+    private int id;
+
+
+    public Worker(String type, String initials, String name, long salary, int id) {
+        this.type = type;
+        this.initials = initials;
+        this.name = name;
+        this.salary = salary;
+        this.id = id;
+    }
+
     @Override
     public String getName() {
         return name;
@@ -15,7 +27,19 @@ public class Worker implements IWorker {
     }
 
     @Override
-    public int getSalaryNumber() {
+    public long getSalaryNumber() {
         return salary;
     }
+
+    @Override
+    public int getID() {
+        return id;
+    }
+
+    @Override
+    public String getType() {
+        return type;
+    }
+
+
 }

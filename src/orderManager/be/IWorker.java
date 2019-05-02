@@ -10,5 +10,9 @@ interface IWorker {
   String getInitials();
 
   //Defines the salary number of the given employee.
-  int getSalaryNumber();
+  long getSalaryNumber();
+
+  int getID();
+
+  String getType();
 }
