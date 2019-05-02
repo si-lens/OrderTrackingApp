@@ -1,20 +1,20 @@
 package orderManager.gui.controller;
-
 import com.jfoenix.controls.JFXProgressBar;
-import com.jfoenix.controls.JFXTreeTableColumn;
-import com.jfoenix.controls.JFXTreeTableView;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
-import javafx.scene.control.cell.TreeItemPropertyValueFactory;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import orderManager.be.DepartmentTask;
 import orderManager.be.Worker;
 import orderManager.bll.mainLogicClass;
 import orderManager.dal.jsonReader;
-
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
@@ -34,16 +34,30 @@ public class mainWindowController implements Initializable {
     public Label dateLabel;
     public JFXProgressBar estimatedProgressBar;
     public Text estimatedProgressLabel;
-    public JFXTreeTableView workersTable;
+    public TableView workersTable;
+    public TableColumn typeCol;
+    public TableColumn initialsCol;
+    public TableColumn nameCol;
+    public TableColumn salaryCol;
+    public TableColumn idCol;
+
+
     private ScheduledExecutorService executor;
     private DepartmentTask actualDepartmentTask;
     private mainLogicClass mainLogic;
-    private List<Worker> workerList;
+    private List<Worker> workersList;
+    private ObservableList<Worker> observableWorkers;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        mainLogic = new mainLogicClass();
+        try {
+            mainLogic = new mainLogicClass();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (SQLServerException e) {
+            e.printStackTrace();
+        }
         displayTime();
-    //    loadWorkersTable();
+        prepareWorkersTable();
         try {
             jsonReader.readFile();
         } catch (IOException e) {
@@ -51,13 +65,15 @@ public class mainWindowController implements Initializable {
         } catch (SQLServerException e) {
             e.printStackTrace();
         }
-        /*
         try {
-            workerList = mainLogic.getWorkers();
+            workersList = mainLogic.getWorkers();
+            observableWorkers = FXCollections.observableArrayList(workersList);
+            prepareWorkersTable();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-*/
+
+
         try {
             calculateEstimatedProgress();
         } catch (ParseException e) {
@@ -75,24 +91,18 @@ public class mainWindowController implements Initializable {
     public void setTime() {
         Platform.runLater(() -> dateLabel.setText(String.valueOf(Calendar.getInstance().getTime())));
     }
-/*
-    public void loadWorkersTable(){
-        JFXTreeTableColumn<Worker, String>  type = new JFXTreeTableColumn<>("Type");
-        JFXTreeTableColumn<Worker, String> initials = new JFXTreeTableColumn<>("Initial");
-        JFXTreeTableColumn<Worker, String>  name = new JFXTreeTableColumn<>("Name");
-        JFXTreeTableColumn<Worker, Long>  salary = new JFXTreeTableColumn<>("Salary");
-        JFXTreeTableColumn<Worker, Integer>  id = new JFXTreeTableColumn<>("ID");
 
-        type.setCellValueFactory(new TreeItemPropertyValueFactory<>("type"));
-        initials.setCellValueFactory(new TreeItemPropertyValueFactory<>("initials"));
-        name.setCellValueFactory(new TreeItemPropertyValueFactory<>("name"));
-        salary.setCellValueFactory(new TreeItemPropertyValueFactory<>("salary"));
-        id.setCellValueFactory(new TreeItemPropertyValueFactory<>("id"));
-
-        workersTable.getColumns().addAll(type,initials,name,salary,id);
-
+    public void prepareWorkersTable(){
+        typeCol.setCellValueFactory(new PropertyValueFactory<>("type"));
+        initialsCol.setCellValueFactory(new PropertyValueFactory<>("initials"));
+        nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
+        salaryCol.setCellValueFactory(new PropertyValueFactory<>("salary"));
+        idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
+        workersTable.setItems(observableWorkers);
+        workersTable.getColumns().clear();
+        workersTable.getColumns().addAll(typeCol,initialsCol,nameCol,salaryCol,idCol);
     }
-*/
+
     public void calculateEstimatedProgress() throws ParseException {
 
       //  its for later use when we will have start and end date
