@@ -64,6 +64,8 @@ public class mainWindowController implements Initializable {
             e.printStackTrace();
         } catch (SQLServerException e) {
             e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
         try {
             workersList = mainLogic.getWorkers();
