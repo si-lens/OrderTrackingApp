@@ -59,7 +59,7 @@ public class jsonReader {
         JSONArray jArray = (JSONArray) object.get("ProductionOrders");
         for (int i = 0; i < jArray.size(); i++) {
             JSONObject rec = (JSONObject) jArray.get(i);
-            System.out.println("Type: " + rec.get("__type"));
+         //   System.out.println("Type: " + rec.get("__type"));
 
         }
 

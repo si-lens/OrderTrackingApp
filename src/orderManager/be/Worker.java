@@ -8,7 +8,7 @@ public class Worker implements IWorker {
     private int id;
 
 
-    public Worker(String type, String initials, String name, long salary, int id) {
+    public Worker(String type, String initials, String name,long salary, int id) {
         this.type = type;
         this.initials = initials;
         this.name = name;
@@ -27,12 +27,12 @@ public class Worker implements IWorker {
     }
 
     @Override
-    public long getSalaryNumber() {
+    public long getSalary() {
         return salary;
     }
 
     @Override
-    public int getID() {
+    public int getId() {
         return id;
     }
 
