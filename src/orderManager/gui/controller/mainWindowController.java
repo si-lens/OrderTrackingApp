@@ -4,6 +4,8 @@ import com.microsoft.sqlserver.jdbc.SQLServerException;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -15,6 +17,10 @@ import orderManager.be.DepartmentTask;
 import orderManager.be.Worker;
 import orderManager.bll.mainLogicClass;
 import orderManager.dal.jsonReader;
+
+import javax.swing.*;
+import java.awt.*;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
@@ -58,15 +64,7 @@ public class mainWindowController implements Initializable {
         }
         displayTime();
         prepareWorkersTable();
-        try {
-            jsonReader.readFile();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (SQLServerException e) {
-            e.printStackTrace();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+
         try {
             workersList = mainLogic.getWorkers();
             observableWorkers = FXCollections.observableArrayList(workersList);
@@ -95,14 +93,13 @@ public class mainWindowController implements Initializable {
     }
 
     public void prepareWorkersTable(){
-        typeCol.setCellValueFactory(new PropertyValueFactory<>("type"));
         initialsCol.setCellValueFactory(new PropertyValueFactory<>("initials"));
         nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
         salaryCol.setCellValueFactory(new PropertyValueFactory<>("salary"));
         idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
         workersTable.setItems(observableWorkers);
         workersTable.getColumns().clear();
-        workersTable.getColumns().addAll(typeCol,initialsCol,nameCol,salaryCol,idCol);
+        workersTable.getColumns().addAll(idCol,nameCol,initialsCol,salaryCol);
     }
 
     public void calculateEstimatedProgress() throws ParseException {
@@ -126,8 +123,8 @@ public class mainWindowController implements Initializable {
         estimatedProgressBar.progressProperty().set(((double)progress));
 */
         //Its for now, raw data
-        String startDateS = "2019-04-29";
-        String endDateS = "2019-06-01";
+        String startDateS = "2019-04-23";
+        String endDateS = "2019-05-29";
         LocalDate startDate = LocalDate.parse(startDateS);
         LocalDate endDate = LocalDate.parse(endDateS);
         LocalDate todaysDate = LocalDate.now();
@@ -141,5 +138,21 @@ public class mainWindowController implements Initializable {
 
     }
 
+
+
+        @FXML
+        private void clickToPickFile(ActionEvent event) throws IOException, SQLException // While creating/editing a song we are using this button to pick path of the song.
+        {
+            FileDialog fd = new FileDialog(new JFrame());
+            fd.setVisible(true);
+            File[] f = fd.getFiles();
+            if (f.length > 0) {
+                String fullPath = f[0].toString();
+                int index = f[0].toString().lastIndexOf('\\');
+                String finalPath = fullPath.substring(index+1,fullPath.length());
+                mainLogic.readFile(finalPath);
+
+            }
+        }
 
 }

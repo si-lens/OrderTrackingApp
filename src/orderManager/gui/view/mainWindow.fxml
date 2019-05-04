@@ -3,6 +3,7 @@
 <?import com.jfoenix.controls.JFXProgressBar?>
 <?import com.jfoenix.controls.JFXTabPane?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TableColumn?>
@@ -40,8 +41,8 @@
          </tabs>
       </JFXTabPane>
       <JFXProgressBar fx:id="estimatedProgressBar" layoutX="31.0" layoutY="406.0" prefHeight="25.0" prefWidth="573.0" progress="0.76" />
-      <Label layoutX="33.0" layoutY="386.0" prefHeight="17.0" prefWidth="102.0" text="Start Date - 29/04" />
-      <Label alignment="BASELINE_RIGHT" layoutX="503.0" layoutY="386.0" prefHeight="17.0" prefWidth="100.0" text="End date - 1/06" />
+      <Label layoutX="33.0" layoutY="386.0" prefHeight="17.0" prefWidth="102.0" text="Start Date - 23/04" />
+      <Label alignment="BASELINE_RIGHT" layoutX="503.0" layoutY="386.0" prefHeight="17.0" prefWidth="100.0" text="End date - 29/05" />
       <Label layoutX="258.0" layoutY="386.0" text="Estimated progress" />
       <Text layoutX="385.0" layoutY="102.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Active employees" />
       <Line endX="421.0" layoutX="212.0" layoutY="367.0" startX="-210.0" />
@@ -93,14 +94,14 @@
             <Insets />
          </opaqueInsets>
       </Label>
-      <TableView fx:id="workersTable" layoutX="251.0" layoutY="110.0" prefHeight="245.0" prefWidth="360.0">
+      <TableView fx:id="workersTable" layoutX="325.0" layoutY="110.0" prefHeight="245.0" prefWidth="286.0">
         <columns>
-          <TableColumn fx:id="typeCol" editable="false" prefWidth="123.0" text="Type" />
-          <TableColumn fx:id="initialsCol" editable="false" prefWidth="39.0" text="Initial" />
-            <TableColumn fx:id="nameCol" editable="false" prefWidth="125.0" text="Name" />
-            <TableColumn fx:id="salaryCol" editable="false" prefWidth="46.0" text="Salary" />
-            <TableColumn fx:id="idCol" editable="false" prefWidth="26.0" text="ID" />
+            <TableColumn fx:id="idCol" prefWidth="26.0" text="ID" />
+            <TableColumn fx:id="nameCol" prefWidth="135.0" text="Name" />
+          <TableColumn fx:id="initialsCol" minWidth="8.0" prefWidth="60.0" text="Initial" />
+            <TableColumn fx:id="salaryCol" prefWidth="67.0" text="Salary" />
         </columns>
       </TableView>
+      <Button layoutX="527.0" layoutY="55.0" mnemonicParsing="false" onAction="#clickToPickFile" prefHeight="25.0" prefWidth="84.0" text="load JSON" />
    </children>
 </AnchorPane>

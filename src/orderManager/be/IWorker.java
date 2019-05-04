@@ -14,5 +14,4 @@ interface IWorker {
 
   int getId();
 
-  String getType();
 }

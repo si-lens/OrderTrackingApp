@@ -16,6 +16,10 @@ private availableWorkersDAO awDAO;
        awDAO = new availableWorkersDAO();
     }
 
+    public void readFile(String path) throws IOException, SQLException {
+        jsonReader.readFile(path);
+    }
+
     public List<Worker> getWorkers() throws SQLException {
     return awDAO.getWorkers();
 }

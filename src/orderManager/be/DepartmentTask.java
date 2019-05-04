@@ -7,11 +7,14 @@ import java.util.Date;
 import java.util.List;
 
 public class DepartmentTask implements IDepartmentTask {
+    private int productionOrderID;
     private Department department;
     private boolean orderState;
     private Date startDate;
     private Date endDate;
     private List<Worker> listOfWorkers;
+
+
     @Override
     public IDepartment getDepartment() {
         return department;
