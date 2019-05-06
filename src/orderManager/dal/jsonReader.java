@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.sql.*;
 import java.text.SimpleDateFormat;
 
-import orderManager.be.Department;
+import orderManager.dal.Connection.ConnectionProvider;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;

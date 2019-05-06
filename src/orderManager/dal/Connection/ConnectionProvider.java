@@ -1,4 +1,4 @@
-package orderManager.dal;
+package orderManager.dal.Connection;
 
 import com.microsoft.sqlserver.jdbc.SQLServerDataSource;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
@@ -14,9 +14,11 @@ public class ConnectionProvider {
 
   private final SQLServerDataSource ds;
 
-  public ConnectionProvider() throws IOException {
+  public ConnectionProvider() throws IOException
+  {
     Properties databaseProperties = new Properties();
     databaseProperties.load(new FileInputStream("src\\orderManager\\dal\\credentials.txt"));
+
     ds = new SQLServerDataSource();
     ds.setServerName(databaseProperties.getProperty("ServerName"));
     ds.setDatabaseName(databaseProperties.getProperty("DatabaseName"));

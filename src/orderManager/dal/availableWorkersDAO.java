@@ -2,6 +2,7 @@ package orderManager.dal;
 
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 import orderManager.be.Worker;
+import orderManager.dal.Connection.ConnectionProvider;
 
 import java.io.IOException;
 import java.sql.*;
