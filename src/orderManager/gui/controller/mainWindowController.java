@@ -53,33 +53,33 @@ public class mainWindowController implements Initializable {
     private mainLogicClass mainLogic;
     private List<Worker> workersList;
     private ObservableList<Worker> observableWorkers;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         try {
             mainLogic = new mainLogicClass();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (SQLServerException e) {
+        } catch (IOException | SQLException e) {
             e.printStackTrace();
         }
         displayTime();
-        prepareWorkersTable();
+        refresh();
+    }
 
-        try {
-            workersList = mainLogic.getWorkers();
-            observableWorkers = FXCollections.observableArrayList(workersList);
-            prepareWorkersTable();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-
-        try {
-            calculateEstimatedProgress();
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
+    private void refresh() {
+        Runnable runnable = () -> {
+            Platform.runLater(() -> {
+                try {
+                    workersList = mainLogic.getWorkers();
+                    observableWorkers = FXCollections.observableArrayList(workersList);
+                    prepareWorkersTable();
+                    calculateEstimatedProgress();
+                } catch (ParseException | SQLException e) {
+                    e.printStackTrace();
+                }
+            });
+        };
+        ScheduledExecutorService ses = Executors.newScheduledThreadPool(2);
+        ses.scheduleWithFixedDelay(runnable, 0, 5, TimeUnit.SECONDS);
     }
 
     public void displayTime() {
@@ -144,6 +144,7 @@ public class mainWindowController implements Initializable {
         private void clickToPickFile(ActionEvent event) throws IOException, SQLException // While creating/editing a song we are using this button to pick path of the song.
         {
             FileDialog fd = new FileDialog(new JFrame());
+            fd.setFile("*.json");
             fd.setVisible(true);
             File[] f = fd.getFiles();
             if (f.length > 0) {
