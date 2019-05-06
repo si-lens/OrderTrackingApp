@@ -27,7 +27,6 @@ public class availableWorkersDAO {
             String name = rs.getString(2);
             String initials = rs.getString(3);
             long salary = rs.getLong(4);
-
             Worker w = new Worker(id,name,initials,salary);
             workers.add(w);
         }

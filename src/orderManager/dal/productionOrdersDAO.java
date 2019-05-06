@@ -3,7 +3,9 @@ package orderManager.dal;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 import orderManager.be.Customer;
 import orderManager.be.Delivery;
+import orderManager.be.Department;
 import orderManager.be.ProductionOrder;
+
 import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
@@ -16,6 +18,20 @@ public class productionOrdersDAO {
     public productionOrdersDAO() throws SQLServerException, IOException {
         cp = new ConnectionProvider();
         con = cp.getConnection();
+    }
+
+    public List<Department> getDepartments() throws SQLException {
+        List<Department> departments = new ArrayList<>();
+        String sql = "SELECT DISTINCT Name FROM Departments";
+        Statement st = con.createStatement();
+        ResultSet rs = st.executeQuery(sql);
+        while (rs.next()) {
+            String name = rs.getString("Name");
+            Department d = new Department(name);
+            departments.add(d);
+        }
+
+        return departments;
     }
 
 /*
@@ -85,9 +101,6 @@ public class productionOrdersDAO {
         return
     }
 */
-
-
-
 
 
 }

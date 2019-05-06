@@ -96,10 +96,10 @@
       </Label>
       <TableView fx:id="workersTable" layoutX="325.0" layoutY="110.0" prefHeight="245.0" prefWidth="286.0">
         <columns>
-            <TableColumn fx:id="idCol" prefWidth="26.0" text="ID" />
-            <TableColumn fx:id="nameCol" prefWidth="135.0" text="Name" />
-          <TableColumn fx:id="initialsCol" minWidth="8.0" prefWidth="60.0" text="Initial" />
-            <TableColumn fx:id="salaryCol" prefWidth="67.0" text="Salary" />
+            <TableColumn fx:id="idCol" editable="false" prefWidth="26.0" text="ID" />
+            <TableColumn fx:id="nameCol" editable="false" prefWidth="135.0" text="Name" />
+          <TableColumn fx:id="initialsCol" editable="false" minWidth="8.0" prefWidth="60.0" text="Initial" />
+            <TableColumn fx:id="salaryCol" editable="false" prefWidth="67.0" text="Salary" />
         </columns>
       </TableView>
       <Button layoutX="527.0" layoutY="55.0" mnemonicParsing="false" onAction="#clickToPickFile" prefHeight="25.0" prefWidth="84.0" text="load JSON" />
