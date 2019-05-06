@@ -39,8 +39,7 @@ public class productionOrdersDAO {
     ResultSet rs = st.executeQuery(sql);
     while (rs.next()) {
       String name = rs.getString("Name");
-      int id = rs.getInt("DepartmentTaksID");
-      IDepartment d = new Department(name, id);
+      IDepartment d = new Department(name);
       departments.add(d);
     }
 

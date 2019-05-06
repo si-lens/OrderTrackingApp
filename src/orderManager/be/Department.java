@@ -6,9 +6,8 @@ public class Department implements IDepartment {
     private String name;
     private int departmentTaskID;
 
-    public Department(String name, int departmentTaskID){
+    public Department(String name){
         this.name = name;
-        this.departmentTaskID = departmentTaskID;
     }
     @Override
     public String getName() {

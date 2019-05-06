@@ -28,21 +28,11 @@
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
               </content>
             </Tab>
-            <Tab style="-fx-backgroud-color: RED;" text="Bælg">
-              <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-              </content>
-            </Tab>
-            <Tab text="Mont">
-              <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-              </content>
-            </Tab>
          </tabs>
       </JFXTabPane>
       <JFXProgressBar fx:id="estimatedProgressBar" layoutX="31.0" layoutY="406.0" prefHeight="25.0" prefWidth="573.0" progress="0.76" />
       <Label layoutX="33.0" layoutY="386.0" prefHeight="17.0" prefWidth="102.0" text="Start Date - 23/04" />
-      <Label alignment="BASELINE_RIGHT" layoutX="503.0" layoutY="386.0" prefHeight="17.0" prefWidth="100.0" text="End date - 29/05" />
+      <Label alignment="BASELINE_RIGHT" layoutX="503.0" layoutY="386.0" prefHeight="17.0" prefWidth="100.0" text="End date - 03/06" />
       <Label layoutX="258.0" layoutY="386.0" text="Estimated progress" />
       <Text layoutX="385.0" layoutY="102.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Active employees" />
       <Line endX="421.0" layoutX="212.0" layoutY="367.0" startX="-210.0" />

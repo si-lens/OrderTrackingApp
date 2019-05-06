@@ -124,7 +124,7 @@ public class mainWindowController implements Initializable {
 */
         //Its for now, raw data
         String startDateS = "2019-04-23";
-        String endDateS = "2019-05-29";
+        String endDateS = "2019-06-03";
         LocalDate startDate = LocalDate.parse(startDateS);
         LocalDate endDate = LocalDate.parse(endDateS);
         LocalDate todaysDate = LocalDate.now();

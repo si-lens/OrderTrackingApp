@@ -7,7 +7,8 @@ public class orderManager extends Application {
 
     @Override
     public void start(final Stage primaryStage) throws Exception {
-        new windowOpener("gui/view/mainWindow.fxml");
+//        new windowOpener("gui/view/mainWindow.fxml");
+        new windowOpener("gui/view/loginWindow.fxml");
     }
 
   public static void main(final String[] args) {
