@@ -4,15 +4,13 @@ import java.util.List;
 
 public class ProductionOrder implements IProductionOrder {
     private int id;
-    private String type;
     private Order order;
     private Delivery delivery;
     private Customer customer;
     private List<DepartmentTask> departmentTaskList;
 
-    public ProductionOrder(int id, String type) {
+    public ProductionOrder(int id) {
         this.id = id;
-        this.type = type;
     }
 
     @Override
