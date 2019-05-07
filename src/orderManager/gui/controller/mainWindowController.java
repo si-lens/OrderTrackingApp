@@ -97,15 +97,19 @@ public class mainWindowController implements Initializable {
   public void prepareWorkersTable() {
     JFXTreeTableColumn<Worker, String> initialsCol = new JFXTreeTableColumn<>("Initials");
     initialsCol.setCellValueFactory(new TreeItemPropertyValueFactory<>("initials"));
+    initialsCol.setMinWidth(145);
 
     JFXTreeTableColumn<Worker, String> nameCol = new JFXTreeTableColumn<>("Name");
     nameCol.setCellValueFactory(new TreeItemPropertyValueFactory<>("name"));
+    nameCol.setMinWidth(231);
 
     JFXTreeTableColumn<Worker, String> salaryCol = new JFXTreeTableColumn<>("SalaryNumber");
     salaryCol.setCellValueFactory(new TreeItemPropertyValueFactory<>("salary"));
+    salaryCol.setMinWidth(115);
 
     JFXTreeTableColumn<Worker, String> idCol = new JFXTreeTableColumn<>("ID");
     idCol.setCellValueFactory(new TreeItemPropertyValueFactory<>("id"));
+    idCol.setMinWidth(36);
 
     workersTab.getColumns().addAll(idCol, nameCol, initialsCol, salaryCol);
 
