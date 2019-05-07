@@ -13,45 +13,69 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="453.0" prefWidth="631.0" stylesheets="@../css/orderManager.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="orderManager.gui.controller.mainWindowController">
+<AnchorPane fx:id="mainPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="453.0" prefWidth="631.0" stylesheets="@../css/orderManager.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="orderManager.gui.controller.mainWindowController">
    <children>
-      <JFXButton fx:id="departmentBtn" buttonType="RAISED" depthTest="DISABLE" layoutX="244.0" layoutY="9.0" opacity="0.79" prefHeight="37.0" prefWidth="127.0" ripplerFill="#67a0ff" style="-fx-background-color: #67A0FF; -fx-padding: 0 0 0 0;">
-         <font>
-            <Font size="26.0" />
-         </font>
-      </JFXButton>
-      <Label fx:id="dateLabel" alignment="CENTER" layoutX="433.0" layoutY="14.0" prefHeight="13.0" prefWidth="140.0" text="Time " textAlignment="CENTER">
-         <font>
-            <Font size="13.0" />
-         </font>
-      </Label>
-      <JFXProgressBar fx:id="estimatedProgressBar" layoutX="31.0" layoutY="406.0" prefHeight="25.0" prefWidth="573.0" progress="0.76" />
-      <Label layoutX="33.0" layoutY="386.0" prefHeight="17.0" prefWidth="102.0" text="Start Date - 23/04" />
-      <Label alignment="BASELINE_RIGHT" layoutX="503.0" layoutY="386.0" prefHeight="17.0" prefWidth="100.0" text="End date - 03/06" />
-      <Label layoutX="258.0" layoutY="386.0" text="Estimated progress" />
-      <Line endX="421.0" layoutX="212.0" layoutY="367.0" startX="-210.0" />
+      <Line endX="421.0" layoutX="212.0" layoutY="367.0" startX="-210.0" AnchorPane.bottomAnchor="85.5" AnchorPane.leftAnchor="1.5" AnchorPane.rightAnchor="-2.5" />
       <StackPane layoutY="32.0" prefHeight="496.0" prefWidth="28.0" />
-      <Text fx:id="estimatedProgressLabel" layoutX="301.0" layoutY="424.0" strokeType="OUTSIDE" strokeWidth="0.0" text="77%">
+      <Text fx:id="estimatedProgressLabel" layoutX="301.0" layoutY="424.0" strokeType="OUTSIDE" strokeWidth="0.0" text="77%" AnchorPane.bottomAnchor="25.2353515625" AnchorPane.leftAnchor="300.447265625" AnchorPane.rightAnchor="301.552734375">
          <font>
             <Font size="15.0" />
          </font>
       </Text>
-      <Button layoutX="33.0" layoutY="13.0" mnemonicParsing="false" onAction="#clickToPickFile" prefHeight="31.0" prefWidth="102.0" text="Load JSON" />
-      <JFXTabPane layoutX="43.0" layoutY="81.0" prefHeight="239.0" prefWidth="546.0">
+      <JFXTabPane layoutX="43.0" layoutY="81.0" prefHeight="239.0" prefWidth="546.0" AnchorPane.bottomAnchor="133.0" AnchorPane.leftAnchor="43.0" AnchorPane.rightAnchor="42.0" AnchorPane.topAnchor="81.0">
          <tabs>
             <Tab text="Orders">
                <content>
                </content>
                <content>
-                  <JFXTreeTableView fx:id = "ordersTab" />
+                  <JFXTreeTableView fx:id="ordersTab" />
                </content>
             </Tab>
             <Tab text="ActiveWorkers">
                <content>
-                  <JFXTreeTableView fx:id ="workersTab"/>
+                  <JFXTreeTableView fx:id="workersTab" />
                </content>
             </Tab>
          </tabs>
       </JFXTabPane>
+      <StackPane alignment="BOTTOM_LEFT" layoutX="31.0" layoutY="368.0" prefHeight="38.0" prefWidth="177.0" AnchorPane.bottomAnchor="47.0" AnchorPane.leftAnchor="31.0">
+         <children>
+            <Label prefHeight="17.0" prefWidth="102.0" text="Start Date - 23/04" />
+         </children>
+      </StackPane>
+      <StackPane alignment="BOTTOM_RIGHT" layoutX="426.0" layoutY="368.0" prefHeight="38.0" prefWidth="177.0" AnchorPane.bottomAnchor="47.0" AnchorPane.rightAnchor="28.0">
+         <children>
+            <Label alignment="BASELINE_RIGHT" prefHeight="17.0" prefWidth="100.0" text="End date - 03/06" />
+         </children>
+      </StackPane>
+      <StackPane layoutX="205.0" layoutY="368.0" prefHeight="38.0" prefWidth="219.0" AnchorPane.bottomAnchor="47.0" AnchorPane.leftAnchor="205.0" AnchorPane.rightAnchor="207.0">
+         <children>
+            <Label text="Estimated progress" StackPane.alignment="BOTTOM_CENTER" />
+         </children>
+      </StackPane>
+      <JFXProgressBar fx:id="estimatedProgressBar" layoutX="31.0" layoutY="405.0" prefHeight="25.0" prefWidth="573.0" progress="0.76" AnchorPane.bottomAnchor="23.0" AnchorPane.leftAnchor="31.0" AnchorPane.rightAnchor="27.0" />
+      <StackPane layoutX="227.0" layoutY="14.0" prefHeight="69.0" prefWidth="202.0" AnchorPane.leftAnchor="227.0" AnchorPane.rightAnchor="202.0" AnchorPane.topAnchor="14.0">
+         <children>
+            <JFXButton fx:id="departmentBtn" alignment="CENTER" buttonType="RAISED" contentDisplay="CENTER" depthTest="DISABLE" disable="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" opacity="0.79" prefHeight="37.0" prefWidth="200.0" ripplerFill="#67a0ff" style="-fx-background-color: #67A0FF; -fx-padding: 0 0 0 0;" text="Button" textAlignment="CENTER">
+               <font>
+                  <Font size="26.0" />
+               </font>
+            </JFXButton>
+         </children>
+      </StackPane>
+      <StackPane alignment="TOP_LEFT" layoutX="43.0" layoutY="6.0" prefHeight="76.0" prefWidth="152.0" AnchorPane.topAnchor="6.0">
+         <children>
+            <Button mnemonicParsing="false" onAction="#clickToPickFile" prefHeight="31.0" prefWidth="102.0" text="Load JSON" />
+         </children>
+      </StackPane>
+      <StackPane alignment="TOP_RIGHT" layoutX="437.0" layoutY="6.0" prefHeight="76.0" prefWidth="152.0" AnchorPane.rightAnchor="42.0" AnchorPane.topAnchor="6.0">
+         <children>
+            <Label fx:id="dateLabel" alignment="CENTER" prefHeight="13.0" prefWidth="140.0" text="Time " textAlignment="CENTER">
+               <font>
+                  <Font size="13.0" />
+               </font>
+            </Label>
+         </children>
+      </StackPane>
    </children>
 </AnchorPane>

@@ -30,6 +30,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.cell.TreeItemPropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
@@ -49,6 +50,10 @@ public class mainWindowController implements Initializable {
   public JFXButton departmentBtn;
   public JFXTreeTableView workersTab;
   public JFXTreeTableView ordersTab;
+  public TreeTableColumn idCol;
+  public TreeTableColumn nameCol;
+  public TreeTableColumn initialsCol;
+  public TreeTableColumn salaryCol;
 
 
   private ScheduledExecutorService executor;
@@ -97,20 +102,25 @@ public class mainWindowController implements Initializable {
   public void prepareWorkersTable() {
     JFXTreeTableColumn<Worker, String> initialsCol = new JFXTreeTableColumn<>("Initials");
     initialsCol.setCellValueFactory(new TreeItemPropertyValueFactory<>("initials"));
+    initialsCol.setMinWidth(145);
+    initialsCol.setResizable(true);
 
     JFXTreeTableColumn<Worker, String> nameCol = new JFXTreeTableColumn<>("Name");
     nameCol.setCellValueFactory(new TreeItemPropertyValueFactory<>("name"));
+    nameCol.setMinWidth(231);
 
     JFXTreeTableColumn<Worker, String> salaryCol = new JFXTreeTableColumn<>("SalaryNumber");
     salaryCol.setCellValueFactory(new TreeItemPropertyValueFactory<>("salary"));
+    salaryCol.setMinWidth(115);
 
     JFXTreeTableColumn<Worker, String> idCol = new JFXTreeTableColumn<>("ID");
     idCol.setCellValueFactory(new TreeItemPropertyValueFactory<>("id"));
+    idCol.setMinWidth(36);
 
     workersTab.getColumns().addAll(idCol, nameCol, initialsCol, salaryCol);
 
     TreeItem<Worker> root = new RecursiveTreeItem<>(observableWorkers,
-        RecursiveTreeObject::getChildren);
+            RecursiveTreeObject::getChildren);
     workersTab.setRoot(root);
     workersTab.setShowRoot(false);
 
