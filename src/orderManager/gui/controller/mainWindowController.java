@@ -105,7 +105,7 @@ public class mainWindowController implements Initializable {
   }
 
   public void prepareWorkersTable() {
-      if (workersTab.getColumns().isEmpty()) {
+    if (workersTab.getColumns().isEmpty()) {
       JFXTreeTableColumn<Worker, String> initialsCol = new JFXTreeTableColumn<>("Initials");
       initialsCol.setCellValueFactory(new TreeItemPropertyValueFactory<>("initials"));
       initialsCol.setMinWidth(145);
@@ -171,7 +171,7 @@ public class mainWindowController implements Initializable {
 
   @FXML
   private void clickToPickFile(ActionEvent event)
-      throws IOException, SQLException // While creating/editing a song we are using this button to pick path of the song.
+          throws IOException, SQLException // While creating/editing a song we are using this button to pick path of the song.
   {
     FileDialog fd = new FileDialog(new JFrame());
     fd.setFile("*.json");
