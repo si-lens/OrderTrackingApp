@@ -1,7 +1,6 @@
 package orderManager.bll;
 
 import com.microsoft.sqlserver.jdbc.SQLServerException;
-import orderManager.be.Department;
 import orderManager.be.IDepartment;
 import orderManager.be.Worker;
 import orderManager.dal.availableWorkersDAO;

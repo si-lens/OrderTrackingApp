@@ -5,10 +5,10 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="102.0" prefWidth="217.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="orderManager.gui.controller.loginWindowController">
+<AnchorPane prefHeight="143.0" prefWidth="265.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="orderManager.gui.controller.loginWindowController">
    <children>
-      <ComboBox fx:id="departmentSelection" layoutX="34.0" layoutY="23.0" prefWidth="150.0" promptText="Select department" />
+      <ComboBox fx:id="departmentSelection" layoutX="41.0" layoutY="30.0" prefHeight="31.0" prefWidth="184.0" promptText="Select department" />
       <Label layoutX="110.0" layoutY="35.0" />
-      <Button fx:id="loginButton" layoutX="83.0" layoutY="63.0" mnemonicParsing="false" onAction="#logIn" text="Log in" />
+      <Button fx:id="loginButton" layoutX="102.0" layoutY="78.0" mnemonicParsing="false" onAction="#logIn" text="Log in" />
    </children>
 </AnchorPane>

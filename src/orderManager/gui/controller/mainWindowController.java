@@ -9,7 +9,6 @@ import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 import java.awt.FileDialog;
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
@@ -31,13 +30,11 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeTableColumn;
 import javafx.scene.control.cell.TreeItemPropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
-
 import javax.swing.JFrame;
-
-import javafx.util.Callback;
 import orderManager.be.DepartmentTask;
 import orderManager.be.IDepartment;
 import orderManager.be.Worker;
@@ -53,6 +50,10 @@ public class mainWindowController implements Initializable {
   public JFXButton departmentBtn;
   public JFXTreeTableView workersTab;
   public JFXTreeTableView ordersTab;
+  public TreeTableColumn idCol;
+  public TreeTableColumn nameCol;
+  public TreeTableColumn initialsCol;
+  public TreeTableColumn salaryCol;
 
 
   private ScheduledExecutorService executor;
@@ -104,10 +105,11 @@ public class mainWindowController implements Initializable {
   }
 
   public void prepareWorkersTable() {
-    if (workersTab.getColumns().isEmpty()) {
+      if (workersTab.getColumns().isEmpty()) {
       JFXTreeTableColumn<Worker, String> initialsCol = new JFXTreeTableColumn<>("Initials");
       initialsCol.setCellValueFactory(new TreeItemPropertyValueFactory<>("initials"));
       initialsCol.setMinWidth(145);
+      initialsCol.setResizable(true);
 
       JFXTreeTableColumn<Worker, String> nameCol = new JFXTreeTableColumn<>("Name");
       nameCol.setCellValueFactory(new TreeItemPropertyValueFactory<>("name"));
@@ -123,10 +125,10 @@ public class mainWindowController implements Initializable {
 
       workersTab.getColumns().addAll(idCol, nameCol, initialsCol, salaryCol);
     }
-      TreeItem<Worker> root = new RecursiveTreeItem<>(observableWorkers,
-              RecursiveTreeObject::getChildren);
-      workersTab.setRoot(root);
-      workersTab.setShowRoot(false);
+    TreeItem<Worker> root = new RecursiveTreeItem<>(observableWorkers,
+            RecursiveTreeObject::getChildren);
+    workersTab.setRoot(root);
+    workersTab.setShowRoot(false);
 
   }
 
