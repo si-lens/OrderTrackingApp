@@ -21,19 +21,20 @@ import orderManager.be.IOrder;
 import orderManager.be.IProductionOrder;
 import orderManager.be.Order;
 import orderManager.be.ProductionOrder;
+import orderManager.dal.Connection.ConnectionPool;
 import orderManager.dal.Connection.ConnectionProvider;
 
 public class productionOrdersDAO {
 
-  ConnectionProvider cp;
-  Connection con;
+  ConnectionPool cp;
+  Connection con = null;
 
   public productionOrdersDAO() throws SQLServerException, IOException {
-    cp = new ConnectionProvider();
-    con = cp.getConnection();
+    cp = new ConnectionPool();
   }
 
   public List<IDepartment> getDepartments() throws SQLException {
+    con = cp.checkOut();
     List<IDepartment> departments = new ArrayList<>();
     String sql = "SELECT DISTINCT Name FROM Departments";
     Statement st = con.createStatement();
@@ -43,12 +44,12 @@ public class productionOrdersDAO {
       IDepartment d = new Department(name);
       departments.add(d);
     }
-
+    cp.checkIn(con);
     return departments;
   }
 
   public List<IProductionOrder> getProdutcionOrders() throws SQLException {
-
+    con = cp.checkOut();
     List<IProductionOrder> pOrders = new ArrayList<>();
     String sql = "SELECT * FROM ProductionOrders";
     Statement st = con.createStatement();
@@ -58,11 +59,12 @@ public class productionOrdersDAO {
       IProductionOrder po = new ProductionOrder(id);
       pOrders.add(po);
     }
+    cp.checkIn(con);
     return pOrders;
   }
 
   public List<ICustomer> getCustomers() throws SQLException {
-
+    con = cp.checkOut();
     List<ICustomer> customers = new ArrayList<>();
     String sql = "SELECT * FROM Customers";
     Statement st = con.createStatement();
@@ -73,11 +75,12 @@ public class productionOrdersDAO {
       ICustomer c = new Customer(name, id);
       customers.add(c);
     }
+    cp.checkIn(con);
     return customers;
   }
 
   public List<IDelivery> getDeliveries() throws SQLException {
-
+    con = cp.checkOut();
     List<IDelivery> delivery = new ArrayList<>();
     String sql = "SELECT * FROM Delivery";
     Statement st = con.createStatement();
@@ -88,11 +91,12 @@ public class productionOrdersDAO {
       IDelivery d = new Delivery(id, deliveryTime);
       delivery.add(d);
     }
+    cp.checkIn(con);
     return delivery;
   }
 
   public List<IDepartmentTask> getDepartmentTasks() throws SQLException {
-
+    con = cp.checkOut();
     List<IDepartmentTask> departmentTasks = new ArrayList<>();
     String sql = "SELECT * FROM DepartmentTasks";
     Statement st = con.createStatement();
@@ -107,11 +111,12 @@ public class productionOrdersDAO {
           startDate, endDate);
       departmentTasks.add(department);
     }
+    cp.checkIn(con);
     return departmentTasks;
   }
 
   public List<IOrder> getOrders() throws SQLException {
-
+    con = cp.checkOut();
     List<IOrder> orders = new ArrayList<>();
     String sql = "SELECT * FROM Orders";
     Statement st = con.createStatement();
@@ -123,6 +128,7 @@ public class productionOrdersDAO {
       IOrder order = new Order(orderNumber, id);
       orders.add(order);
     }
+    cp.checkIn(con);
     return orders;
   }
 

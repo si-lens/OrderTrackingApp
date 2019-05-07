@@ -9,6 +9,7 @@ import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 import java.awt.FileDialog;
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
@@ -33,7 +34,10 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.cell.TreeItemPropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
+
 import javax.swing.JFrame;
+
+import javafx.util.Callback;
 import orderManager.be.DepartmentTask;
 import orderManager.be.IDepartment;
 import orderManager.be.Worker;
@@ -68,20 +72,25 @@ public class mainWindowController implements Initializable {
       e.printStackTrace();
     }
     displayTime();
-    try {
-      workersList = mainLogic.getWorkers();
-      observableWorkers = FXCollections.observableArrayList(workersList);
-      prepareWorkersTable();
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
+    refresh();
+  }
 
-    try {
-      calculateEstimatedProgress();
-    } catch (ParseException e) {
-      e.printStackTrace();
-    }
-
+  private void refresh()
+  {
+    Runnable runnable = () -> {
+      Platform.runLater(() -> {
+        try {
+          workersList = mainLogic.getWorkers();
+          observableWorkers = FXCollections.observableArrayList(workersList);
+          prepareWorkersTable();
+          calculateEstimatedProgress();
+        } catch (SQLException | ParseException e) {
+          e.printStackTrace();
+        }
+      });
+    };
+    ScheduledExecutorService ses = Executors.newScheduledThreadPool(2);
+    ses.scheduleWithFixedDelay(runnable, 0, 5, TimeUnit.SECONDS);
   }
 
   public void displayTime() {
@@ -95,28 +104,29 @@ public class mainWindowController implements Initializable {
   }
 
   public void prepareWorkersTable() {
-    JFXTreeTableColumn<Worker, String> initialsCol = new JFXTreeTableColumn<>("Initials");
-    initialsCol.setCellValueFactory(new TreeItemPropertyValueFactory<>("initials"));
-    initialsCol.setMinWidth(145);
+    if (workersTab.getColumns().isEmpty()) {
+      JFXTreeTableColumn<Worker, String> initialsCol = new JFXTreeTableColumn<>("Initials");
+      initialsCol.setCellValueFactory(new TreeItemPropertyValueFactory<>("initials"));
+      initialsCol.setMinWidth(145);
 
-    JFXTreeTableColumn<Worker, String> nameCol = new JFXTreeTableColumn<>("Name");
-    nameCol.setCellValueFactory(new TreeItemPropertyValueFactory<>("name"));
-    nameCol.setMinWidth(231);
+      JFXTreeTableColumn<Worker, String> nameCol = new JFXTreeTableColumn<>("Name");
+      nameCol.setCellValueFactory(new TreeItemPropertyValueFactory<>("name"));
+      nameCol.setMinWidth(231);
 
-    JFXTreeTableColumn<Worker, String> salaryCol = new JFXTreeTableColumn<>("SalaryNumber");
-    salaryCol.setCellValueFactory(new TreeItemPropertyValueFactory<>("salary"));
-    salaryCol.setMinWidth(115);
+      JFXTreeTableColumn<Worker, String> salaryCol = new JFXTreeTableColumn<>("SalaryNumber");
+      salaryCol.setCellValueFactory(new TreeItemPropertyValueFactory<>("salary"));
+      salaryCol.setMinWidth(115);
 
-    JFXTreeTableColumn<Worker, String> idCol = new JFXTreeTableColumn<>("ID");
-    idCol.setCellValueFactory(new TreeItemPropertyValueFactory<>("id"));
-    idCol.setMinWidth(36);
+      JFXTreeTableColumn<Worker, String> idCol = new JFXTreeTableColumn<>("ID");
+      idCol.setCellValueFactory(new TreeItemPropertyValueFactory<>("id"));
+      idCol.setMinWidth(36);
 
-    workersTab.getColumns().addAll(idCol, nameCol, initialsCol, salaryCol);
-
-    TreeItem<Worker> root = new RecursiveTreeItem<>(observableWorkers,
-        RecursiveTreeObject::getChildren);
-    workersTab.setRoot(root);
-    workersTab.setShowRoot(false);
+      workersTab.getColumns().addAll(idCol, nameCol, initialsCol, salaryCol);
+    }
+      TreeItem<Worker> root = new RecursiveTreeItem<>(observableWorkers,
+              RecursiveTreeObject::getChildren);
+      workersTab.setRoot(root);
+      workersTab.setShowRoot(false);
 
   }
 
@@ -162,6 +172,7 @@ public class mainWindowController implements Initializable {
       throws IOException, SQLException // While creating/editing a song we are using this button to pick path of the song.
   {
     FileDialog fd = new FileDialog(new JFrame());
+    fd.setFile("*.json");
     fd.setVisible(true);
     File[] f = fd.getFiles();
     if (f.length > 0) {

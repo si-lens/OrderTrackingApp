@@ -2,6 +2,7 @@ package orderManager.dal;
 
 import com.microsoft.sqlserver.jdbc.SQLServerException;
 import orderManager.be.Worker;
+import orderManager.dal.Connection.ConnectionPool;
 import orderManager.dal.Connection.ConnectionProvider;
 
 import java.io.IOException;
@@ -10,15 +11,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class availableWorkersDAO {
-    ConnectionProvider cp;
-    Connection con;
+    ConnectionPool cp;
+    Connection con = null;
 
     public availableWorkersDAO() throws IOException, SQLServerException {
-        cp = new ConnectionProvider();
-        con = cp.getConnection();
+        cp = new ConnectionPool();
     }
 
     public List<Worker> getWorkers() throws SQLException {
+        con = cp.checkOut();
         List<Worker> workers = new ArrayList<>();
         String sql = "SELECT * FROM AvailableWorkers";
         Statement st = con.createStatement();
@@ -31,6 +32,7 @@ public class availableWorkersDAO {
             Worker w = new Worker(id,name,initials,salary);
             workers.add(w);
         }
+        cp.checkIn(con);
         System.out.println(workers.size());
         return workers;
     }
