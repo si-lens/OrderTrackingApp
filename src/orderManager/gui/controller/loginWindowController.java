@@ -9,6 +9,7 @@ import javafx.stage.Stage;
 import orderManager.be.Department;
 import orderManager.be.IDepartment;
 import orderManager.bll.mainLogicClass;
+import orderManager.gui.model.Model;
 import orderManager.windowOpener;
 
 import java.io.IOException;
@@ -42,12 +43,14 @@ public class loginWindowController implements Initializable {
 
     public void loadDepartments(){
         for(int i=0; i<departmentList.size(); i++){
-            departmentSelection.getItems().add(departmentList.get(i).getName());
+            departmentSelection.getItems().add(departmentList.get(i));
         }
     }
 
 
     public void logIn(ActionEvent actionEvent) throws IOException {
+        IDepartment department = (IDepartment) departmentSelection.getSelectionModel().getSelectedItem();
+        Model.getInstance().setDepartment(department);
         Stage stage = (Stage) loginButton.getScene().getWindow();
         stage.close();
         new windowOpener("gui/view/mainWindow.fxml");

@@ -1,7 +1,7 @@
 package orderManager.be;
 
 //Defines the name of the given production worker.
-interface IWorker {
+public interface IWorker{
 
   //Defines the name of the given production worker.
   String getName();
