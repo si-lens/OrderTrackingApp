@@ -15,9 +15,7 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.Calendar;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -41,7 +39,7 @@ import orderManager.be.Worker;
 import orderManager.bll.mainLogicClass;
 import orderManager.gui.model.Model;
 
-public class mainWindowController implements Initializable {
+public class mainWindowController implements Initializable, Observer {
 
   public AnchorPane mainPane;
   public Label dateLabel;
@@ -69,6 +67,12 @@ public class mainWindowController implements Initializable {
     departmentBtn.setText(chosenDepartment.getName());
     try {
       mainLogic = new mainLogicClass();
+      /*
+      mainLogic.addObserver(this);
+      workersList = mainLogic.getWorkers();
+      observableWorkers = FXCollections.observableArrayList(workersList);
+      prepareWorkersTable();
+       */
     } catch (SQLServerException | IOException e) {
       e.printStackTrace();
     }
@@ -191,4 +195,20 @@ public class mainWindowController implements Initializable {
     }
   }
 
+  @Override
+  public void update(Observable o, Object arg) {
+    Platform.runLater(new Runnable() {
+      @Override
+      public void run() {
+        try {
+          workersList = mainLogic.getWorkers();
+          observableWorkers = FXCollections.observableArrayList(workersList);
+          prepareWorkersTable();
+          calculateEstimatedProgress();
+        } catch (ParseException | SQLException e) {
+          e.printStackTrace();
+        }
+      }
+    });
+  }
 }

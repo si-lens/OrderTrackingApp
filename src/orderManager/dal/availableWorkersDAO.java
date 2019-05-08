@@ -10,9 +10,10 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class availableWorkersDAO {
-    ConnectionPool cp;
-    Connection con = null;
+public class availableWorkersDAO implements IDAODetails {
+    private ConnectionPool cp;
+    private Connection con = null;
+    private boolean hasNewData;
 
     public availableWorkersDAO() throws IOException, SQLServerException {
         cp = new ConnectionPool();
@@ -36,6 +37,30 @@ public class availableWorkersDAO {
         System.out.println(workers.size());
         return workers;
     }
+    /*
+    public void setName(String name) throws SQLException {
+        con = cp.checkOut();
+        String sql = "INSERT INTO AvailableWorkers()";
+        Statement st = con.createStatement();
+        ResultSet rs =  st.executeQuery(sql);
+
+        cp.checkIn(con);
+    }
+     */
 
 
+    @Override
+    public List getDetails() throws SQLException {
+        return getWorkers();
+    }
+
+    @Override
+    public boolean hasNewData() {
+        return hasNewData;
+    }
+
+    @Override
+    public void setHasNewData(boolean hasNewData) {
+        this.hasNewData = hasNewData;
+    }
 }
