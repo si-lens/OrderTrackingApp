@@ -106,27 +106,32 @@ public class mainWindowController implements Initializable {
 
   public void prepareWorkersTable() {
     if (workersTab.getColumns().isEmpty()) {
-      JFXTreeTableColumn<Worker, String> initialsCol = new JFXTreeTableColumn<>("Initials");
-      initialsCol.setCellValueFactory(new TreeItemPropertyValueFactory<>("initials"));
-      initialsCol.setMinWidth(145);
-      initialsCol.setResizable(true);
-
-      JFXTreeTableColumn<Worker, String> nameCol = new JFXTreeTableColumn<>("Name");
-      nameCol.setCellValueFactory(new TreeItemPropertyValueFactory<>("name"));
-      nameCol.setMinWidth(231);
-
-      JFXTreeTableColumn<Worker, String> salaryCol = new JFXTreeTableColumn<>("SalaryNumber");
-      salaryCol.setCellValueFactory(new TreeItemPropertyValueFactory<>("salary"));
-      salaryCol.setMinWidth(115);
 
       JFXTreeTableColumn<Worker, String> idCol = new JFXTreeTableColumn<>("ID");
       idCol.setCellValueFactory(new TreeItemPropertyValueFactory<>("id"));
       idCol.setMinWidth(36);
+      idCol.setStyle("-fx-alignment: CENTER");
+
+      JFXTreeTableColumn<Worker, String> nameCol = new JFXTreeTableColumn<>("Name");
+      nameCol.setCellValueFactory(new TreeItemPropertyValueFactory<>("name"));
+      nameCol.setMinWidth(231);
+      nameCol.setStyle("-fx-alignment: CENTER");
+
+      JFXTreeTableColumn<Worker, String> initialsCol = new JFXTreeTableColumn<>("Initials");
+      initialsCol.setCellValueFactory(new TreeItemPropertyValueFactory<>("initials"));
+      initialsCol.setMinWidth(145);
+      initialsCol.setStyle("-fx-alignment: CENTER");
+
+      JFXTreeTableColumn<Worker, String> salaryCol = new JFXTreeTableColumn<>("SalaryNumber");
+      salaryCol.setCellValueFactory(new TreeItemPropertyValueFactory<>("salary"));
+      salaryCol.setMinWidth(115);
+      salaryCol.setStyle("-fx-alignment: CENTER");
+
+
 
       workersTab.getColumns().addAll(idCol, nameCol, initialsCol, salaryCol);
     }
-    TreeItem<Worker> root = new RecursiveTreeItem<>(observableWorkers,
-            RecursiveTreeObject::getChildren);
+    TreeItem<Worker> root = new RecursiveTreeItem<>(observableWorkers,RecursiveTreeObject::getChildren);
     workersTab.setRoot(root);
     workersTab.setShowRoot(false);
 
@@ -182,7 +187,7 @@ public class mainWindowController implements Initializable {
       int index = f[0].toString().lastIndexOf('\\');
       String finalPath = fullPath.substring(index + 1, fullPath.length());
       mainLogic.readFile(finalPath);
-
+      
     }
   }
 
