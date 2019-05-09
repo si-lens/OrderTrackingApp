@@ -1,36 +1,52 @@
 package orderManager.bll;
 
-import com.microsoft.sqlserver.jdbc.SQLServerException;
-import orderManager.be.Department;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.List;
 import orderManager.be.IDepartment;
-import orderManager.be.Worker;
+import orderManager.be.IProductionOrder;
+import orderManager.be.IWorker;
 import orderManager.dal.availableWorkersDAO;
 import orderManager.dal.jsonReader;
 import orderManager.dal.productionOrdersDAO;
 
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.List;
-
 public class mainLogicClass {
-private availableWorkersDAO awDAO;
-private productionOrdersDAO pDAO;
 
-    public mainLogicClass() throws IOException, SQLServerException {
-       awDAO = new availableWorkersDAO();
-       pDAO = new productionOrdersDAO();
-    }
+  private availableWorkersDAO awDAO;
+  private productionOrdersDAO pDAO;
+  private List<IWorker> workers;
+  private List<IDepartment> departments;
+  private List<IProductionOrder> productionOrders;
+  private mainLogicClass mlc;
 
-    public void readFile(String path) throws IOException, SQLException {
-        jsonReader.readFile(path);
-    }
+  public mainLogicClass() throws IOException, SQLException {
+    awDAO = new availableWorkersDAO();
+    pDAO = new productionOrdersDAO();
+    setWorkers();
+    setDepartments();
+  }
 
-    public List<Worker> getWorkers() throws SQLException {
-    return awDAO.getWorkers();
-}
+  public void readFile(String path) throws IOException, SQLException {
+    jsonReader.readFile(path);
+  }
 
-    public List<IDepartment> getDepartments() throws SQLException {
-        return pDAO.getDepartments();
-    }
+  public void setWorkers() throws SQLException {
+    workers = awDAO.getWorkers();
+  }
 
+  public List<IWorker> getWorkers() {
+    return workers;
+  }
+
+  public void setDepartments() throws SQLException {
+    departments = pDAO.getDepartments();
+  }
+
+  public List<IDepartment> getDepartments() {
+    return departments;
+  }
+
+  public void getProducionOrdersByDepartment(IDepartment department) throws SQLException {
+        productionOrders = pDAO.getProdutcionOrders(department);
+  }
 }

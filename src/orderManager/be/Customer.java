@@ -5,7 +5,7 @@ public class Customer implements ICustomer {
     private int id;
 
 
-    public Customer(String name, int id) {
+    public Customer(int id, String name) {
         this.name = name;
         this.id = id;
     }

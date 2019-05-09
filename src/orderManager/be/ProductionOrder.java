@@ -3,43 +3,47 @@ package orderManager.be;
 import java.util.List;
 
 public class ProductionOrder implements IProductionOrder {
-    private int id;
-    private Order order;
-    private Delivery delivery;
-    private Customer customer;
-    private List<DepartmentTask> departmentTaskList;
 
-    public ProductionOrder(int id) {
-        this.id = id;
-    }
+  private int id;
+  private IOrder order;
+  private IDelivery delivery;
+  private ICustomer customer;
+  private List<IDepartmentTask> departmentTaskList;
 
-    @Override
-    public Order getOrder() {
-        return order;
-    }
+  public ProductionOrder(int id, ICustomer customer, IDelivery delivery, IOrder order) {
+    this.id = id;
+    this.delivery = delivery;
+    this.customer = customer;
+    this.order = order;
+  }
 
-    @Override
-    public Delivery getDelivery() {
-        return delivery;
-    }
+  @Override
+  public IOrder getOrder() {
+    return order;
+  }
 
-    @Override
-    public Customer getCustomer() {
-        return customer;
-    }
+  @Override
+  public IDelivery getDelivery() {
+    return delivery;
+  }
 
-    @Override
-    public List<DepartmentTask> getDepartmentTasks() {
-        return departmentTaskList;
-    }
+  @Override
+  public ICustomer getCustomer() {
+    return customer;
+  }
 
-    @Override
-    public void addDepartmentTask(DepartmentTask task) {
-     departmentTaskList.add(task);
-    }
+  @Override
+  public List<IDepartmentTask> getDepartmentTasks() {
+    return departmentTaskList;
+  }
 
-    @Override
-    public void removeDepartmentTask(DepartmentTask task) {
+  @Override
+  public void addDepartmentTask(IDepartmentTask task) {
+    departmentTaskList.add(task);
+  }
+
+  @Override
+  public void removeDepartmentTask(IDepartmentTask task) {
     departmentTaskList.remove(task);
-    }
+  }
 }

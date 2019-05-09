@@ -7,20 +7,20 @@ import java.util.List;
 public interface IProductionOrder {
 
   //Defines relevant data of the order/
-  Order getOrder();
+  IOrder getOrder();
 
   //Defines relevant data of the delivery.
-  Delivery getDelivery();
+  IDelivery getDelivery();
 
   //Defines data of the customer.
-  Customer getCustomer();
+  ICustomer getCustomer();
 
   //Defines tasks of departments.
-  List<DepartmentTask> getDepartmentTasks();
+  List<IDepartmentTask> getDepartmentTasks();
 
   //Adds a task to this production order.
-  void addDepartmentTask(DepartmentTask Task);
+  void addDepartmentTask(IDepartmentTask Task);
 
   //Removes the task to this production order.
-  void removeDepartmentTask(DepartmentTask task);
+  void removeDepartmentTask(IDepartmentTask task);
 }

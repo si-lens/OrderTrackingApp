@@ -8,20 +8,18 @@ import java.util.List;
 
 public class DepartmentTask implements IDepartmentTask {
 
-    private  int id;
-    private int productionOrderID;
-    private Department department;
+
+    private IDepartment department;
     private boolean orderState;
     private Date startDate;
     private Date endDate;
     private List<Worker> listOfWorkers;
 
-    public DepartmentTask(int id, int productionOrderID, boolean orderState, Date startDate, Date endDate){
-        this.id = id;
-        this.productionOrderID = productionOrderID;
+    public DepartmentTask(Date startDate, Date endDate, boolean orderState, IDepartment department){
         this.orderState = orderState;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.department = department;
     }
 
     @Override

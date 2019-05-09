@@ -4,6 +4,7 @@ import com.microsoft.sqlserver.jdbc.SQLServerException;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.Date;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -43,88 +44,84 @@ public class productionOrdersDAO {
       IDepartment d = new Department(name);
       departments.add(d);
     }
-
     return departments;
   }
 
-  public List<IProductionOrder> getProdutcionOrders() throws SQLException {
-
+  public List<IProductionOrder> getProdutcionOrders(IDepartment department) throws SQLException {
     List<IProductionOrder> pOrders = new ArrayList<>();
-    String sql = "SELECT * FROM ProductionOrders";
-    Statement st = con.createStatement();
-    ResultSet rs = st.executeQuery(sql);
+    String sql = "SELECT ProductionOrders.ID, CustomerID, DeliveryID, OrderID FROM ProductionOrders,DepartmentTasks,Departments WHERE ProductionOrders.ID = DepartmentTasks.ProductionOrderID AND Departments.ID = DepartmentTasks.DepartmentID AND Name = ?";
+    PreparedStatement ppst = con.prepareStatement(sql);
+    ppst.setString(1, department.getName());
+    ResultSet rs = ppst.executeQuery(sql);
     while (rs.next()) {
       int id = rs.getInt("ID");
-      IProductionOrder po = new ProductionOrder(id);
-      pOrders.add(po);
+      int customerID = rs.getInt("CustomerID");
+      int deliveryID = rs.getInt("DeliveryID");
+      int orderID = rs.getInt("OrderID");
+      IProductionOrder po = new ProductionOrder(id, getCustomer(customerID),
+          getDelivery(deliveryID), getOrder(orderID));
+      pOrders.add(getDepartmentTasks(id, po));
     }
     return pOrders;
   }
 
-  public List<ICustomer> getCustomers() throws SQLException {
-
-    List<ICustomer> customers = new ArrayList<>();
-    String sql = "SELECT * FROM Customers";
-    Statement st = con.createStatement();
-    ResultSet rs = st.executeQuery(sql);
-    while (rs.next()) {
-      String name = rs.getString("Name");
-      int id = rs.getInt("ProductionOrderID");
-      ICustomer c = new Customer(name, id);
-      customers.add(c);
-    }
-    return customers;
+  public ICustomer getCustomer(int customerID) throws SQLException {
+    String sql = "SELECT * FROM Customers WHERE ID = ?";
+    PreparedStatement ppst = con.prepareStatement(sql);
+    ppst.setInt(1, customerID);
+    ResultSet rs = ppst.executeQuery(sql);
+    rs.next();
+    int id = rs.getInt("ID");
+    String name = rs.getString("Name");
+    return new Customer(id, name);
   }
 
-  public List<IDelivery> getDeliveries() throws SQLException {
-
-    List<IDelivery> delivery = new ArrayList<>();
-    String sql = "SELECT * FROM Delivery";
-    Statement st = con.createStatement();
-    ResultSet rs = st.executeQuery(sql);
-    while (rs.next()) {
-      Date deliveryTime = rs.getDate("DeliveryTime");
-      int id = rs.getInt("ProductionOrderID");
-      IDelivery d = new Delivery(id, deliveryTime);
-      delivery.add(d);
-    }
-    return delivery;
+  public IDelivery getDelivery(int deliveryID) throws SQLException {
+    String sql = "SELECT * FROM Deliveries WHERE ID = ?";
+    PreparedStatement ppst = con.prepareStatement(sql);
+    ppst.setInt(1, deliveryID);
+    ResultSet rs = ppst.executeQuery(sql);
+    rs.next();
+    int id = rs.getInt("ID");
+    Date date = rs.getDate("DeliveryDate");
+    return new Delivery(id, date);
   }
 
-  public List<IDepartmentTask> getDepartmentTasks() throws SQLException {
+  public IOrder getOrder(int orderID) throws SQLException {
+    String sql = "SELECT * FROM Orders WHERE ID = ?";
+    PreparedStatement ppst = con.prepareStatement(sql);
+    ppst.setInt(1, orderID);
+    ResultSet rs = ppst.executeQuery(sql);
+    rs.next();
+    int id = rs.getInt("ID");
+    String orderNumber = rs.getString("OrderNumber");
+    return new Order(id, orderNumber);
+  }
 
-    List<IDepartmentTask> departmentTasks = new ArrayList<>();
-    String sql = "SELECT * FROM DepartmentTasks";
-    Statement st = con.createStatement();
-    ResultSet rs = st.executeQuery(sql);
+  public IProductionOrder getDepartmentTasks(int id, IProductionOrder po) throws SQLException {
+    String sql = "SELECT * FROM DepartmentTasks WHERE ProductionOrderID = ?";
+    PreparedStatement ppst = con.prepareStatement(sql);
+    ppst.setInt(1, id);
+    ResultSet rs = ppst.executeQuery(sql);
     while (rs.next()) {
-      int id = rs.getInt("ID");
       Date endDate = rs.getDate("EndDate");
       Date startDate = rs.getDate("StartDate");
       boolean finishedOrder = rs.getBoolean("FinishedOrder");
-      int productionOrderID = rs.getInt("ProductionOrderID");
-      IDepartmentTask department = new DepartmentTask(id, productionOrderID, finishedOrder,
-          startDate, endDate);
-      departmentTasks.add(department);
+      int departmentID = rs.getInt("DepartmentID");
+      IDepartmentTask department = new DepartmentTask(startDate, endDate, finishedOrder,
+          getDepartment(departmentID));
+      po.addDepartmentTask(department);
     }
-    return departmentTasks;
+    return po;
   }
 
-  public List<IOrder> getOrders() throws SQLException {
-
-    List<IOrder> orders = new ArrayList<>();
-    String sql = "SELECT * FROM Orders";
-    Statement st = con.createStatement();
-    ResultSet rs = st.executeQuery(sql);
-
-    while (rs.next()) {
-      int id = rs.getInt("ProductionOrderID");
-      String orderNumber = rs.getString("OrderNumber");
-      IOrder order = new Order(orderNumber, id);
-      orders.add(order);
-    }
-    return orders;
+  public IDepartment getDepartment(int departmentID) throws SQLException {
+    String sql = "SELECT * FROM Departments WHERE ID = ?";
+    PreparedStatement ppst = con.prepareStatement(sql);
+    ppst.setInt(1, departmentID);
+    ResultSet rs = ppst.executeQuery();
+    rs.next();
+    IDepartment dp = new Department(rs.getString("Name"));
+    return dp;
   }
-
-
 }

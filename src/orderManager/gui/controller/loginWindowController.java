@@ -9,6 +9,7 @@ import javafx.stage.Stage;
 import orderManager.be.Department;
 import orderManager.be.IDepartment;
 import orderManager.bll.mainLogicClass;
+import orderManager.dal.jsonReaderMK2;
 import orderManager.gui.model.Model;
 import orderManager.windowOpener;
 
@@ -31,11 +32,7 @@ public class loginWindowController implements Initializable {
             mainLogic = new mainLogicClass();
             departmentList = mainLogic.getDepartments();
             loadDepartments();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (SQLServerException e) {
-            e.printStackTrace();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

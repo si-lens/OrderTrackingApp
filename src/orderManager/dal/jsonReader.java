@@ -76,7 +76,6 @@ public class jsonReader {
             loadCustomers((JSONObject) rec.get("Customer"), i + 1);
             loadDelivery((JSONObject) rec.get("Delivery"), i + 1);
             loadOrder((JSONObject) rec.get("Order"), i + 1);
-
         }
     }
 
@@ -111,9 +110,7 @@ public class jsonReader {
 
 
     public static void loadDepartment(JSONObject department, int id) throws SQLException {
-
-
-            String sql = "INSERT INTO Departments(DepartmentTaskID,Name) VALUES(?, ?)";
+            String sql = "INSERT INTO Departments(ID,Name) VALUES(?, ?)";
             PreparedStatement ppst = con.prepareStatement(sql);
             ppst.setInt(1, id);
             ppst.setString(2, (String) department.get("Name"));

@@ -6,7 +6,6 @@ import com.jfoenix.controls.JFXTreeTableColumn;
 import com.jfoenix.controls.JFXTreeTableView;
 import com.jfoenix.controls.RecursiveTreeItem;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
-import com.microsoft.sqlserver.jdbc.SQLServerException;
 import java.awt.FileDialog;
 import java.io.File;
 import java.io.IOException;
@@ -28,13 +27,11 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.cell.TreeItemPropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import javax.swing.JFrame;
-import orderManager.be.DepartmentTask;
 import orderManager.be.IDepartment;
 import orderManager.be.Worker;
 import orderManager.bll.mainLogicClass;
@@ -52,36 +49,23 @@ public class mainWindowController implements Initializable {
 
 
   private ScheduledExecutorService executor;
-  private DepartmentTask actualDepartmentTask;
   private mainLogicClass mainLogic;
-  private List<Worker> workersList;
   private ObservableList<Worker> observableWorkers;
   private IDepartment chosenDepartment;
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
-    chosenDepartment = Model.getInstance().getDepartment();
-    departmentBtn.setText(chosenDepartment.getName());
     try {
+      chosenDepartment = Model.getInstance().getDepartment();
+      departmentBtn.setText(chosenDepartment.getName());
       mainLogic = new mainLogicClass();
-    } catch (SQLServerException | IOException e) {
-      e.printStackTrace();
-    }
-    displayTime();
-    try {
-      workersList = mainLogic.getWorkers();
-      observableWorkers = FXCollections.observableArrayList(workersList);
+      observableWorkers = (FXCollections.observableArrayList((List<Worker>)(List)mainLogic.getWorkers()));
+      displayTime();
       prepareWorkersTable();
-    } catch (SQLException e) {
-      e.printStackTrace();
-    }
-
-    try {
       calculateEstimatedProgress();
-    } catch (ParseException e) {
+    } catch (Exception e) {
       e.printStackTrace();
     }
-
   }
 
   public void displayTime() {
@@ -167,7 +151,7 @@ public class mainWindowController implements Initializable {
     if (f.length > 0) {
       String fullPath = f[0].toString();
       int index = f[0].toString().lastIndexOf('\\');
-      String finalPath = fullPath.substring(index + 1, fullPath.length());
+      String finalPath = fullPath.substring(index + 1);
       mainLogic.readFile(finalPath);
 
     }
