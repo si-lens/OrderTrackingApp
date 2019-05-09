@@ -1,107 +1,88 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXProgressBar?>
 <?import com.jfoenix.controls.JFXTabPane?>
-<?import javafx.geometry.Insets?>
+<?import com.jfoenix.controls.JFXTreeTableView?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Tab?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TreeTableView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="453.0" prefWidth="631.0" stylesheets="@../css/orderManager.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="orderManager.gui.controller.mainWindowController">
+<AnchorPane fx:id="mainPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="453.0" prefWidth="631.0" stylesheets="@../css/orderManager.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="orderManager.gui.controller.mainWindowController">
    <children>
-      <Label fx:id="dateLabel" alignment="CENTER" layoutX="433.0" layoutY="36.0" prefHeight="13.0" prefWidth="140.0" text="Time " textAlignment="CENTER">
-         <font>
-            <Font size="13.0" />
-         </font>
-      </Label>
-      <JFXTabPane layoutY="-1.0" prefHeight="37.0" prefWidth="631.0">
-         <tabs>
-            <Tab text="Halvfab">
-              <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-              </content>
-            </Tab>
-            <Tab style="-fx-backgroud-color: RED;" text="Bælg">
-              <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-              </content>
-            </Tab>
-            <Tab text="Mont">
-              <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-              </content>
-            </Tab>
-         </tabs>
-      </JFXTabPane>
-      <JFXProgressBar fx:id="estimatedProgressBar" layoutX="31.0" layoutY="406.0" prefHeight="25.0" prefWidth="573.0" progress="0.76" />
-      <Label layoutX="33.0" layoutY="386.0" prefHeight="17.0" prefWidth="102.0" text="Start Date - 23/04" />
-      <Label alignment="BASELINE_RIGHT" layoutX="503.0" layoutY="386.0" prefHeight="17.0" prefWidth="100.0" text="End date - 29/05" />
-      <Label layoutX="258.0" layoutY="386.0" text="Estimated progress" />
-      <Text layoutX="385.0" layoutY="102.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Active employees" />
-      <Line endX="421.0" layoutX="212.0" layoutY="367.0" startX="-210.0" />
+      <Line endX="421.0" layoutX="212.0" layoutY="367.0" startX="-210.0" AnchorPane.bottomAnchor="85.5" AnchorPane.leftAnchor="1.5" AnchorPane.rightAnchor="-2.5" />
       <StackPane layoutY="32.0" prefHeight="496.0" prefWidth="28.0" />
-      <Label alignment="BASELINE_RIGHT" layoutX="28.0" layoutY="110.0" prefHeight="25.0" prefWidth="100.0" text="Customer:">
-         <font>
-            <Font size="15.0" />
-         </font>
-         <opaqueInsets>
-            <Insets />
-         </opaqueInsets>
-      </Label>
-      <Label alignment="BASELINE_RIGHT" layoutX="28.0" layoutY="135.0" prefHeight="25.0" prefWidth="100.0" text="Order number:">
-         <font>
-            <Font size="15.0" />
-         </font>
-      </Label>
-      <Label alignment="BASELINE_RIGHT" layoutX="28.0" layoutY="160.0" prefHeight="25.0" prefWidth="100.0" text="Delivery date:">
-         <font>
-            <Font size="15.0" />
-         </font>
-      </Label>
-      <Text fx:id="estimatedProgressLabel" layoutX="301.0" layoutY="424.0" strokeType="OUTSIDE" strokeWidth="0.0" text="77%">
+      <Text fx:id="estimatedProgressLabel" layoutX="301.0" layoutY="424.0" strokeType="OUTSIDE" strokeWidth="0.0" text="77%" AnchorPane.bottomAnchor="25.2353515625" AnchorPane.leftAnchor="300.447265625" AnchorPane.rightAnchor="301.552734375">
          <font>
             <Font size="15.0" />
          </font>
       </Text>
-      <Label fx:id="customerName" alignment="BASELINE_LEFT" layoutX="135.0" layoutY="110.0" prefHeight="25.0" prefWidth="177.0" text="Namleb A/S">
-         <font>
-            <Font size="15.0" />
-         </font>
-         <opaqueInsets>
-            <Insets />
-         </opaqueInsets>
-      </Label>
-      <Label fx:id="orderNumber" alignment="BASELINE_LEFT" layoutX="135.0" layoutY="135.0" prefHeight="25.0" prefWidth="177.0" text="01505001">
-         <font>
-            <Font size="15.0" />
-         </font>
-         <opaqueInsets>
-            <Insets />
-         </opaqueInsets>
-      </Label>
-      <Label fx:id="deliveryDate" alignment="BASELINE_LEFT" layoutX="135.0" layoutY="160.0" prefHeight="25.0" prefWidth="119.0" text="15/07/2019">
-         <font>
-            <Font size="15.0" />
-         </font>
-         <opaqueInsets>
-            <Insets />
-         </opaqueInsets>
-      </Label>
-      <TableView fx:id="workersTable" layoutX="325.0" layoutY="110.0" prefHeight="245.0" prefWidth="286.0">
-        <columns>
-            <TableColumn fx:id="idCol" prefWidth="26.0" text="ID" />
-            <TableColumn fx:id="nameCol" prefWidth="135.0" text="Name" />
-          <TableColumn fx:id="initialsCol" minWidth="8.0" prefWidth="60.0" text="Initial" />
-            <TableColumn fx:id="salaryCol" prefWidth="67.0" text="Salary" />
-        </columns>
-      </TableView>
-      <Button layoutX="527.0" layoutY="55.0" mnemonicParsing="false" onAction="#clickToPickFile" prefHeight="25.0" prefWidth="84.0" text="load JSON" />
+      <JFXTabPane layoutX="43.0" layoutY="81.0" prefHeight="239.0" prefWidth="546.0" AnchorPane.bottomAnchor="133.0" AnchorPane.leftAnchor="43.0" AnchorPane.rightAnchor="42.0" AnchorPane.topAnchor="81.0">
+         <tabs>
+            <Tab text="Orders">
+               <content>
+               </content>
+               <content>
+                  <JFXTreeTableView fx:id="ordersTab">
+                     <columnResizePolicy>
+                        <TreeTableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                     </columnResizePolicy></JFXTreeTableView>
+               </content>
+            </Tab>
+            <Tab text="ActiveWorkers">
+               <content>
+                  <JFXTreeTableView fx:id="workersTab">
+                     <columnResizePolicy>
+                        <TreeTableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                     </columnResizePolicy></JFXTreeTableView>
+               </content>
+            </Tab>
+         </tabs>
+      </JFXTabPane>
+      <StackPane alignment="BOTTOM_LEFT" layoutX="31.0" layoutY="368.0" prefHeight="38.0" prefWidth="177.0" AnchorPane.bottomAnchor="47.0" AnchorPane.leftAnchor="31.0">
+         <children>
+            <Label prefHeight="17.0" prefWidth="102.0" text="Start Date - 23/04" />
+         </children>
+      </StackPane>
+      <StackPane alignment="BOTTOM_RIGHT" layoutX="426.0" layoutY="368.0" prefHeight="38.0" prefWidth="177.0" AnchorPane.bottomAnchor="47.0" AnchorPane.rightAnchor="28.0">
+         <children>
+            <Label alignment="BASELINE_RIGHT" prefHeight="17.0" prefWidth="100.0" text="End date - 03/06" />
+         </children>
+      </StackPane>
+      <StackPane layoutX="205.0" layoutY="368.0" prefHeight="38.0" prefWidth="219.0" AnchorPane.bottomAnchor="47.0" AnchorPane.leftAnchor="205.0" AnchorPane.rightAnchor="207.0">
+         <children>
+            <Label text="Estimated progress" StackPane.alignment="BOTTOM_CENTER" />
+         </children>
+      </StackPane>
+      <JFXProgressBar fx:id="estimatedProgressBar" layoutX="31.0" layoutY="405.0" prefHeight="25.0" prefWidth="573.0" progress="0.76" AnchorPane.bottomAnchor="23.0" AnchorPane.leftAnchor="31.0" AnchorPane.rightAnchor="27.0" />
+      <StackPane layoutX="227.0" layoutY="14.0" prefHeight="69.0" prefWidth="202.0" AnchorPane.leftAnchor="227.0" AnchorPane.rightAnchor="202.0" AnchorPane.topAnchor="14.0">
+         <children>
+            <JFXButton fx:id="departmentBtn" alignment="CENTER" buttonType="RAISED" contentDisplay="CENTER" depthTest="DISABLE" disable="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" opacity="0.79" prefHeight="37.0" prefWidth="200.0" ripplerFill="#67a0ff" style="-fx-background-color: #67A0FF; -fx-padding: 0 0 0 0;" text="Button" textAlignment="CENTER">
+               <font>
+                  <Font size="26.0" />
+               </font>
+            </JFXButton>
+         </children>
+      </StackPane>
+      <StackPane alignment="TOP_LEFT" layoutX="43.0" layoutY="6.0" prefHeight="76.0" prefWidth="152.0" AnchorPane.topAnchor="6.0">
+         <children>
+            <Button mnemonicParsing="false" onAction="#clickToPickFile" prefHeight="31.0" prefWidth="102.0" text="Load JSON" />
+         </children>
+      </StackPane>
+      <StackPane alignment="TOP_RIGHT" layoutX="437.0" layoutY="6.0" prefHeight="76.0" prefWidth="152.0" AnchorPane.rightAnchor="42.0" AnchorPane.topAnchor="6.0">
+         <children>
+            <Label fx:id="dateLabel" alignment="CENTER" prefHeight="13.0" prefWidth="140.0" text="Time " textAlignment="CENTER">
+               <font>
+                  <Font size="13.0" />
+               </font>
+            </Label>
+         </children>
+      </StackPane>
    </children>
 </AnchorPane>

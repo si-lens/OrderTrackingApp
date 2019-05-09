@@ -25,7 +25,7 @@ public class loginWindowController implements Initializable {
     public ComboBox departmentSelection;
     private mainLogicClass mainLogic;
     private List<IDepartment> departmentList;
-
+    private String mainWindowPath= "gui/view/mainWindow.fxml";
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         try {
@@ -47,9 +47,13 @@ public class loginWindowController implements Initializable {
 
     public void logIn(ActionEvent actionEvent) throws IOException {
         IDepartment department = (IDepartment) departmentSelection.getSelectionModel().getSelectedItem();
-        Model.getInstance().setDepartment(department);
-        Stage stage = (Stage) loginButton.getScene().getWindow();
-        stage.close();
-        new windowOpener("gui/view/mainWindow.fxml");
+        if(department!=null) {
+            Model.getInstance().setDepartment(department);
+            Stage stage = (Stage) loginButton.getScene().getWindow();
+            stage.close();
+            int height = 495;
+            int width = 651;
+            new windowOpener(mainWindowPath, width, height, true);
+        }
     }
 }
