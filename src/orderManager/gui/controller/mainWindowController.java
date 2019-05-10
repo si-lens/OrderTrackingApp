@@ -14,9 +14,7 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.Calendar;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -37,7 +35,7 @@ import orderManager.be.Worker;
 import orderManager.bll.mainLogicClass;
 import orderManager.gui.model.Model;
 
-public class mainWindowController implements Initializable {
+public class mainWindowController implements Initializable, Observer {
 
   public AnchorPane mainPane;
   public Label dateLabel;
@@ -55,17 +53,39 @@ public class mainWindowController implements Initializable {
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
-    try {
-      chosenDepartment = Model.getInstance().getDepartment();
-      departmentBtn.setText(chosenDepartment.getName());
-      mainLogic = new mainLogicClass();
-      observableWorkers = (FXCollections.observableArrayList((List<Worker>)(List)mainLogic.getWorkers()));
-      displayTime();
+  try {
+    chosenDepartment = Model.getInstance().getDepartment();
+    departmentBtn.setText(chosenDepartment.getName());
+    mainLogic = new mainLogicClass();
+      /*
+      mainLogic.addObserver(this);
+      workersList = mainLogic.getWorkers();
+      observableWorkers = FXCollections.observableArrayList(workersList);
       prepareWorkersTable();
-      calculateEstimatedProgress();
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
+       */
+  } catch (IOException | SQLException e) {
+    e.printStackTrace();
+  }
+    displayTime();
+    refresh();
+}
+
+  private void refresh() {
+    Runnable runnable = () -> {
+      Platform.runLater(() -> {
+        try {
+          // workersList = mainLogic.getWorkers();
+          // observableWorkers = FXCollections.observableArrayList(workersList);
+          observableWorkers = (FXCollections.observableArrayList((List<Worker>) (List) mainLogic.getWorkers()));
+          prepareWorkersTable();
+          calculateEstimatedProgress();
+        } catch (ParseException e) {
+          e.printStackTrace();
+        }
+      });
+    };
+    ScheduledExecutorService ses = Executors.newScheduledThreadPool(2);
+    ses.scheduleWithFixedDelay(runnable, 0, 5, TimeUnit.SECONDS);
   }
 
   public void displayTime() {
@@ -79,24 +99,25 @@ public class mainWindowController implements Initializable {
   }
 
   public void prepareWorkersTable() {
-    JFXTreeTableColumn<Worker, String> initialsCol = new JFXTreeTableColumn<>("Initials");
-    initialsCol.setCellValueFactory(new TreeItemPropertyValueFactory<>("initials"));
-    initialsCol.setMinWidth(145);
+    if (workersTab.getColumns().isEmpty()) {
+      JFXTreeTableColumn<Worker, String> initialsCol = new JFXTreeTableColumn<>("Initials");
+      initialsCol.setCellValueFactory(new TreeItemPropertyValueFactory<>("initials"));
+      initialsCol.setMinWidth(145);
 
-    JFXTreeTableColumn<Worker, String> nameCol = new JFXTreeTableColumn<>("Name");
-    nameCol.setCellValueFactory(new TreeItemPropertyValueFactory<>("name"));
-    nameCol.setMinWidth(231);
+      JFXTreeTableColumn<Worker, String> nameCol = new JFXTreeTableColumn<>("Name");
+      nameCol.setCellValueFactory(new TreeItemPropertyValueFactory<>("name"));
+      nameCol.setMinWidth(231);
 
-    JFXTreeTableColumn<Worker, String> salaryCol = new JFXTreeTableColumn<>("SalaryNumber");
-    salaryCol.setCellValueFactory(new TreeItemPropertyValueFactory<>("salary"));
-    salaryCol.setMinWidth(115);
+      JFXTreeTableColumn<Worker, String> salaryCol = new JFXTreeTableColumn<>("SalaryNumber");
+      salaryCol.setCellValueFactory(new TreeItemPropertyValueFactory<>("salary"));
+      salaryCol.setMinWidth(115);
 
-    JFXTreeTableColumn<Worker, String> idCol = new JFXTreeTableColumn<>("ID");
-    idCol.setCellValueFactory(new TreeItemPropertyValueFactory<>("id"));
-    idCol.setMinWidth(36);
+      JFXTreeTableColumn<Worker, String> idCol = new JFXTreeTableColumn<>("ID");
+      idCol.setCellValueFactory(new TreeItemPropertyValueFactory<>("id"));
+      idCol.setMinWidth(36);
 
-    workersTab.getColumns().addAll(idCol, nameCol, initialsCol, salaryCol);
-
+      workersTab.getColumns().addAll(idCol, nameCol, initialsCol, salaryCol);
+    }
     TreeItem<Worker> root = new RecursiveTreeItem<>(observableWorkers,
         RecursiveTreeObject::getChildren);
     workersTab.setRoot(root);
@@ -146,6 +167,7 @@ public class mainWindowController implements Initializable {
       throws IOException, SQLException // While creating/editing a song we are using this button to pick path of the song.
   {
     FileDialog fd = new FileDialog(new JFrame());
+    fd.setName("*.json");
     fd.setVisible(true);
     File[] f = fd.getFiles();
     if (f.length > 0) {
@@ -157,4 +179,19 @@ public class mainWindowController implements Initializable {
     }
   }
 
+  @Override
+  public void update(Observable o, Object arg) {
+    Platform.runLater(new Runnable() {
+      @Override
+      public void run() {
+        try {
+          observableWorkers = (FXCollections.observableArrayList((List<Worker>) (List) mainLogic.getWorkers()));
+          prepareWorkersTable();
+          calculateEstimatedProgress();
+        } catch (ParseException e) {
+          e.printStackTrace();
+        }
+      }
+    });
+  }
 }
