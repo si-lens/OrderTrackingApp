@@ -50,13 +50,13 @@ public class productionOrdersDAO implements IDAODetails {
     return departments;
   }
 
-  public List<IProductionOrder> getProdutcionOrders(IDepartment department) throws SQLException {
+  public List<IProductionOrder> getDepartmentContent(IDepartment department) throws SQLException {
     con = cp.checkOut();
     List<IProductionOrder> pOrders = new ArrayList<>();
     String sql = "SELECT ProductionOrders.ID, CustomerID, DeliveryID, OrderID FROM ProductionOrders,DepartmentTasks,Departments WHERE ProductionOrders.ID = DepartmentTasks.ProductionOrderID AND Departments.ID = DepartmentTasks.DepartmentID AND Name = ?";
     PreparedStatement ppst = con.prepareStatement(sql);
     ppst.setString(1, department.getName());
-    ResultSet rs = ppst.executeQuery(sql);
+    ResultSet rs = ppst.executeQuery();
     while (rs.next()) {
       int id = rs.getInt("ID");
       int customerID = rs.getInt("CustomerID");
@@ -70,12 +70,16 @@ public class productionOrdersDAO implements IDAODetails {
     return pOrders;
   }
 
+
+
+
+
   public ICustomer getCustomer(int customerID) throws SQLException {
     con = cp.checkOut();
     String sql = "SELECT * FROM Customers WHERE ID = ?";
     PreparedStatement ppst = con.prepareStatement(sql);
     ppst.setInt(1, customerID);
-    ResultSet rs = ppst.executeQuery(sql);
+    ResultSet rs = ppst.executeQuery();
     rs.next();
     int id = rs.getInt("ID");
     String name = rs.getString("Name");
@@ -88,10 +92,10 @@ public class productionOrdersDAO implements IDAODetails {
     String sql = "SELECT * FROM Deliveries WHERE ID = ?";
     PreparedStatement ppst = con.prepareStatement(sql);
     ppst.setInt(1, deliveryID);
-    ResultSet rs = ppst.executeQuery(sql);
+    ResultSet rs = ppst.executeQuery();
     rs.next();
     int id = rs.getInt("ID");
-    Date date = rs.getDate("DeliveryDate");
+    Date date = rs.getDate("DeliveryTime");
     cp.checkIn(con);
     return new Delivery(id, date);
   }
@@ -101,7 +105,7 @@ public class productionOrdersDAO implements IDAODetails {
     String sql = "SELECT * FROM Orders WHERE ID = ?";
     PreparedStatement ppst = con.prepareStatement(sql);
     ppst.setInt(1, orderID);
-    ResultSet rs = ppst.executeQuery(sql);
+    ResultSet rs = ppst.executeQuery();
     rs.next();
     int id = rs.getInt("ID");
     String orderNumber = rs.getString("OrderNumber");
@@ -114,7 +118,7 @@ public class productionOrdersDAO implements IDAODetails {
     String sql = "SELECT * FROM DepartmentTasks WHERE ProductionOrderID = ?";
     PreparedStatement ppst = con.prepareStatement(sql);
     ppst.setInt(1, id);
-    ResultSet rs = ppst.executeQuery(sql);
+    ResultSet rs = ppst.executeQuery();
     while (rs.next()) {
       Date endDate = rs.getDate("EndDate");
       Date startDate = rs.getDate("StartDate");

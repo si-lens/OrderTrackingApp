@@ -4,5 +4,5 @@ package orderManager.be;
 public interface IOrder {
 
   //Defines a unique order number.
-  String getOrderNumber();
+String getOrderNumber();
 }

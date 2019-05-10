@@ -6,21 +6,22 @@ import java.util.List;
 //This interface acts as an adapter for BelMaker models such as Order and Customer.
 public interface IProductionOrder {
 
-  //Defines relevant data of the order/
-  IOrder getOrder();
 
-  //Defines relevant data of the delivery.
-  IDelivery getDelivery();
+    //Defines relevant data of the order/
+    IOrder getOrder();
 
-  //Defines data of the customer.
-  ICustomer getCustomer();
+    //Defines relevant data of the delivery.
+    IDelivery getDelivery();
 
-  //Defines tasks of departments.
-  List<IDepartmentTask> getDepartmentTasks();
+    //Defines data of the customer.
+    ICustomer getCustomer();
 
-  //Adds a task to this production order.
-  void addDepartmentTask(IDepartmentTask Task);
+    //Defines tasks of departments.
+    List<IDepartmentTask> getDepartmentTasks();
 
-  //Removes the task to this production order.
-  void removeDepartmentTask(IDepartmentTask task);
+    //Adds a task to this production order.
+    void addDepartmentTask(IDepartmentTask Task);
+
+    //Removes the task to this production order.
+    void removeDepartmentTask(IDepartmentTask task);
 }

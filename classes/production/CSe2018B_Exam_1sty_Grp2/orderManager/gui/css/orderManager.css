@@ -1,3 +1,22 @@
 .jfx-progress-bar .bar {
-  -fx-background-color: #684aff;
+  -fx-background-color: #67A0FF;
 }
+.jfx-tab-pane .tab-header-area .tab-selected-line{
+  -fx-background-color: White;
+}
+
+.jfx-tab-pane .tab-header-background{
+  -fx-background-color: #67A0FF;
+}
+
+.jfx-button {
+  -fx-text-fill: black;
+  -fx-background-color: #67a0ff;
+}
+
+
+
+.jfx-tab-pane .tab-{
+  -fx-font-color: RED;
+}
+

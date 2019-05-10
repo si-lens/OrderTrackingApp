@@ -1,5 +1,6 @@
 package orderManager.be;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ProductionOrder implements IProductionOrder {
@@ -15,6 +16,7 @@ public class ProductionOrder implements IProductionOrder {
     this.delivery = delivery;
     this.customer = customer;
     this.order = order;
+    departmentTaskList = new ArrayList<>();
   }
 
   @Override

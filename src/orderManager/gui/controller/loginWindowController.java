@@ -45,7 +45,7 @@ public class loginWindowController implements Initializable {
     }
 
 
-    public void logIn(ActionEvent actionEvent) throws IOException {
+    public void logIn(ActionEvent actionEvent) throws IOException, SQLException {
         IDepartment department = (IDepartment) departmentSelection.getSelectionModel().getSelectedItem();
         if(department!=null) {
             Model.getInstance().setDepartment(department);
