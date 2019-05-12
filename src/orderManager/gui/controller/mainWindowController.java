@@ -30,8 +30,8 @@ import javafx.scene.control.cell.TreeItemPropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import javax.swing.JFrame;
-import orderManager.be.IDepartment;
-import orderManager.be.Worker;
+
+import orderManager.be.*;
 import orderManager.bll.mainLogicClass;
 import orderManager.gui.model.Model;
 
@@ -49,14 +49,17 @@ public class mainWindowController implements Initializable, Observer {
   private ScheduledExecutorService executor;
   private mainLogicClass mainLogic;
   private ObservableList<Worker> observableWorkers;
+  private ObservableList<OrderDetails> observableOrders;
   private IDepartment chosenDepartment;
+  private Model model;
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
   try {
-    chosenDepartment = Model.getInstance().getDepartment();
-    departmentBtn.setText(chosenDepartment.getName());
+    model = Model.getInstance();
     mainLogic = new mainLogicClass();
+    chosenDepartment = model.getDepartment();
+    departmentBtn.setText(chosenDepartment.getName());
       /*
       mainLogic.addObserver(this);
       workersList = mainLogic.getWorkers();
@@ -77,9 +80,11 @@ public class mainWindowController implements Initializable, Observer {
           // workersList = mainLogic.getWorkers();
           // observableWorkers = FXCollections.observableArrayList(workersList);
           observableWorkers = (FXCollections.observableArrayList((List<Worker>) (List) mainLogic.getWorkers()));
+          observableOrders = model.obsOrdDet();
           prepareWorkersTable();
+          prepareOrdersTable();
           calculateEstimatedProgress();
-        } catch (ParseException e) {
+        } catch (ParseException | SQLException e) {
           e.printStackTrace();
         }
       });
@@ -125,6 +130,32 @@ public class mainWindowController implements Initializable, Observer {
 
   }
 
+  public void prepareOrdersTable() {
+    if (ordersTab.getColumns().isEmpty()) {
+      JFXTreeTableColumn<OrderDetails, String> orderNumber = new JFXTreeTableColumn<>("Order Number");
+      orderNumber.setCellValueFactory(new TreeItemPropertyValueFactory<>("orderNumber"));
+      orderNumber.setMinWidth(145);
+
+      JFXTreeTableColumn<OrderDetails, Date> startDate = new JFXTreeTableColumn<>("Start Date");
+      startDate.setCellValueFactory(new TreeItemPropertyValueFactory<>("startDate"));
+      startDate.setMinWidth(231);
+
+      JFXTreeTableColumn<OrderDetails, Date> endDate = new JFXTreeTableColumn<>("End Date");
+      endDate.setCellValueFactory(new TreeItemPropertyValueFactory<>("endDate"));
+      endDate.setMinWidth(115);
+
+      JFXTreeTableColumn<OrderDetails, Boolean> orderStatus = new JFXTreeTableColumn<>("Order Status");
+      orderStatus.setCellValueFactory(new TreeItemPropertyValueFactory<>("orderStatus"));
+      orderStatus.setMinWidth(36);
+
+      ordersTab.getColumns().addAll(orderNumber, startDate, endDate, orderStatus);
+    }
+    TreeItem<OrderDetails> root = new RecursiveTreeItem<>(observableOrders, RecursiveTreeObject::getChildren);
+    ordersTab.setRoot(root);
+    ordersTab.setShowRoot(false);
+
+  }
+
   public void calculateEstimatedProgress() throws ParseException {
 
     //  its for later use when we will have start and end date
@@ -167,7 +198,7 @@ public class mainWindowController implements Initializable, Observer {
       throws IOException, SQLException // While creating/editing a song we are using this button to pick path of the song.
   {
     FileDialog fd = new FileDialog(new JFrame());
-    fd.setName("*.json");
+    fd.setFile("*.json");
     fd.setVisible(true);
     File[] f = fd.getFiles();
     if (f.length > 0) {

@@ -10,18 +10,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import orderManager.be.Customer;
-import orderManager.be.Delivery;
-import orderManager.be.Department;
-import orderManager.be.DepartmentTask;
-import orderManager.be.ICustomer;
-import orderManager.be.IDelivery;
-import orderManager.be.IDepartment;
-import orderManager.be.IDepartmentTask;
-import orderManager.be.IOrder;
-import orderManager.be.IProductionOrder;
-import orderManager.be.Order;
-import orderManager.be.ProductionOrder;
+
+import orderManager.be.*;
 import orderManager.dal.Connection.ConnectionPool;
 import orderManager.dal.Connection.ConnectionProvider;
 
@@ -56,7 +46,7 @@ public class productionOrdersDAO implements IDAODetails {
     String sql = "SELECT ProductionOrders.ID, CustomerID, DeliveryID, OrderID FROM ProductionOrders,DepartmentTasks,Departments WHERE ProductionOrders.ID = DepartmentTasks.ProductionOrderID AND Departments.ID = DepartmentTasks.DepartmentID AND Name = ?";
     PreparedStatement ppst = con.prepareStatement(sql);
     ppst.setString(1, department.getName());
-    ResultSet rs = ppst.executeQuery(sql);
+    ResultSet rs = ppst.executeQuery();
     while (rs.next()) {
       int id = rs.getInt("ID");
       int customerID = rs.getInt("CustomerID");
@@ -75,7 +65,7 @@ public class productionOrdersDAO implements IDAODetails {
     String sql = "SELECT * FROM Customers WHERE ID = ?";
     PreparedStatement ppst = con.prepareStatement(sql);
     ppst.setInt(1, customerID);
-    ResultSet rs = ppst.executeQuery(sql);
+    ResultSet rs = ppst.executeQuery();
     rs.next();
     int id = rs.getInt("ID");
     String name = rs.getString("Name");
@@ -88,10 +78,10 @@ public class productionOrdersDAO implements IDAODetails {
     String sql = "SELECT * FROM Deliveries WHERE ID = ?";
     PreparedStatement ppst = con.prepareStatement(sql);
     ppst.setInt(1, deliveryID);
-    ResultSet rs = ppst.executeQuery(sql);
+    ResultSet rs = ppst.executeQuery();
     rs.next();
     int id = rs.getInt("ID");
-    Date date = rs.getDate("DeliveryDate");
+    Date date = rs.getDate("DeliveryTime");
     cp.checkIn(con);
     return new Delivery(id, date);
   }
@@ -101,7 +91,7 @@ public class productionOrdersDAO implements IDAODetails {
     String sql = "SELECT * FROM Orders WHERE ID = ?";
     PreparedStatement ppst = con.prepareStatement(sql);
     ppst.setInt(1, orderID);
-    ResultSet rs = ppst.executeQuery(sql);
+    ResultSet rs = ppst.executeQuery();
     rs.next();
     int id = rs.getInt("ID");
     String orderNumber = rs.getString("OrderNumber");
@@ -114,7 +104,7 @@ public class productionOrdersDAO implements IDAODetails {
     String sql = "SELECT * FROM DepartmentTasks WHERE ProductionOrderID = ?";
     PreparedStatement ppst = con.prepareStatement(sql);
     ppst.setInt(1, id);
-    ResultSet rs = ppst.executeQuery(sql);
+    ResultSet rs = ppst.executeQuery();
     while (rs.next()) {
       Date endDate = rs.getDate("EndDate");
       Date startDate = rs.getDate("StartDate");
@@ -125,7 +115,26 @@ public class productionOrdersDAO implements IDAODetails {
       po.addDepartmentTask(department);
     }
     cp.checkIn(con);
-    return po;
+    return dt;
+  }
+
+  public List<OrderDetails> getDepartmentTasksByDepartment(IDepartment department) throws SQLException {
+    con = cp.checkOut();
+    List<OrderDetails> od = new ArrayList<>();
+    String sql = "SELECT OrderNumber, StartDate, EndDate, FinishedOrder FROM DepartmentTasks join Departments on DepartmentTasks.DepartmentID=Departments.ID join ProductionOrders on DepartmentTasks.ProductionOrderID=ProductionOrders.ID join Orders on ProductionOrderID=Orders.ID WHERE Departments.Name = ?";
+    PreparedStatement ppst = con.prepareStatement(sql);
+    ppst.setString(1, department.getName());
+    ResultSet rs = ppst.executeQuery();
+    while (rs.next()) {
+      String orderNumber = rs.getString("OrderNumber");
+      Date startDate = rs.getDate("StartDate");
+      Date endDate = rs.getDate("EndDate");
+      boolean finishedOrder = rs.getBoolean("FinishedOrder");
+      OrderDetails ordDet = new OrderDetails(orderNumber, startDate, endDate, finishedOrder);
+      od.add(ordDet);
+    }
+    cp.checkIn(con);
+    return od;
   }
 
   public IDepartment getDepartment(int departmentID) throws SQLException {
