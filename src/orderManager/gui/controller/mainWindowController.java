@@ -6,7 +6,6 @@ import com.jfoenix.controls.JFXTreeTableColumn;
 import com.jfoenix.controls.JFXTreeTableView;
 import com.jfoenix.controls.RecursiveTreeItem;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
-
 import java.awt.FileDialog;
 import java.io.File;
 import java.io.IOException;
@@ -19,7 +18,6 @@ import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -31,13 +29,11 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.cell.TreeItemPropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
-
 import javax.swing.JFrame;
 
 import orderManager.be.*;
 import orderManager.bll.mainLogicClass;
 import orderManager.gui.model.Model;
-
 
 public class mainWindowController implements Initializable, Observer {
 
@@ -53,17 +49,17 @@ public class mainWindowController implements Initializable, Observer {
     private ScheduledExecutorService executor;
     private mainLogicClass mainLogic;
     private ObservableList<Worker> observableWorkers;
-    private ObservableList<IProductionOrder> observableProductionOrders;
+    private ObservableList<OrderDetails> observableOrders;
     private IDepartment chosenDepartment;
     private Model model;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         try {
-            chosenDepartment = Model.getInstance().getDepartment();
+            model = Model.getInstance();
+            mainLogic = new mainLogicClass();
+            chosenDepartment = model.getDepartment();
             departmentBtn.setText(chosenDepartment.getName());
-            model = new Model();
-
       /*
       mainLogic.addObserver(this);
       workersList = mainLogic.getWorkers();
@@ -83,12 +79,12 @@ public class mainWindowController implements Initializable, Observer {
                 try {
                     // workersList = mainLogic.getWorkers();
                     // observableWorkers = FXCollections.observableArrayList(workersList);
-                    observableWorkers = (FXCollections.observableArrayList((List<Worker>) (List) model.getWorkers()));
-                    //observableProductionOrders = FXCollections.observableArrayList(model.getDepartmentContent());
+                    observableWorkers = (FXCollections.observableArrayList((List<Worker>) (List) mainLogic.getWorkers()));
+                    observableOrders = model.obsOrdDet();
                     prepareWorkersTable();
                     prepareOrdersTable();
                     calculateEstimatedProgress();
-                } catch (ParseException e) {
+                } catch (ParseException | SQLException e) {
                     e.printStackTrace();
                 }
             });
@@ -109,54 +105,63 @@ public class mainWindowController implements Initializable, Observer {
 
     public void prepareWorkersTable() {
         if (workersTab.getColumns().isEmpty()) {
-            JFXTreeTableColumn<Worker, String> idCol = new JFXTreeTableColumn<>("ID");
-            setColumnDetails("id", idCol, 36);
+            JFXTreeTableColumn<Worker, String> initialsCol = new JFXTreeTableColumn<>("Initials");
+            prepareColumn(initialsCol,"initials",145);
 
             JFXTreeTableColumn<Worker, String> nameCol = new JFXTreeTableColumn<>("Name");
-            setColumnDetails("name", nameCol, 231);
-
-            JFXTreeTableColumn<Worker, String> initialsCol = new JFXTreeTableColumn<>("Initials");
-            setColumnDetails("initials", initialsCol, 145);
+            prepareColumn(nameCol,"name",231);
 
             JFXTreeTableColumn<Worker, String> salaryCol = new JFXTreeTableColumn<>("SalaryNumber");
-            setColumnDetails("salary", salaryCol, 115);
+            prepareColumn(salaryCol,"salary",115);
+
+            JFXTreeTableColumn<Worker, String> idCol = new JFXTreeTableColumn<>("ID");
+            prepareColumn(idCol,"id",36);
 
             workersTab.getColumns().addAll(idCol, nameCol, initialsCol, salaryCol);
-            loadWorkersTableContent();
         }
-
+        setWorkersTable();
 
     }
 
-    public void setColumnDetails(String workerAttribute, JFXTreeTableColumn<Worker, String> colName, int minWidth) {
-        colName.setCellValueFactory(new TreeItemPropertyValueFactory<>(workerAttribute));
-        colName.setMinWidth(minWidth);
-        colName.setStyle("-fx-alignment: CENTER");
-    }
-
-    public void loadWorkersTableContent() {
-        TreeItem<Worker> root = new RecursiveTreeItem<>(observableWorkers,RecursiveTreeObject::getChildren);
+    private void setWorkersTable() {
+        TreeItem<Worker> root = new RecursiveTreeItem<>(observableWorkers,
+                RecursiveTreeObject::getChildren);
         workersTab.setRoot(root);
         workersTab.setShowRoot(false);
     }
 
+
     public void prepareOrdersTable() {
         if (ordersTab.getColumns().isEmpty()) {
+            JFXTreeTableColumn<OrderDetails, String> orderNumber = new JFXTreeTableColumn<>("Order Number");
+            prepareColumn(orderNumber,"orderNumber",145);
 
-            JFXTreeTableColumn<IProductionOrder, String> orderNumberCol = new JFXTreeTableColumn<>("Order number");
+            JFXTreeTableColumn<OrderDetails, Date> startDate = new JFXTreeTableColumn<>("Start Date");
+            prepareColumn(startDate,"startDate",145);
 
-            JFXTreeTableColumn<IProductionOrder, String> deliveryTimeCol = new JFXTreeTableColumn<>("Delivery date");
+            JFXTreeTableColumn<OrderDetails, Date> endDate = new JFXTreeTableColumn<>("End Date");
+            prepareColumn(endDate,"endDate",145);
 
-            JFXTreeTableColumn<IProductionOrder, String> customerName = new JFXTreeTableColumn<>("Customer");
+            JFXTreeTableColumn<OrderDetails, Boolean> orderStatus = new JFXTreeTableColumn<>("Order Status");
+            prepareColumn(orderStatus,"orderState",92);
 
-            ordersTab.getColumns().addAll(orderNumberCol,deliveryTimeCol,customerName);
-
-
+            ordersTab.getColumns().addAll(orderNumber, startDate, endDate, orderStatus);
         }
 
-
+        setOrdersTable();
+    }
+    private void setOrdersTable() {
+        TreeItem<OrderDetails> root = new RecursiveTreeItem<>(observableOrders, RecursiveTreeObject::getChildren);
+        ordersTab.setRoot(root);
+        ordersTab.setShowRoot(false);
     }
 
+
+    public void prepareColumn(JFXTreeTableColumn colName,String attributeName, int colWidth){
+        colName.setCellValueFactory(new TreeItemPropertyValueFactory<>(attributeName));
+        colName.setMinWidth(colWidth);
+        colName.setStyle("-fx-alignment: CENTER");
+    }
 
     public void calculateEstimatedProgress() throws ParseException {
 
@@ -200,7 +205,7 @@ public class mainWindowController implements Initializable, Observer {
             throws IOException, SQLException // While creating/editing a song we are using this button to pick path of the song.
     {
         FileDialog fd = new FileDialog(new JFrame());
-        fd.setName("*.json");
+        fd.setFile("*.json");
         fd.setVisible(true);
         File[] f = fd.getFiles();
         if (f.length > 0) {

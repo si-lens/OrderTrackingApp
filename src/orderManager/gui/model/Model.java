@@ -1,8 +1,9 @@
 package orderManager.gui.model;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import orderManager.be.IDepartment;
-import orderManager.be.IProductionOrder;
-import orderManager.be.IWorker;
+import orderManager.be.OrderDetails;
 import orderManager.bll.mainLogicClass;
 
 import java.io.IOException;
@@ -11,23 +12,26 @@ import java.util.List;
 
 public class Model {
 
-  IDepartment department;
-  static Model model;
-  private mainLogicClass mainLogic;
+  private IDepartment department;
+  private static Model model;
+  private mainLogicClass mlc;
 
-  public Model() throws IOException, SQLException {
-    mainLogic = mainLogicClass.getInstance();
-  }
-
-  public static Model getInstance() throws IOException, SQLException {
+  public static Model getInstance() {
     if(model == null)
       model = new Model();
     return model;
   }
 
+  private Model()
+  {
+    try {
+      mlc = new mainLogicClass();
+    } catch (IOException | SQLException e) {
+      e.printStackTrace();
+    }
+  }
 
-  public void setDepartment(IDepartment department) throws SQLException {
-    mainLogic.setDepartmentContent(department);
+  public void setDepartment(IDepartment department){
     this.department = department;
   }
 
@@ -35,10 +39,8 @@ public class Model {
     return department;
   }
 
-  public List<IProductionOrder> getDepartmentContent(){return mainLogic.getDepartmentContent();}
-
-  public List<IWorker> getWorkers(){ return mainLogic.getWorkers();}
-
-
-
+  public ObservableList<OrderDetails> obsOrdDet() throws SQLException {
+    List<OrderDetails> ordDet = mlc.getOrderDetail(department);
+    return FXCollections.observableArrayList(ordDet);
+  }
 }

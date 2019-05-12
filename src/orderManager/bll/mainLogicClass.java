@@ -2,12 +2,11 @@ package orderManager.bll;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 
-import orderManager.be.IDepartment;
-import orderManager.be.IProductionOrder;
-import orderManager.be.IWorker;
+import orderManager.be.*;
 import orderManager.dal.availableWorkersDAO;
 import orderManager.dal.jsonReader;
 import orderManager.dal.jsonReaderMK2;
@@ -15,13 +14,11 @@ import orderManager.dal.productionOrdersDAO;
 
 public class mainLogicClass extends Observable {
 
-  private static mainLogicClass mainLogic;
   private availableWorkersDAO awDAO;
   private productionOrdersDAO pDAO;
   private List<IWorker> workers;
   private List<IDepartment> departments;
   private List<IProductionOrder> productionOrders;
-  private List<IProductionOrder> departmentContent;
   private mainLogicClass mlc;
   private boolean isRunning = true;
 
@@ -30,12 +27,6 @@ public class mainLogicClass extends Observable {
     pDAO = new productionOrdersDAO();
     setWorkers();
     setDepartments();
-  }
-
-  public static mainLogicClass getInstance() throws IOException, SQLException {
-    if(mainLogic == null)
-      mainLogic = new mainLogicClass();
-    return mainLogic;
   }
 
   public void readFile(String path) throws IOException, SQLException {
@@ -57,19 +48,14 @@ public class mainLogicClass extends Observable {
   public List<IDepartment> getDepartments() {
     return departments;
   }
-
-  public void setDepartmentContent(IDepartment department) throws SQLException {
-    departmentContent = pDAO.getDepartmentContent(department);
+/*
+  public List<IProductionOrder> getProducionOrdersByDepartment(IDepartment department) throws SQLException {
+    return pDAO.getProdutcionOrders(department);
   }
-
-  public List<IProductionOrder> getDepartmentContent(){return departmentContent;}
-
-  /*
-  public void getProducionOrdersByDepartment(IDepartment department) throws SQLException {
-        productionOrders = pDAO.getProdutcionOrders(department);
+*/
+  public List<OrderDetails> getOrderDetail(IDepartment department) throws SQLException {
+    return pDAO.getDepartmentTasksByDepartment(department);
   }
-  */
-
 
   //Observable Design Pattern
   public void refreshTables()
