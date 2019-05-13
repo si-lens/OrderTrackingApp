@@ -25,7 +25,7 @@ public class mainLogicClass extends Observable {
   public mainLogicClass() throws IOException, SQLException {
     awDAO = new availableWorkersDAO();
     pDAO = new productionOrdersDAO();
-    setWorkers();
+    //setWorkers();
     setDepartments();
   }
 
@@ -33,12 +33,14 @@ public class mainLogicClass extends Observable {
     jsonReaderMK2.readFile(path);
   }
 
+  /*
   public void setWorkers() throws SQLException {
     workers = awDAO.getWorkers();
   }
+   */
 
-  public List<IWorker> getWorkers() {
-    return workers;
+  public List<IWorker> getWorkers() throws SQLException {
+    return awDAO.getWorkers();
   }
 
   public void setDepartments() throws SQLException {

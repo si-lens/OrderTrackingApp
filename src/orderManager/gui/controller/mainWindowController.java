@@ -226,7 +226,7 @@ public class mainWindowController implements Initializable, Observer {
                     observableWorkers = (FXCollections.observableArrayList((List<Worker>) (List) mainLogic.getWorkers()));
                     prepareWorkersTable();
                     calculateEstimatedProgress();
-                } catch (ParseException e) {
+                } catch (ParseException | SQLException e) {
                     e.printStackTrace();
                 }
             }
