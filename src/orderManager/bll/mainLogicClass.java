@@ -54,7 +54,7 @@ public class mainLogicClass extends Observable {
   }
 */
   public List<OrderDetails> getOrderDetail(IDepartment department) throws SQLException {
-    return pDAO.getDepartmentTasksByDepartment(department);
+    return pDAO.getDepartmentOrders(department);
   }
 
   //Observable Design Pattern

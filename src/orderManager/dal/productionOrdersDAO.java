@@ -122,7 +122,7 @@ public class productionOrdersDAO implements IDAODetails {
     return po;
   }
 
-  public List<OrderDetails> getDepartmentTasksByDepartment(IDepartment department) throws SQLException {
+  public List<OrderDetails> getDepartmentOrders(IDepartment department) throws SQLException {
     con = cp.checkOut();
     List<OrderDetails> od = new ArrayList<>();
     String sql = "SELECT OrderNumber, StartDate, EndDate, FinishedOrder FROM DepartmentTasks join Departments on DepartmentTasks.DepartmentID=Departments.ID join ProductionOrders on DepartmentTasks.ProductionOrderID=ProductionOrders.ID join Orders on ProductionOrderID=Orders.ID WHERE Departments.Name = ?";
