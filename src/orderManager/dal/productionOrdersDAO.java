@@ -121,7 +121,7 @@ public class productionOrdersDAO implements IDAODetails {
     cp.checkIn(con);
     return po;
   }
-
+/*
   public List<OrderDetails> getDepartmentOrders(IDepartment department) throws SQLException {
     con = cp.checkOut();
     List<OrderDetails> od = new ArrayList<>();
@@ -140,7 +140,7 @@ public class productionOrdersDAO implements IDAODetails {
     cp.checkIn(con);
     return od;
   }
-
+*/
   public IDepartment getDepartment(int departmentID) throws SQLException {
     con = cp.checkOut();
     String sql = "SELECT * FROM Departments WHERE ID = ?";

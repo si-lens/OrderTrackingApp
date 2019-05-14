@@ -1,9 +1,11 @@
 package orderManager.be;
 
+import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-public class ProductionOrder implements IProductionOrder {
+public class ProductionOrder extends RecursiveTreeObject<ProductionOrder> implements IProductionOrder {
 
   private int id;
   private IOrder order;
@@ -48,4 +50,12 @@ public class ProductionOrder implements IProductionOrder {
   public void removeDepartmentTask(IDepartmentTask task) {
     departmentTaskList.remove(task);
   }
+
+  public String getOrderNumber() {
+    return order.getOrderNumber();
+  }
+
+  public String getCustomerName(){return customer.getName();}
+
+  public Date getDeliveryDate(){return delivery.getDeliveryTime();}
 }

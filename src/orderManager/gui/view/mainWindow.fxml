@@ -52,7 +52,7 @@
             <Label text="Estimated progress" StackPane.alignment="BOTTOM_CENTER" />
          </children>
       </StackPane>
-      <StackPane layoutX="227.0" layoutY="14.0" prefHeight="69.0" prefWidth="202.0" AnchorPane.leftAnchor="227.0" AnchorPane.rightAnchor="202.0" AnchorPane.topAnchor="14.0">
+      <StackPane layoutX="224.0" layoutY="10.0" prefHeight="69.0" prefWidth="202.0" AnchorPane.leftAnchor="224.0" AnchorPane.rightAnchor="205.0" AnchorPane.topAnchor="10.0">
          <children>
             <JFXButton id="departmentDisplayer" fx:id="departmentBtn" alignment="CENTER" buttonType="RAISED" contentDisplay="CENTER" depthTest="DISABLE" disable="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" opacity="0.79" prefHeight="37.0" prefWidth="200.0" ripplerFill="#67a0ff" style="-fx-background-color: #67A0FF; -fx-padding: 0 0 0 0;" text="Button" textAlignment="CENTER">
                <font>

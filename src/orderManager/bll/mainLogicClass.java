@@ -16,9 +16,7 @@ public class mainLogicClass extends Observable {
 
   private availableWorkersDAO awDAO;
   private productionOrdersDAO pDAO;
-  private List<IWorker> workers;
   private List<IDepartment> departments;
-  private List<IProductionOrder> productionOrders;
   private mainLogicClass mlc;
   private boolean isRunning = true;
 
@@ -50,15 +48,15 @@ public class mainLogicClass extends Observable {
   public List<IDepartment> getDepartments() {
     return departments;
   }
-/*
+
   public List<IProductionOrder> getProducionOrdersByDepartment(IDepartment department) throws SQLException {
-    return pDAO.getProdutcionOrders(department);
+    return pDAO.getDepartmentContent(department);
   }
-*/
+/*
   public List<OrderDetails> getOrderDetail(IDepartment department) throws SQLException {
     return pDAO.getDepartmentOrders(department);
   }
-
+*/
   //Observable Design Pattern
   public void refreshTables()
   {

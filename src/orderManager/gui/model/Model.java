@@ -1,31 +1,23 @@
 package orderManager.gui.model;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import orderManager.be.IDepartment;
-import orderManager.be.IWorker;
-import orderManager.be.OrderDetails;
-import orderManager.bll.mainLogicClass;
-
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
+import orderManager.be.IDepartment;
+import orderManager.be.IProductionOrder;
+import orderManager.be.IWorker;
+import orderManager.bll.mainLogicClass;
 
 public class Model {
 
-  private IDepartment department;
   private static Model model;
+  private IDepartment department;
   private mainLogicClass mlc;
   private String orderNumber;
+  private List<IProductionOrder> productionOrders;
+  private List<IWorker> workers;
 
-  public static Model getInstance() {
-    if(model == null)
-      model = new Model();
-    return model;
-  }
-
-  private Model()
-  {
+  private Model() {
     try {
       mlc = new mainLogicClass();
     } catch (IOException | SQLException e) {
@@ -33,28 +25,39 @@ public class Model {
     }
   }
 
-  public void setDepartment(IDepartment department){
-    this.department = department;
+  public static Model getInstance() {
+    if (model == null) {
+      model = new Model();
+    }
+    return model;
   }
 
-  public void setSelectedOrderNumber(String orderNumber){
-    this.orderNumber=orderNumber;
+  public mainLogicClass getManager(){
+    return mlc;
   }
 
-  public String getSelectedOrderNumber(){
-    return orderNumber;
-  }
-
-  public IDepartment getDepartment(){
-    return department;
+  public List<IProductionOrder> getProductionOrders() throws SQLException {
+    return mlc.getProducionOrdersByDepartment(department);
   }
 
   public List<IWorker> getWorkers() throws SQLException {
     return mlc.getWorkers();
   }
 
-  public ObservableList<OrderDetails> obsOrdDet() throws SQLException {
-    List<OrderDetails> ordDet = mlc.getOrderDetail(department);
-    return FXCollections.observableArrayList(ordDet);
+  public String getSelectedOrderNumber() {
+    return orderNumber;
   }
+
+  public void setSelectedOrderNumber(String orderNumber) {
+    this.orderNumber = orderNumber;
+  }
+
+  public IDepartment getDepartment() {
+    return department;
+  }
+
+  public void setDepartment(IDepartment department) {
+    this.department = department;
+  }
+
 }
