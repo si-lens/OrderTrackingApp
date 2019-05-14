@@ -17,7 +17,6 @@ public class mainLogicClass extends Observable {
   private availableWorkersDAO awDAO;
   private productionOrdersDAO pDAO;
   private List<IDepartment> departments;
-  private mainLogicClass mlc;
   private boolean isRunning = true;
 
   public mainLogicClass() throws IOException, SQLException {
