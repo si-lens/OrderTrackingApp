@@ -21,7 +21,7 @@
                <content>
                </content>
                <content>
-                  <JFXTreeTableView fx:id="ordersTab">
+                  <JFXTreeTableView fx:id="ordersTab" onMouseClicked="#doubleClickDetails">
                      <columnResizePolicy>
                         <TreeTableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                      </columnResizePolicy></JFXTreeTableView>

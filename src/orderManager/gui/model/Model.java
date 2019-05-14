@@ -3,6 +3,7 @@ package orderManager.gui.model;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import orderManager.be.IDepartment;
+import orderManager.be.IWorker;
 import orderManager.be.OrderDetails;
 import orderManager.bll.mainLogicClass;
 
@@ -15,6 +16,7 @@ public class Model {
   private IDepartment department;
   private static Model model;
   private mainLogicClass mlc;
+  private String orderNumber;
 
   public static Model getInstance() {
     if(model == null)
@@ -35,8 +37,20 @@ public class Model {
     this.department = department;
   }
 
+  public void setSelectedOrderNumber(String orderNumber){
+    this.orderNumber=orderNumber;
+  }
+
+  public String getSelectedOrderNumber(){
+    return orderNumber;
+  }
+
   public IDepartment getDepartment(){
     return department;
+  }
+
+  public List<IWorker> getWorkers() throws SQLException {
+    return mlc.getWorkers();
   }
 
   public ObservableList<OrderDetails> obsOrdDet() throws SQLException {

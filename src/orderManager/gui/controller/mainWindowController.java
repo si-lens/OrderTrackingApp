@@ -27,6 +27,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.cell.TreeItemPropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import javax.swing.JFrame;
@@ -34,6 +35,7 @@ import javax.swing.JFrame;
 import orderManager.be.*;
 import orderManager.bll.mainLogicClass;
 import orderManager.gui.model.Model;
+import orderManager.windowOpener;
 
 public class mainWindowController implements Initializable, Observer {
 
@@ -52,6 +54,7 @@ public class mainWindowController implements Initializable, Observer {
     private ObservableList<OrderDetails> observableOrders;
     private IDepartment chosenDepartment;
     private Model model;
+    private String taskWindowPath;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -71,6 +74,7 @@ public class mainWindowController implements Initializable, Observer {
         }
         displayTime();
         refresh();
+        taskWindowPath = "gui/view/taskWindow.fxml";
     }
 
     private void refresh() {
@@ -131,10 +135,11 @@ public class mainWindowController implements Initializable, Observer {
     }
 
 
-    public void prepareOrdersTable() {
+    public void prepareOrdersTable() throws SQLException {
         if (ordersTab.getColumns().isEmpty()) {
             JFXTreeTableColumn<OrderDetails, String> orderNumber = new JFXTreeTableColumn<>("Order Number");
             prepareColumn(orderNumber,"orderNumber",145);
+
 
             JFXTreeTableColumn<OrderDetails, Date> startDate = new JFXTreeTableColumn<>("Start Date");
             prepareColumn(startDate,"startDate",145);
@@ -231,5 +236,17 @@ public class mainWindowController implements Initializable, Observer {
                 }
             }
         });
+    }
+
+    public void doubleClickDetails(MouseEvent mouseEvent) throws IOException {
+        if(mouseEvent.getClickCount()==2) {
+            new windowOpener(taskWindowPath,682,446,true);
+          //  RecursiveTreeItem<OrderDetails> od = (RecursiveTreeItem<OrderDetails>) ordersTab.getSelectionModel().getSelectedItem();
+          //  model.setSelectedOrderNumber(od.);
+            loadOrderTasks();
+        }
+    }
+
+    private void loadOrderTasks() {
     }
 }
