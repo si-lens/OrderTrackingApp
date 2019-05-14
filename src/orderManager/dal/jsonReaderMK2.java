@@ -38,7 +38,6 @@ public class jsonReaderMK2 {
     resetTable("Deliveries");
     resetTable("Orders");
 
-
     try {
       JSONObject object = (JSONObject) parser.parse(new FileReader(json));
       loadData(object);
@@ -77,32 +76,29 @@ public class jsonReaderMK2 {
 
   public static int loadCustomers(JSONObject customer) throws SQLException {
     String name = (String) customer.get("Name");
-    String sql = "INSERT INTO Customers (Name) SELECT (?) WHERE NOT EXISTS (SELECT Name from Customers WHERE Name = (?))";
+
+    String sql =
+        "INSERT INTO Customers (Name) SELECT (?) WHERE NOT EXISTS (SELECT Name from Customers WHERE Name = ?)"
+            + " SELECT * FROM Customers WHERE Name = ?";
     PreparedStatement ppst = con.prepareStatement(sql);
     ppst.setString(1, name);
     ppst.setString(2, name);
-    ppst.execute();
-
-    String sql2 = "SELECT * FROM Customers WHERE Name = ?";
-    PreparedStatement ppst2 = con.prepareStatement(sql2);
-    ppst2.setString(1, name);
-    ResultSet rs = ppst2.executeQuery();
+    ppst.setString(3, name);
+    ResultSet rs = ppst.executeQuery();
     rs.next();
     return rs.getInt(1);
   }
 
   public static int loadOrders(JSONObject order) throws SQLException {
     String orderNumber = (String) order.get("OrderNumber");
-    String sql = "INSERT INTO Orders (OrderNumber) SELECT ? WHERE NOT EXISTS (SELECT OrderNumber from Orders WHERE OrderNumber = ?)";
+    String sql =
+        "INSERT INTO Orders (OrderNumber) SELECT ? WHERE NOT EXISTS (SELECT OrderNumber from Orders WHERE OrderNumber = ?)"
+            + " SELECT ID FROM Orders WHERE OrderNumber = ?";
     PreparedStatement ppst = con.prepareStatement(sql);
     ppst.setString(1, orderNumber);
     ppst.setString(2, orderNumber);
-    ppst.execute();
-
-    String sql2 = "SELECT ID FROM Orders WHERE OrderNumber = ?";
-    PreparedStatement ppst2 = con.prepareStatement(sql2);
-    ppst2.setString(1, orderNumber);
-    ResultSet rs = ppst2.executeQuery();
+    ppst.setString(3, orderNumber);
+    ResultSet rs = ppst.executeQuery();
     rs.next();
     return rs.getInt(1);
   }
@@ -112,16 +108,14 @@ public class jsonReaderMK2 {
     date = date.replace("/Date(", "").replace("+0200)/", "");
     Date formattedDate = new Date(Long.valueOf(date));
 
-    String sql = "INSERT INTO Deliveries (DeliveryTime) SELECT ? WHERE NOT EXISTS (SELECT DeliveryTime from Deliveries WHERE DeliveryTime = ?)";
+    String sql =
+        "INSERT INTO Deliveries (DeliveryTime) SELECT ? WHERE NOT EXISTS (SELECT DeliveryTime from Deliveries WHERE DeliveryTime = ?)"
+            + " SELECT ID FROM Deliveries WHERE DeliveryTime = ?";
     PreparedStatement ppst = con.prepareStatement(sql);
     ppst.setDate(1, formattedDate);
-    ppst.setDate(2, formattedDate);
-    ppst.execute();
-
-    String sql2 = "SELECT ID FROM Deliveries WHERE DeliveryTime = ?";
-    PreparedStatement ppst2 = con.prepareStatement(sql2);
-    ppst2.setDate(1, formattedDate);
-    ResultSet rs = ppst2.executeQuery();
+    ppst.setDate(1, formattedDate);
+    ppst.setDate(1, formattedDate);
+    ResultSet rs = ppst.executeQuery();
     rs.next();
     return rs.getInt(1);
   }
@@ -165,16 +159,15 @@ public class jsonReaderMK2 {
 
   public static int loadDepartment(JSONObject department) throws SQLException {
     String name = (String) department.get("Name");
-    String sql = "INSERT INTO Departments (Name) SELECT ? WHERE NOT EXISTS (SELECT Name from Departments WHERE Name = ?)";
+
+    String sql =
+        "INSERT INTO Departments (Name) SELECT ? WHERE NOT EXISTS (SELECT Name from Departments WHERE Name = ?)"
+            + "SELECT ID FROM Departments WHERE Name = ?";
     PreparedStatement ppst = con.prepareStatement(sql);
     ppst.setString(1, name);
     ppst.setString(2, name);
-    ppst.execute();
-
-    String sql2 = "SELECT ID FROM Departments WHERE Name = ?";
-    PreparedStatement ppst2 = con.prepareStatement(sql2);
-    ppst2.setString(1, name);
-    ResultSet rs = ppst2.executeQuery();
+    ppst.setString(3, name);
+    ResultSet rs = ppst.executeQuery();
     rs.next();
     return rs.getInt(1);
   }
