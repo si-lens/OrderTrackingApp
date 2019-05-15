@@ -12,7 +12,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane fx:id="mainPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="453.0" prefWidth="631.0" stylesheets="@../css/orderManager.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="orderManager.gui.controller.mainWindowController">
+<AnchorPane fx:id="mainPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="453.0" prefWidth="631.0" stylesheets="@../css/orderManager.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="orderManager.gui.controller.mainWindowController">
    <children>
       <StackPane layoutY="32.0" prefHeight="496.0" prefWidth="28.0" />
       <JFXTabPane layoutX="43.0" layoutY="81.0" prefHeight="239.0" prefWidth="546.0" AnchorPane.bottomAnchor="133.0" AnchorPane.leftAnchor="43.0" AnchorPane.rightAnchor="42.0" AnchorPane.topAnchor="81.0">
@@ -52,7 +52,7 @@
             <Label text="Estimated progress" StackPane.alignment="BOTTOM_CENTER" />
          </children>
       </StackPane>
-      <StackPane layoutX="227.0" layoutY="14.0" prefHeight="69.0" prefWidth="202.0" AnchorPane.leftAnchor="227.0" AnchorPane.rightAnchor="202.0" AnchorPane.topAnchor="14.0">
+      <StackPane layoutX="224.0" layoutY="10.0" prefHeight="69.0" prefWidth="202.0" AnchorPane.leftAnchor="224.0" AnchorPane.rightAnchor="205.0" AnchorPane.topAnchor="10.0">
          <children>
             <JFXButton id="departmentDisplayer" fx:id="departmentBtn" alignment="CENTER" buttonType="RAISED" contentDisplay="CENTER" depthTest="DISABLE" disable="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" opacity="0.79" prefHeight="37.0" prefWidth="200.0" ripplerFill="#67a0ff" style="-fx-background-color: #67A0FF; -fx-padding: 0 0 0 0;" text="Button" textAlignment="CENTER">
                <font>
@@ -61,9 +61,9 @@
             </JFXButton>
          </children>
       </StackPane>
-      <StackPane alignment="TOP_LEFT" layoutX="43.0" layoutY="6.0" prefHeight="76.0" prefWidth="152.0" AnchorPane.topAnchor="6.0">
+      <StackPane alignment="TOP_LEFT" layoutX="44.0" layoutY="11.0" prefHeight="76.0" prefWidth="152.0" AnchorPane.topAnchor="11.0">
          <children>
-            <JFXButton buttonType="RAISED" onAction="#clickToPickFile" prefHeight="27.0" prefWidth="73.0" text="JSON file" />
+            <JFXButton buttonType="RAISED" onAction="#clickToPickFile" prefHeight="31.0" prefWidth="84.0" text="JSON file" />
          </children>
       </StackPane>
       <StackPane alignment="TOP_RIGHT" layoutX="437.0" layoutY="6.0" prefHeight="76.0" prefWidth="152.0" AnchorPane.rightAnchor="42.0" AnchorPane.topAnchor="6.0">

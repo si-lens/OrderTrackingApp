@@ -6,6 +6,7 @@ import java.util.List;
 import orderManager.be.IDepartment;
 import orderManager.be.IProductionOrder;
 import orderManager.be.IWorker;
+import orderManager.be.ProductionOrder;
 import orderManager.bll.mainLogicClass;
 
 public class Model {
@@ -13,7 +14,7 @@ public class Model {
   private static Model model;
   private IDepartment department;
   private mainLogicClass mlc;
-  private String orderNumber;
+  private ProductionOrder po;
   private List<IProductionOrder> productionOrders;
   private List<IWorker> workers;
 
@@ -44,13 +45,11 @@ public class Model {
     return mlc.getWorkers();
   }
 
-  public String getSelectedOrderNumber() {
-    return orderNumber;
+  public ProductionOrder getSelectedProductionOrder() {
+    return po;
   }
 
-  public void setSelectedOrderNumber(String orderNumber) {
-    this.orderNumber = orderNumber;
-  }
+
 
   public IDepartment getDepartment() {
     return department;
@@ -60,4 +59,7 @@ public class Model {
     this.department = department;
   }
 
+  public void setSelectedProductionOrder(ProductionOrder po) {
+    this.po=po;
+  }
 }

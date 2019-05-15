@@ -14,12 +14,14 @@ public class DepartmentTask implements IDepartmentTask {
     private Date startDate;
     private Date endDate;
     private List<Worker> listOfWorkers;
+    private String departmentName;
 
     public DepartmentTask(Date startDate, Date endDate, boolean orderState, IDepartment department){
         this.orderState = orderState;
         this.startDate = startDate;
         this.endDate = endDate;
         this.department = department;
+        departmentName = department.getName();
     }
 
     @Override
@@ -68,4 +70,8 @@ public class DepartmentTask implements IDepartmentTask {
     public List<Worker> getActiveWorkers() {
         return listOfWorkers;
     }
+
+    public String getDepartmentName(){return departmentName;}
+
+
 }

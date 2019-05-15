@@ -35,4 +35,6 @@ public interface IDepartmentTask {
 
   //Defines the active workers on this given production order.
   List<Worker> getActiveWorkers();
+
+  String getDepartmentName();
 }

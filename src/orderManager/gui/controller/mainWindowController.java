@@ -6,6 +6,7 @@ import com.jfoenix.controls.JFXTreeTableColumn;
 import com.jfoenix.controls.JFXTreeTableView;
 import com.jfoenix.controls.RecursiveTreeItem;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
+
 import java.awt.FileDialog;
 import java.io.File;
 import java.io.IOException;
@@ -23,6 +24,7 @@ import java.util.ResourceBundle;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -35,7 +37,9 @@ import javafx.scene.control.cell.TreeItemPropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
+
 import javax.swing.JFrame;
+
 import orderManager.be.DepartmentTask;
 import orderManager.be.IDepartment;
 import orderManager.be.ProductionOrder;
@@ -45,56 +49,56 @@ import orderManager.windowOpener;
 
 public class mainWindowController implements Initializable, Observer {
 
-  public AnchorPane mainPane;
-  public Label dateLabel;
-  public JFXProgressBar estimatedProgressBar;
-  public Text estimatedProgressLabel;
-  public JFXButton departmentBtn;
-  public JFXTreeTableView workersTab;
-  public JFXTreeTableView ordersTab;
+    public AnchorPane mainPane;
+    public Label dateLabel;
+    public JFXProgressBar estimatedProgressBar;
+    public Text estimatedProgressLabel;
+    public JFXButton departmentBtn;
+    public JFXTreeTableView workersTab;
+    public JFXTreeTableView ordersTab;
 
 
-  private ScheduledExecutorService executor;
-  private ObservableList<Worker> observableWorkers;
-  private ObservableList<ProductionOrder> observableOrders;
-  private IDepartment chosenDepartment;
-  private Model model;
+    private ScheduledExecutorService executor;
+    private ObservableList<Worker> observableWorkers;
+    private ObservableList<ProductionOrder> observableOrders;
+    private IDepartment chosenDepartment;
+    private Model model;
 
-  @Override
-  public void initialize(URL location, ResourceBundle resources) {
-    model = Model.getInstance();
-    chosenDepartment = model.getDepartment();
-    departmentBtn.setText(chosenDepartment.getName());
-    displayTime();
-    refresh();
-  }
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        model = Model.getInstance();
+        chosenDepartment = model.getDepartment();
+        departmentBtn.setText(chosenDepartment.getName());
+        displayTime();
+        refresh();
+    }
 
-  private void refresh() {
-    Runnable runnable = () -> Platform.runLater(() -> {
-      try {
-        observableWorkers = (FXCollections.observableArrayList((List<Worker>) (List) model.getWorkers()));
-        observableOrders = (FXCollections.observableArrayList((List<ProductionOrder>) (List) model.getProductionOrders()));
-        prepareWorkersTable();
-        prepareOrdersTable();
-        calculateEstimatedProgress();
-      } catch (ParseException | SQLException e) {
-        e.printStackTrace();
-      }
-    });
-    ScheduledExecutorService ses = Executors.newScheduledThreadPool(2);
-    ses.scheduleWithFixedDelay(runnable, 0, 600, TimeUnit.SECONDS);
-  }
+    private void refresh() {
+        Runnable runnable = () -> Platform.runLater(() -> {
+            try {
+                observableWorkers = (FXCollections.observableArrayList((List<Worker>) (List) model.getWorkers()));
+                observableOrders = (FXCollections.observableArrayList((List<ProductionOrder>) (List) model.getProductionOrders()));
+                //prepareWorkersTable();
+                prepareOrdersTable();
+                calculateEstimatedProgress();
+            } catch (ParseException | SQLException e) {
+                e.printStackTrace();
+            }
+        });
+        ScheduledExecutorService ses = Executors.newScheduledThreadPool(2);
+        ses.scheduleWithFixedDelay(runnable, 0, 600, TimeUnit.SECONDS);
+    }
 
-  public void displayTime() {
-    Runnable thread = () -> setTime();
-    executor = Executors.newScheduledThreadPool(1);
-    executor.scheduleAtFixedRate(thread, 0, 1, TimeUnit.SECONDS);
-  }
+    public void displayTime() {
+        Runnable thread = () -> setTime();
+        executor = Executors.newScheduledThreadPool(1);
+        executor.scheduleAtFixedRate(thread, 0, 1, TimeUnit.SECONDS);
+    }
 
-  public void setTime() {
-    Platform.runLater(() -> dateLabel.setText(String.valueOf(Calendar.getInstance().getTime())));
-  }
-
+    public void setTime() {
+        Platform.runLater(() -> dateLabel.setText(String.valueOf(Calendar.getInstance().getTime())));
+    }
+/* not used right now
   public void prepareWorkersTable() {
     if (workersTab.getColumns().isEmpty()) {
       JFXTreeTableColumn<Worker, String> initialsCol = new JFXTreeTableColumn<>("Initials");
@@ -121,58 +125,44 @@ public class mainWindowController implements Initializable, Observer {
     workersTab.setRoot(root);
     workersTab.setShowRoot(false);
   }
+*/
 
+    public void prepareOrdersTable() {
+        if (ordersTab.getColumns().isEmpty()) {
 
-  public void prepareOrdersTable() {
-    if (ordersTab.getColumns().isEmpty()) {
+            JFXTreeTableColumn<ProductionOrder, String> orderNumber = new JFXTreeTableColumn<>("Order Number");
+            prepareColumn(orderNumber, "orderNumber", 145);
 
-      JFXTreeTableColumn<ProductionOrder, String> orderNumber = new JFXTreeTableColumn<>("Order Number");
-      prepareColumn(orderNumber, "orderNumber", 145);
+            JFXTreeTableColumn<ProductionOrder, String> customerName = new JFXTreeTableColumn<>("Customer Name");
+            prepareColumn(customerName, "customerName", 145);
 
-      JFXTreeTableColumn<ProductionOrder, String> customerName = new JFXTreeTableColumn<>("Customer Name");
-      prepareColumn(customerName, "customerName", 145);
+            JFXTreeTableColumn<ProductionOrder, Date> deliveryDate = new JFXTreeTableColumn<>("Delivery Date");
+            prepareColumn(deliveryDate, "deliveryDate", 145);
 
-      JFXTreeTableColumn<ProductionOrder, Date> deliveryDate = new JFXTreeTableColumn<>("Delivery Date");
-      prepareColumn(deliveryDate, "deliveryDate", 145);
+            ordersTab.getColumns().addAll(orderNumber, customerName, deliveryDate);
 
-      ordersTab.getColumns().addAll(orderNumber, customerName, deliveryDate);
+        }
 
+        setOrdersTable();
     }
 
-    setOrdersTable();
-  }
+    private void setOrdersTable() {
+        TreeItem<ProductionOrder> root = new RecursiveTreeItem<>(observableOrders, RecursiveTreeObject::getChildren);
+        ordersTab.setRoot(root);
+        ordersTab.setShowRoot(false);
+    }
 
-  private void setOrdersTable() {
-    TreeItem<ProductionOrder> root = new RecursiveTreeItem<>(observableOrders, RecursiveTreeObject::getChildren);
-    ordersTab.setRoot(root);
-    ordersTab.setShowRoot(false);
-  }
 
-  public void prepareTasksTable() {
-    JFXTreeTableColumn<DepartmentTask, String> department = new JFXTreeTableColumn<>("Department");
-    prepareColumn(department, "department", 145);
 
-    JFXTreeTableColumn<DepartmentTask, String> startDate = new JFXTreeTableColumn<>("Start Date");
-    prepareColumn(startDate, "startDate", 145);
+    public void prepareColumn(JFXTreeTableColumn colName, String attributeName, int colWidth) {
+        colName.setCellValueFactory(new TreeItemPropertyValueFactory<>(attributeName));
+        colName.setMinWidth(colWidth);
+        colName.setStyle("-fx-alignment: CENTER");
+    }
 
-    JFXTreeTableColumn<DepartmentTask, Date> endDate = new JFXTreeTableColumn<>("End Date");
-    prepareColumn(endDate, "endDate", 145);
+    public void calculateEstimatedProgress() throws ParseException {
 
-    JFXTreeTableColumn<DepartmentTask, Boolean> finishedOrder = new JFXTreeTableColumn<>("Finished Order");
-    prepareColumn(finishedOrder, "finishedOrder", 145);
-
-    ordersTab.getColumns().addAll(department, startDate, endDate, finishedOrder);
-  }
-
-  public void prepareColumn(JFXTreeTableColumn colName, String attributeName, int colWidth) {
-    colName.setCellValueFactory(new TreeItemPropertyValueFactory<>(attributeName));
-    colName.setMinWidth(colWidth);
-    colName.setStyle("-fx-alignment: CENTER");
-  }
-
-  public void calculateEstimatedProgress() throws ParseException {
-
-    //  its for later use when we will have start and end date
+        //  its for later use when we will have start and end date
     /*
         ZoneId defaultZoneId = ZoneId.systemDefault();
         Date sDate = actualDepartmentTask.getStartTime();
@@ -190,63 +180,62 @@ public class mainWindowController implements Initializable, Observer {
         estimatedProgressLabel.setText((int)(progress*100)+"%");
         estimatedProgressBar.progressProperty().set(((double)progress));
 */
-    //Its for now, raw data
-    String startDateS = "2019-04-23";
-    String endDateS = "2019-06-03";
-    LocalDate startDate = LocalDate.parse(startDateS);
-    LocalDate endDate = LocalDate.parse(endDateS);
-    LocalDate todaysDate = LocalDate.now();
-    long daysBetweenStartAndEnd = ChronoUnit.DAYS.between(startDate, endDate);
-    long daysBetweenStartAndNow = ChronoUnit.DAYS.between(startDate, todaysDate);
-    double valOne = (double) daysBetweenStartAndEnd;
-    double valTwo = (double) daysBetweenStartAndNow;
-    double progress = valTwo / valOne;
-    estimatedProgressLabel.setText((int) (progress * 100) + "%");
-    estimatedProgressBar.progressProperty().set(progress);
-
-  }
-
-
-  @FXML
-  private void clickToPickFile(ActionEvent event)
-      throws IOException, SQLException // While creating/editing a song we are using this button to pick path of the song.
-  {
-    FileDialog fd = new FileDialog(new JFrame());
-    fd.setFile("*.json");
-    fd.setVisible(true);
-    File[] f = fd.getFiles();
-    if (f.length > 0) {
-      String fullPath = f[0].toString();
-      int index = f[0].toString().lastIndexOf('\\');
-      String finalPath = fullPath.substring(index + 1);
-      model.getManager().readFile(finalPath);
+        //Its for now, raw data
+        String startDateS = "2019-04-23";
+        String endDateS = "2019-06-03";
+        LocalDate startDate = LocalDate.parse(startDateS);
+        LocalDate endDate = LocalDate.parse(endDateS);
+        LocalDate todaysDate = LocalDate.now();
+        long daysBetweenStartAndEnd = ChronoUnit.DAYS.between(startDate, endDate);
+        long daysBetweenStartAndNow = ChronoUnit.DAYS.between(startDate, todaysDate);
+        double valOne = (double) daysBetweenStartAndEnd;
+        double valTwo = (double) daysBetweenStartAndNow;
+        double progress = valTwo / valOne;
+        estimatedProgressLabel.setText((int) (progress * 100) + "%");
+        estimatedProgressBar.progressProperty().set(progress);
 
     }
-  }
 
-  @Override
-  public void update(Observable o, Object arg) {
-    Platform.runLater(() -> {
-      try {
-        observableWorkers = (FXCollections.observableArrayList((List<Worker>) (List) model.getWorkers()));
-        prepareWorkersTable();
-        calculateEstimatedProgress();
-      } catch (Exception e) {
-        e.printStackTrace();
-      }
-    });
-  }
 
-  public void doubleClickDetails(MouseEvent mouseEvent) throws IOException {
-    if (mouseEvent.getClickCount() == 2) {
-      new windowOpener("gui/view/taskWindow.fxml", 682, 446, true);
-      //  RecursiveTreeItem<OrderDetails> od = (RecursiveTreeItem<OrderDetails>) ordersTab.getSelectionModel().getSelectedItem();
-      //  model.setSelectedOrderNumber(od.);
-      loadOrderTasks();
+    @FXML
+    private void clickToPickFile(ActionEvent event)
+            throws IOException, SQLException // While creating/editing a song we are using this button to pick path of the song.
+    {
+        FileDialog fd = new FileDialog(new JFrame());
+        fd.setFile("*.json");
+        fd.setVisible(true);
+        File[] f = fd.getFiles();
+        if (f.length > 0) {
+            String fullPath = f[0].toString();
+            int index = f[0].toString().lastIndexOf('\\');
+            String finalPath = fullPath.substring(index + 1);
+            model.getManager().readFile(finalPath);
+
+        }
     }
-  }
 
-  private void loadOrderTasks() {
-  }
+    @Override
+    public void update(Observable o, Object arg) {
+        Platform.runLater(() -> {
+            try {
+                observableWorkers = (FXCollections.observableArrayList((List<Worker>) (List) model.getWorkers()));
+                //prepareWorkersTable();
+                calculateEstimatedProgress();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    public void doubleClickDetails(MouseEvent mouseEvent) throws IOException {
+        if (mouseEvent.getClickCount() == 2) {
+            RecursiveTreeItem<ProductionOrder> od = (RecursiveTreeItem<ProductionOrder>) ordersTab.getSelectionModel().getSelectedItem();
+            model.setSelectedProductionOrder(od.getValue());
+            new windowOpener("gui/view/taskWindow.fxml", 682, 446, true);
+
+        }
+    }
+
+
 
 }
