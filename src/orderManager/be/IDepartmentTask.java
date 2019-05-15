@@ -13,10 +13,10 @@ public interface IDepartmentTask {
   IDepartment getDepartment();
 
   //Defines if the order has been finished.
-  Boolean isOrderFinished();
+  Boolean getFinishedOrder();
 
   //Defines start date for this deprtment.
-  Date getStartTime();
+  Date getStartDate();
 
   //Defines the end date for this department.
   Date getEndDate();

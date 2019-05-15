@@ -98,34 +98,7 @@ public class mainWindowController implements Initializable, Observer {
     public void setTime() {
         Platform.runLater(() -> dateLabel.setText(String.valueOf(Calendar.getInstance().getTime())));
     }
-/* not used right now
-  public void prepareWorkersTable() {
-    if (workersTab.getColumns().isEmpty()) {
-      JFXTreeTableColumn<Worker, String> initialsCol = new JFXTreeTableColumn<>("Initials");
-      prepareColumn(initialsCol, "initials", 145);
 
-      JFXTreeTableColumn<Worker, String> nameCol = new JFXTreeTableColumn<>("Name");
-      prepareColumn(nameCol, "name", 231);
-
-      JFXTreeTableColumn<Worker, String> salaryCol = new JFXTreeTableColumn<>("SalaryNumber");
-      prepareColumn(salaryCol, "salary", 115);
-
-      JFXTreeTableColumn<Worker, String> idCol = new JFXTreeTableColumn<>("ID");
-      prepareColumn(idCol, "id", 36);
-
-      workersTab.getColumns().addAll(idCol, nameCol, initialsCol, salaryCol);
-    }
-    setWorkersTable();
-
-  }
-
-  private void setWorkersTable() {
-    TreeItem<Worker> root = new RecursiveTreeItem<>(observableWorkers,
-        RecursiveTreeObject::getChildren);
-    workersTab.setRoot(root);
-    workersTab.setShowRoot(false);
-  }
-*/
 
     public void prepareOrdersTable() {
         if (ordersTab.getColumns().isEmpty()) {

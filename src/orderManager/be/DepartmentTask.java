@@ -1,12 +1,13 @@
 package orderManager.be;
 
+import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import javafx.concurrent.Worker;
 import javafx.event.EventHandler;
 
 import java.util.Date;
 import java.util.List;
 
-public class DepartmentTask implements IDepartmentTask {
+public class DepartmentTask extends RecursiveTreeObject<orderManager.be.DepartmentTask> implements IDepartmentTask {
 
 
     private IDepartment department;
@@ -14,15 +15,14 @@ public class DepartmentTask implements IDepartmentTask {
     private Date startDate;
     private Date endDate;
     private List<Worker> listOfWorkers;
-    private String departmentName;
 
     public DepartmentTask(Date startDate, Date endDate, boolean orderState, IDepartment department){
         this.orderState = orderState;
         this.startDate = startDate;
         this.endDate = endDate;
         this.department = department;
-        departmentName = department.getName();
     }
+    public String getDepartmentName(){ return department.getName();}
 
     @Override
     public IDepartment getDepartment() {
@@ -30,12 +30,12 @@ public class DepartmentTask implements IDepartmentTask {
     }
 
     @Override
-    public Boolean isOrderFinished() {
+    public Boolean getFinishedOrder() {
        return orderState;
     }
 
     @Override
-    public Date getStartTime() {
+    public Date getStartDate() {
        return startDate;
     }
 
@@ -70,8 +70,6 @@ public class DepartmentTask implements IDepartmentTask {
     public List<Worker> getActiveWorkers() {
         return listOfWorkers;
     }
-
-    public String getDepartmentName(){return departmentName;}
 
 
 }

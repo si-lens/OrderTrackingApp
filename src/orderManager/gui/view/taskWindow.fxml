@@ -2,11 +2,11 @@
 
 <?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXComboBox?>
-<?import javafx.scene.control.TableView?>
+<?import com.jfoenix.controls.JFXTreeTableView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="446.0" prefWidth="682.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="orderManager.gui.controller.taskWindowController">
+<AnchorPane prefHeight="446.0" prefWidth="682.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="orderManager.gui.controller.taskWindowController">
    <children>
       <JFXButton id="departmentDisplayer" fx:id="orderNumberLabel" alignment="CENTER" buttonType="RAISED" contentDisplay="CENTER" depthTest="DISABLE" disable="true" layoutX="29.0" layoutY="28.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" opacity="0.79" prefHeight="37.0" prefWidth="294.0" ripplerFill="WHITE" style="-fx-padding: 0 0 0 0;" text="Order Number" textAlignment="CENTER">
          <font>
@@ -20,15 +20,7 @@
       </JFXButton>
       <JFXButton fx:id="markAsDoneButt" layoutX="32.0" layoutY="404.0" ripplerFill="#d3cece" style="-fx-background-color: #d3cece;" text="Mark as done" />
       <JFXComboBox fx:id="addWorkersBox" editable="true" layoutX="209.0" layoutY="404.0" prefHeight="25.0" prefWidth="115.0" promptText="Add workers" />
-      <TableView fx:id="orderTasksTable" layoutX="29.0" layoutY="73.0" prefHeight="315.0" prefWidth="294.0">
-         <columnResizePolicy>
-            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-         </columnResizePolicy>
-      </TableView>
-      <TableView fx:id="activeWorkersTable" layoutX="356.0" layoutY="73.0" prefHeight="315.0" prefWidth="294.0">
-         <columnResizePolicy>
-            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-         </columnResizePolicy>
-      </TableView>
+      <JFXTreeTableView fx:id="orderTasksTable" layoutX="34.0" layoutY="73.0" prefHeight="315.0" prefWidth="285.0" />
+      <JFXTreeTableView fx:id="activeWorkersTable" layoutX="361.0" layoutY="73.0" prefHeight="315.0" prefWidth="285.0" />
    </children>
 </AnchorPane>
