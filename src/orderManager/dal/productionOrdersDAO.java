@@ -58,10 +58,6 @@ public class productionOrdersDAO implements IDAODetails {
     return pOrders;
   }
 
-
-
-
-
   public ICustomer getCustomer(int customerID) throws SQLException {
     con = cp.checkOut();
     String sql = "SELECT * FROM Customers WHERE ID = ?";
@@ -107,26 +103,7 @@ public class productionOrdersDAO implements IDAODetails {
     cp.checkIn(con);
     return po;
   }
-/*
-  public List<OrderDetails> getDepartmentOrders(IDepartment department) throws SQLException {
-    con = cp.checkOut();
-    List<OrderDetails> od = new ArrayList<>();
-    String sql = "SELECT OrderNumber, StartDate, EndDate, FinishedOrder FROM DepartmentTasks join Departments on DepartmentTasks.DepartmentID=Departments.ID join ProductionOrders on DepartmentTasks.ProductionOrderID=ProductionOrders.ID join Orders on ProductionOrderID=Orders.ID WHERE Departments.Name = ?";
-    PreparedStatement ppst = con.prepareStatement(sql);
-    ppst.setString(1, department.getName());
-    ResultSet rs = ppst.executeQuery();
-    while (rs.next()) {
-      String orderNumber = rs.getString("OrderNumber");
-      Date startDate = rs.getDate("StartDate");
-      Date endDate = rs.getDate("EndDate");
-      boolean finishedOrder = rs.getBoolean("FinishedOrder");
-      OrderDetails ordDet = new OrderDetails(orderNumber, startDate, endDate, finishedOrder);
-      od.add(ordDet);
-    }
-    cp.checkIn(con);
-    return od;
-  }
-*/
+
   public IDepartment getDepartment(int departmentID) throws SQLException {
     con = cp.checkOut();
     String sql = "SELECT * FROM Departments WHERE ID = ?";
@@ -158,6 +135,42 @@ public class productionOrdersDAO implements IDAODetails {
     return workers;
   }
 
+  public List<DepartmentTask> getDepartmentTasksByOrderNumber(IOrder order) throws SQLException {
+    con = cp.checkOut();
+    List<DepartmentTask> dp = new ArrayList<>();
+    String sql = "SELECT StartDate, EndDate, FinishedOrder, DepartmentID FROM DepartmentTasks join ProductionOrders on DepartmentTasks.ProductionOrderID=ProductionOrders.ID join Orders on ProductionOrders.OrderID=Orders.ID WHERE OrderNumber=?";
+    PreparedStatement ppst = con.prepareStatement(sql);
+    ppst.setString(1, order.getOrderNumber());
+    ResultSet rs = ppst.executeQuery();
+    while (rs.next()) {
+      Date startDate = rs.getDate("StartDate");
+      Date endDate = rs.getDate("EndDate");
+      boolean finishedOrder = rs.getBoolean("FinishedOrder");
+      int departmentID = rs.getInt("DepartmentID");
+      DepartmentTask dt = new DepartmentTask(startDate, endDate, finishedOrder, getDepartment(departmentID), null);
+      dp.add(dt);
+    }
+    cp.checkIn(con);
+    return dp;
+  }
+
+  public void changeStatus(IProductionOrder prodOrd) throws SQLException {
+    con = cp.checkOut();
+    String sql =  "UPDATE DepartmentTasks \n" +
+            "SET DepartmentTasks.FinishedOrder = 1 \n" +
+            "FROM DepartmentTasks \n" +
+            "join Departments on DepartmentID=Departments.ID \n" +
+            "join ProductionOrders on DepartmentTasks.ProductionOrderID=ProductionOrders.ID \n" +
+            "join Orders on ProductionOrders.OrderID=Orders.ID\n" +
+            "WHERE Orders.OrderNumber=? and Departments.Name=?";
+    PreparedStatement ppst = con.prepareStatement(sql);
+    ppst.setString(1, prodOrd.getOrder().getOrderNumber());
+    ppst.setString(2, prodOrd.getDepartmentTasks().get(1).getDepartment().getName());
+    ppst.execute();
+    cp.checkIn(con);
+    setHasNewData(true);
+  }
+
   @Override
   public List getDetails() throws SQLException {
     return null;
@@ -170,6 +183,6 @@ public class productionOrdersDAO implements IDAODetails {
 
   @Override
   public void setHasNewData(boolean hasNewData) {
-
+    this.hasNewData = hasNewData;
   }
 }

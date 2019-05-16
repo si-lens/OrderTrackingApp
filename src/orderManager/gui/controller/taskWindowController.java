@@ -4,6 +4,8 @@ import com.jfoenix.controls.*;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.cell.TreeItemPropertyValueFactory;
@@ -45,6 +47,16 @@ public class taskWindowController implements Initializable {
         }
         setOrderNumber();
         prepareTasksTable();
+    }
+
+    @FXML
+    private void changeStatus(ActionEvent event)
+    {
+        try {
+            model.changeStatus(selectedOrder);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     private void setOrderNumber() {

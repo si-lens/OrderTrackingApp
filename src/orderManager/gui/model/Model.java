@@ -3,11 +3,10 @@ package orderManager.gui.model;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
-import orderManager.be.IDepartment;
-import orderManager.be.IProductionOrder;
-import orderManager.be.IWorker;
-import orderManager.be.ProductionOrder;
+
+import orderManager.be.*;
 import orderManager.bll.mainLogicClass;
+import orderManager.dal.Properties.PropertyReader;
 
 public class Model {
 
@@ -17,10 +16,12 @@ public class Model {
   private ProductionOrder po;
   private List<IProductionOrder> productionOrders;
   private List<IWorker> workers;
+  private PropertyReader pr;
 
   private Model() {
     try {
       mlc = new mainLogicClass();
+      pr = new PropertyReader();
     } catch (IOException | SQLException e) {
       e.printStackTrace();
     }
@@ -49,17 +50,30 @@ public class Model {
     return po;
   }
 
+public void changeStatus(IProductionOrder prodOrd) throws SQLException {
+  mlc.changeStatus(prodOrd);
+}
 
-
-  public IDepartment getDepartment() {
-    return department;
+  public String getDepartment() {
+    if (department == null)
+    {
+      return pr.read();
+    } else
+    {
+      return department.getName();
+    }
   }
 
   public void setDepartment(IDepartment department) {
     this.department = department;
+    pr.write(department.getName());
   }
 
   public void setSelectedProductionOrder(ProductionOrder po) {
     this.po=po;
   }
+
+    public void setSelectedOrderNumber(IOrder order) throws SQLException {
+      mlc.getDepartmentTaskByOrderNumber(order);
+    }
 }

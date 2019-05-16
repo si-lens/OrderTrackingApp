@@ -19,7 +19,7 @@
                </columnResizePolicy></JFXTreeTableView>
             <StackPane alignment="CENTER_LEFT" layoutX="14.0" layoutY="449.0" prefHeight="48.0" prefWidth="178.0" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0">
                <children>
-                  <JFXButton fx:id="markAsDoneButt" prefHeight="25.0" prefWidth="117.0" ripplerFill="#d3cece" style="-fx-background-color: #d3cece;" text="Mark as done" />
+                  <JFXButton fx:id="markAsDoneButt" onAction="#changeStatus" prefHeight="25.0" prefWidth="117.0" ripplerFill="#d3cece" style="-fx-background-color: #d3cece;" text="Mark as done" />
                </children>
             </StackPane>
             <StackPane alignment="CENTER_RIGHT" layoutX="211.0" layoutY="449.0" prefHeight="48.0" prefWidth="178.0" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="9.0">

@@ -44,12 +44,20 @@ public class mainLogicClass extends Observable {
     departments = pDAO.getDepartments();
   }
 
+  public List<DepartmentTask> getDepartmentTaskByOrderNumber(IOrder order) throws SQLException {
+    return pDAO.getDepartmentTasksByOrderNumber(order);
+  }
+
   public List<IDepartment> getDepartments() {
     return departments;
   }
 
   public List<IProductionOrder> getProducionOrdersByDepartment(IDepartment department) throws SQLException {
     return pDAO.getDepartmentContent(department);
+  }
+
+  public void changeStatus(IProductionOrder prodOrd) throws SQLException {
+    pDAO.changeStatus(prodOrd);
   }
 /*
   public List<OrderDetails> getOrderDetail(IDepartment department) throws SQLException {
@@ -61,11 +69,11 @@ public class mainLogicClass extends Observable {
   {
     Runnable runnable = () -> {
       while (isRunning) {
-        if(awDAO.hasNewData())
+        if(pDAO.hasNewData())
         {
           try {
             setChanged();
-            notifyObservers(awDAO.getDetails());
+            notifyObservers(pDAO.getDetails());
             Thread.sleep(5000);
           } catch (SQLException | InterruptedException e) {
             e.printStackTrace();
