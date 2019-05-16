@@ -30,6 +30,7 @@ public class loginWindowController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         try {
             mainLogic = new mainLogicClass();
+            mainLogic.readFile("data.json");
             departmentList = mainLogic.getDepartments();
             loadDepartments();
         } catch (Exception e) {

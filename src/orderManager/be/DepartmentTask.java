@@ -14,9 +14,9 @@ public class DepartmentTask extends RecursiveTreeObject<orderManager.be.Departme
     private boolean orderState;
     private Date startDate;
     private Date endDate;
-    private List<Worker> listOfWorkers;
+    private List<IWorker> listOfWorkers;
 
-    public DepartmentTask(Date startDate, Date endDate, boolean orderState, IDepartment department){
+    public DepartmentTask(Date startDate, Date endDate, boolean orderState, IDepartment department, List<IWorker> list){
         this.orderState = orderState;
         this.startDate = startDate;
         this.endDate = endDate;
@@ -45,12 +45,12 @@ public class DepartmentTask extends RecursiveTreeObject<orderManager.be.Departme
     }
 
     @Override
-    public void addWorker(Worker worker) {
+    public void addWorker(IWorker worker) {
     listOfWorkers.add(worker);
     }
 
     @Override
-    public void removeWorker(Worker worker) {
+    public void removeWorker(IWorker worker) {
         listOfWorkers.remove(worker);
     }
 
@@ -67,7 +67,7 @@ public class DepartmentTask extends RecursiveTreeObject<orderManager.be.Departme
     }
 
     @Override
-    public List<Worker> getActiveWorkers() {
+    public List<IWorker> getActiveWorkers() {
         return listOfWorkers;
     }
 

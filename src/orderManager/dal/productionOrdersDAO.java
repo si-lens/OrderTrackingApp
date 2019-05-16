@@ -43,18 +43,16 @@ public class productionOrdersDAO implements IDAODetails {
   public List<IProductionOrder> getDepartmentContent(IDepartment department) throws SQLException {
     con = cp.checkOut();
     List<IProductionOrder> pOrders = new ArrayList<>();
-    String sql = "SELECT ProductionOrders.ID, CustomerID, DeliveryID, OrderID FROM ProductionOrders,DepartmentTasks,Departments WHERE ProductionOrders.ID = DepartmentTasks.ProductionOrderID AND Departments.ID = DepartmentTasks.DepartmentID AND Name = ?";
+    String sql = "SELECT ProductionOrders.OrderNumber, CustomerID, DeliveryID FROM ProductionOrders,DepartmentTasks,Departments WHERE ProductionOrders.OrderNumber = DepartmentTasks.OrderNumber AND Departments.ID = DepartmentTasks.DepartmentID AND Departments.Name = ?";
     PreparedStatement ppst = con.prepareStatement(sql);
     ppst.setString(1, department.getName());
     ResultSet rs = ppst.executeQuery();
     while (rs.next()) {
-      int id = rs.getInt("ID");
       int customerID = rs.getInt("CustomerID");
       int deliveryID = rs.getInt("DeliveryID");
-      int orderID = rs.getInt("OrderID");
-      IProductionOrder po = new ProductionOrder(id, getCustomer(customerID),
-          getDelivery(deliveryID), getOrder(orderID));
-      pOrders.add(getDepartmentTasks(id, po));
+      String orderNumber = rs.getString("OrderNumber");
+      IProductionOrder po = new ProductionOrder(getCustomer(customerID), getDelivery(deliveryID), new Order(orderNumber));
+      pOrders.add(getDepartmentTasks(orderNumber, po));
     }
     cp.checkIn(con);
     return pOrders;
@@ -90,32 +88,20 @@ public class productionOrdersDAO implements IDAODetails {
     return new Delivery(id, date);
   }
 
-  public IOrder getOrder(int orderID) throws SQLException {
-    con = cp.checkOut();
-    String sql = "SELECT * FROM Orders WHERE ID = ?";
-    PreparedStatement ppst = con.prepareStatement(sql);
-    ppst.setInt(1, orderID);
-    ResultSet rs = ppst.executeQuery();
-    rs.next();
-    int id = rs.getInt("ID");
-    String orderNumber = rs.getString("OrderNumber");
-    cp.checkIn(con);
-    return new Order(id, orderNumber);
-  }
 
-  public IProductionOrder getDepartmentTasks(int id, IProductionOrder po) throws SQLException {
+  public IProductionOrder getDepartmentTasks(String orderNumber, IProductionOrder po) throws SQLException {
     con = cp.checkOut();
-    String sql = "SELECT * FROM DepartmentTasks WHERE ProductionOrderID = ?";
+    String sql = "SELECT * FROM DepartmentTasks WHERE OrderNumber = ?";
     PreparedStatement ppst = con.prepareStatement(sql);
-    ppst.setInt(1, id);
+    ppst.setString(1, orderNumber);
     ResultSet rs = ppst.executeQuery();
     while (rs.next()) {
+      int id = rs.getInt("ID");
       Date endDate = rs.getDate("EndDate");
       Date startDate = rs.getDate("StartDate");
       boolean finishedOrder = rs.getBoolean("FinishedOrder");
       int departmentID = rs.getInt("DepartmentID");
-      IDepartmentTask department = new DepartmentTask(startDate, endDate, finishedOrder,
-          getDepartment(departmentID));
+      IDepartmentTask department = new DepartmentTask(startDate, endDate, finishedOrder, getDepartment(departmentID), getWorkers(id));
       po.addDepartmentTask(department);
     }
     cp.checkIn(con);
@@ -151,6 +137,25 @@ public class productionOrdersDAO implements IDAODetails {
     IDepartment dp = new Department(rs.getString("Name"));
     cp.checkIn(con);
     return dp;
+  }
+
+  public List<IWorker> getWorkers(int id) throws SQLException {
+    con = cp.checkOut();
+    List<IWorker> workers = new ArrayList<>();
+    String sql = "SELECT * FROM AvailableWorkers,TaskWorkers WHERE AvailableWorkers.ID = TaskWorkers.WorkerID AND TaskWorkers.DepartmentTaskID = ?";
+    PreparedStatement ppst = con.prepareStatement(sql);
+    ppst.setInt(1, id);
+    ResultSet rs =  ppst.executeQuery();
+    while (rs.next()) {
+      int workerID = rs.getInt(1);
+      String name = rs.getString(2);
+      String initials = rs.getString(3);
+      long salary = rs.getLong(4);
+      IWorker w = new Worker(workerID,name,initials,salary);
+      workers.add(w);
+    }
+    cp.checkIn(con);
+    return workers;
   }
 
   @Override

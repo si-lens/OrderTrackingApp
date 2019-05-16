@@ -22,10 +22,10 @@ public interface IDepartmentTask {
   Date getEndDate();
 
   //Adds a worker as an active worker on this department task.
-  void addWorker(Worker worker);
+  void addWorker(IWorker worker);
 
   //Removes a worker form this department task active workers.
-  void removeWorker(Worker worker);
+  void removeWorker(IWorker worker);
 
   //Raised when a worker has been added to this order.
   EventHandler workerAdded();
@@ -34,7 +34,7 @@ public interface IDepartmentTask {
   EventHandler workerRemoved();
 
   //Defines the active workers on this given production order.
-  List<Worker> getActiveWorkers();
+  List<IWorker> getActiveWorkers();
 
   String getDepartmentName();
 }

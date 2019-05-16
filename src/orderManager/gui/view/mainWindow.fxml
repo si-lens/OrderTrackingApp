@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
-<?import com.jfoenix.controls.JFXProgressBar?>
 <?import com.jfoenix.controls.JFXTabPane?>
 <?import com.jfoenix.controls.JFXTreeTableView?>
 <?import javafx.scene.control.Label?>
@@ -10,26 +9,17 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
 
 <AnchorPane fx:id="mainPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="453.0" prefWidth="631.0" stylesheets="@../css/orderManager.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="orderManager.gui.controller.mainWindowController">
    <children>
       <StackPane layoutY="32.0" prefHeight="496.0" prefWidth="28.0" />
-      <JFXTabPane layoutX="43.0" layoutY="81.0" prefHeight="239.0" prefWidth="546.0" AnchorPane.bottomAnchor="133.0" AnchorPane.leftAnchor="43.0" AnchorPane.rightAnchor="42.0" AnchorPane.topAnchor="81.0">
+      <JFXTabPane layoutX="43.0" layoutY="81.0" prefHeight="324.0" prefWidth="546.0" AnchorPane.bottomAnchor="48.0" AnchorPane.leftAnchor="43.0" AnchorPane.rightAnchor="42.0" AnchorPane.topAnchor="81.0">
          <tabs>
             <Tab text="Orders">
                <content>
                </content>
                <content>
-                  <JFXTreeTableView fx:id="ordersTab" onMouseClicked="#doubleClickDetails">
-                     <columnResizePolicy>
-                        <TreeTableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                     </columnResizePolicy></JFXTreeTableView>
-               </content>
-            </Tab>
-            <Tab text="ActiveWorkers">
-               <content>
-                  <JFXTreeTableView fx:id="workersTab">
+                  <JFXTreeTableView fx:id="ordersTab" onMouseClicked="#doubleClickDetails" prefWidth="546.0">
                      <columnResizePolicy>
                         <TreeTableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                      </columnResizePolicy></JFXTreeTableView>
@@ -37,21 +27,9 @@
             </Tab>
          </tabs>
       </JFXTabPane>
-      <StackPane alignment="BOTTOM_LEFT" layoutX="31.0" layoutY="368.0" prefHeight="38.0" prefWidth="177.0" AnchorPane.bottomAnchor="47.0" AnchorPane.leftAnchor="31.0">
-         <children>
-            <Label prefHeight="17.0" prefWidth="102.0" text="Start Date - 23/04" />
-         </children>
-      </StackPane>
-      <StackPane alignment="BOTTOM_RIGHT" layoutX="426.0" layoutY="368.0" prefHeight="38.0" prefWidth="177.0" AnchorPane.bottomAnchor="47.0" AnchorPane.rightAnchor="28.0">
-         <children>
-            <Label alignment="BASELINE_RIGHT" prefHeight="17.0" prefWidth="100.0" text="End date - 03/06" />
-         </children>
-      </StackPane>
-      <StackPane layoutX="205.0" layoutY="368.0" prefHeight="38.0" prefWidth="219.0" AnchorPane.bottomAnchor="47.0" AnchorPane.leftAnchor="205.0" AnchorPane.rightAnchor="207.0">
-         <children>
-            <Label text="Estimated progress" StackPane.alignment="BOTTOM_CENTER" />
-         </children>
-      </StackPane>
+      <StackPane alignment="BOTTOM_LEFT" layoutX="31.0" layoutY="368.0" prefHeight="38.0" prefWidth="177.0" AnchorPane.bottomAnchor="47.0" AnchorPane.leftAnchor="31.0" />
+      <StackPane alignment="BOTTOM_RIGHT" layoutX="426.0" layoutY="368.0" prefHeight="38.0" prefWidth="177.0" AnchorPane.bottomAnchor="47.0" AnchorPane.rightAnchor="28.0" />
+      <StackPane layoutX="205.0" layoutY="368.0" prefHeight="38.0" prefWidth="219.0" AnchorPane.bottomAnchor="47.0" AnchorPane.leftAnchor="205.0" AnchorPane.rightAnchor="207.0" />
       <StackPane layoutX="224.0" layoutY="10.0" prefHeight="69.0" prefWidth="202.0" AnchorPane.leftAnchor="224.0" AnchorPane.rightAnchor="205.0" AnchorPane.topAnchor="10.0">
          <children>
             <JFXButton id="departmentDisplayer" fx:id="departmentBtn" alignment="CENTER" buttonType="RAISED" contentDisplay="CENTER" depthTest="DISABLE" disable="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" opacity="0.79" prefHeight="37.0" prefWidth="200.0" ripplerFill="#67a0ff" style="-fx-background-color: #67A0FF; -fx-padding: 0 0 0 0;" text="Button" textAlignment="CENTER">
@@ -76,15 +54,5 @@
          </children>
       </StackPane>
       <StackPane layoutX="603.0" layoutY="32.0" prefHeight="496.0" prefWidth="28.0" />
-      <StackPane layoutX="31.0" layoutY="405.0" prefHeight="25.0" prefWidth="573.0" AnchorPane.bottomAnchor="23.0" AnchorPane.leftAnchor="31.0" AnchorPane.rightAnchor="27.0">
-         <children>
-            <JFXProgressBar fx:id="estimatedProgressBar" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="25.0" prefWidth="573.0" progress="0.76" />
-            <Text fx:id="estimatedProgressLabel" strokeType="OUTSIDE" strokeWidth="0.0" text="77%">
-               <font>
-                  <Font size="15.0" />
-               </font>
-            </Text>
-         </children>
-      </StackPane>
    </children>
 </AnchorPane>
