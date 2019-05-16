@@ -10,13 +10,16 @@
 }
 
 .jfx-button {
-  -fx-text-fill: black;
-  -fx-background-color: #67a0ff;
+
 }
 
 
 
 .jfx-tab-pane .tab-{
   -fx-font-color: RED;
+}
+
+.split-pane *.split-pane-divider {
+  -fx-padding: 0 0 0 0;
 }
 

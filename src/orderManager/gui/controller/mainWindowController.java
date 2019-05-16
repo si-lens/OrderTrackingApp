@@ -193,7 +193,7 @@ public class mainWindowController implements Initializable, Observer {
     if (mouseEvent.getClickCount() == 2) {
       RecursiveTreeItem<ProductionOrder> od = (RecursiveTreeItem<ProductionOrder>) ordersTab.getSelectionModel().getSelectedItem();
       model.setSelectedProductionOrder(od.getValue());
-      new windowOpener("gui/view/taskWindow.fxml", 682, 446, true);
+      new windowOpener("gui/view/taskWindow.fxml", 804, 513, true);
 
     }
   }

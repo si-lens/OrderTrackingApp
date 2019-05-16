@@ -3,24 +3,51 @@
 <?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXComboBox?>
 <?import com.jfoenix.controls.JFXTreeTableView?>
+<?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="446.0" prefWidth="682.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="orderManager.gui.controller.taskWindowController">
-   <children>
-      <JFXButton id="departmentDisplayer" fx:id="orderNumberLabel" alignment="CENTER" buttonType="RAISED" contentDisplay="CENTER" depthTest="DISABLE" disable="true" layoutX="29.0" layoutY="28.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" opacity="0.79" prefHeight="37.0" prefWidth="294.0" ripplerFill="WHITE" style="-fx-padding: 0 0 0 0;" text="Order Number" textAlignment="CENTER">
-         <font>
-            <Font size="26.0" />
-         </font>
-      </JFXButton>
-      <JFXButton id="departmentDisplayer" fx:id="activeWorkersLabel" alignment="CENTER" buttonType="RAISED" contentDisplay="CENTER" depthTest="DISABLE" disable="true" layoutX="403.0" layoutY="28.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" opacity="0.79" prefHeight="37.0" prefWidth="200.0" ripplerFill="#67a0ff" style="-fx-padding: 0 0 0 0;" text="Active Workers" textAlignment="CENTER">
-         <font>
-            <Font size="26.0" />
-         </font>
-      </JFXButton>
-      <JFXButton fx:id="markAsDoneButt" layoutX="32.0" layoutY="404.0" ripplerFill="#d3cece" style="-fx-background-color: #d3cece;" text="Mark as done" />
-      <JFXComboBox fx:id="addWorkersBox" editable="true" layoutX="209.0" layoutY="404.0" prefHeight="25.0" prefWidth="115.0" promptText="Add workers" />
-      <JFXTreeTableView fx:id="orderTasksTable" layoutX="34.0" layoutY="73.0" prefHeight="315.0" prefWidth="285.0" />
-      <JFXTreeTableView fx:id="activeWorkersTable" layoutX="361.0" layoutY="73.0" prefHeight="315.0" prefWidth="285.0" />
-   </children>
-</AnchorPane>
+
+<SplitPane dividerPositions="0.5" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="513.0" prefWidth="804.0" stylesheets="@../css/orderManager.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <items>
+      <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="200.0">
+         <children>
+            <JFXTreeTableView fx:id="orderTasksTable" layoutX="14.0" layoutY="81.0" prefHeight="351.0" prefWidth="359.0" AnchorPane.bottomAnchor="62.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="9.0" AnchorPane.topAnchor="81.0" />
+            <StackPane alignment="CENTER_LEFT" layoutX="14.0" layoutY="449.0" prefHeight="48.0" prefWidth="178.0" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0">
+               <children>
+                  <JFXButton fx:id="markAsDoneButt" prefHeight="25.0" prefWidth="117.0" ripplerFill="#d3cece" style="-fx-background-color: #d3cece;" text="Mark as done" />
+               </children>
+            </StackPane>
+            <StackPane alignment="CENTER_RIGHT" layoutX="211.0" layoutY="449.0" prefHeight="48.0" prefWidth="178.0" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="9.0">
+               <children>
+                  <JFXComboBox fx:id="addWorkersBox" editable="true" prefHeight="25.0" prefWidth="100.0" promptText="Add workers" />
+               </children>
+            </StackPane>
+            <StackPane layoutX="18.0" layoutY="33.0" prefHeight="48.0" prefWidth="359.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="9.0" AnchorPane.topAnchor="33.0">
+               <children>
+                  <JFXButton id="departmentDisplayer" fx:id="orderNumberLabel" alignment="CENTER" buttonType="RAISED" contentDisplay="CENTER" depthTest="DISABLE" disable="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" opacity="0.79" prefHeight="37.0" prefWidth="231.0" ripplerFill="WHITE" style="-fx-padding: 0 0 0 0;" text="Order Number" textAlignment="CENTER">
+                     <font>
+                        <Font size="26.0" />
+                     </font>
+                  </JFXButton>
+               </children>
+            </StackPane>
+         </children>
+      </AnchorPane>
+      <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="507.0" prefWidth="395.0">
+         <children>
+            <JFXTreeTableView fx:id="activeWorkersTable" editable="true" layoutX="9.0" layoutY="83.0" prefHeight="351.0" prefWidth="359.0" AnchorPane.bottomAnchor="62.0" AnchorPane.leftAnchor="9.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="81.0" />
+            <StackPane layoutX="9.0" layoutY="33.0" prefHeight="48.0" prefWidth="375.0" AnchorPane.leftAnchor="9.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="33.0">
+               <children>
+                  <JFXButton id="departmentDisplayer" fx:id="activeWorkersLabel" alignment="CENTER" buttonType="RAISED" contentDisplay="CENTER" depthTest="DISABLE" disable="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" opacity="0.79" prefHeight="37.0" prefWidth="200.0" ripplerFill="#67a0ff" style="-fx-padding: 0 0 0 0;" text="Active Workers" textAlignment="CENTER">
+                     <font>
+                        <Font size="26.0" />
+                     </font>
+                  </JFXButton>
+               </children>
+            </StackPane>
+         </children>
+      </AnchorPane>
+   </items>
+</SplitPane>
