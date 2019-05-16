@@ -45,7 +45,6 @@ public class taskWindowController implements Initializable {
         }
         setOrderNumber();
         prepareTasksTable();
-        prepareWorkersTable();
     }
 
     private void setOrderNumber() {
@@ -75,37 +74,44 @@ public class taskWindowController implements Initializable {
 
         orderTasksTable.getColumns().addAll(department, startDate, endDate, status);
 
+        setTaskTable();
+    }
+
+    private void setTaskTable() {
         TreeItem<DepartmentTask> root = new RecursiveTreeItem<>(observableTasks, RecursiveTreeObject::getChildren);
         orderTasksTable.setRoot(root);
         orderTasksTable.setShowRoot(false);
     }
 
-    public void prepareWorkersTable() {
+    /*
+        public void prepareWorkersTable() {
 
-        JFXTreeTableColumn<Worker, String> idCol = new JFXTreeTableColumn<>("ID");
-        prepareColumn(idCol, "id", 33);
+            JFXTreeTableColumn<Worker, String> idCol = new JFXTreeTableColumn<>("ID");
+            prepareColumn(idCol, "id", 33);
 
-        JFXTreeTableColumn<Worker, String> nameCol = new JFXTreeTableColumn<>("Name");
-        prepareColumn(nameCol, "name", 207);
+            JFXTreeTableColumn<Worker, String> nameCol = new JFXTreeTableColumn<>("Name");
+            prepareColumn(nameCol, "name", 207);
 
-        JFXTreeTableColumn<Worker, String> initialsCol = new JFXTreeTableColumn<>("Initials");
-        prepareColumn(initialsCol, "initials", 44);
-        
-        JFXTreeTableColumn<Worker, String> salaryCol = new JFXTreeTableColumn<>("SalaryNumber");
-        prepareColumn(salaryCol, "salary", 93);
+            JFXTreeTableColumn<Worker, String> initialsCol = new JFXTreeTableColumn<>("Initials");
+            prepareColumn(initialsCol, "initials", 44);
+
+            JFXTreeTableColumn<Worker, String> salaryCol = new JFXTreeTableColumn<>("SalaryNumber");
+            prepareColumn(salaryCol, "salary", 93);
 
 
 
-        activeWorkersTable.getColumns().addAll(idCol, nameCol, initialsCol, salaryCol);
+            activeWorkersTable.getColumns().addAll(idCol, nameCol, initialsCol, salaryCol);
 
-        TreeItem<Worker> root = new RecursiveTreeItem<>(observableWorkers, RecursiveTreeObject::getChildren);
-        activeWorkersTable.setRoot(root);
-        activeWorkersTable.setShowRoot(false);
-    }
-
+            TreeItem<Worker> root = new RecursiveTreeItem<>(observableWorkers, RecursiveTreeObject::getChildren);
+            activeWorkersTable.setRoot(root);
+            activeWorkersTable.setShowRoot(false);
+        }
+    */
     public void prepareColumn(JFXTreeTableColumn colName, String attributeName, int colWidth) {
         colName.setCellValueFactory(new TreeItemPropertyValueFactory<>(attributeName));
         colName.setMinWidth(colWidth);
         colName.setStyle("-fx-alignment: CENTER");
     }
+
 }
+
