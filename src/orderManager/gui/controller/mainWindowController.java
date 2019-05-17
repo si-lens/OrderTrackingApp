@@ -56,14 +56,14 @@ public class mainWindowController implements Initializable, Observer {
   private ScheduledExecutorService executor;
   private ObservableList<Worker> observableWorkers;
   private ObservableList<ProductionOrder> observableOrders;
-  private String chosenDepartment;
+  private IDepartment chosenDepartment;
   private Model model;
 
   @Override
   public void initialize(URL location, ResourceBundle resources) {
     model = Model.getInstance();
     chosenDepartment = model.getDepartment();
-    departmentBtn.setText(chosenDepartment);
+    departmentBtn.setText(chosenDepartment.getName());
     displayTime();
     refresh();
   }

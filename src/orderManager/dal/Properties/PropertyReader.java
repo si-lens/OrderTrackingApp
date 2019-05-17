@@ -1,5 +1,8 @@
 package orderManager.dal.Properties;
 
+import orderManager.be.Department;
+import orderManager.be.IDepartment;
+
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -8,11 +11,11 @@ import java.util.Properties;
 public class PropertyReader {
     private Properties prop = new Properties();
 
-    public String read() {
-        String dep = null;
+    public IDepartment read() {
+        IDepartment dep = null;
         try (FileInputStream input = new FileInputStream("src\\orderManager\\dal\\Properties\\config.properties")) {
             prop.load(input);
-            dep = prop.getProperty("chosenDepartment");
+            dep = new Department(prop.getProperty("chosenDepartment"));
         } catch (IOException e) {
             e.printStackTrace();
         }

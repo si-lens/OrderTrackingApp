@@ -39,7 +39,7 @@ public class Model {
   }
 
   public List<IProductionOrder> getProductionOrders() throws SQLException {
-    return mlc.getProducionOrdersByDepartment(department);
+    return mlc.getProducionOrdersByDepartment(getDepartment());
   }
 
   public List<IWorker> getWorkers() throws SQLException {
@@ -54,13 +54,13 @@ public void changeStatus(IProductionOrder prodOrd) throws SQLException {
   mlc.changeStatus(prodOrd);
 }
 
-  public String getDepartment() {
+  public IDepartment getDepartment() {
     if (department == null)
     {
       return pr.read();
     } else
     {
-      return department.getName();
+      return department;
     }
   }
 
