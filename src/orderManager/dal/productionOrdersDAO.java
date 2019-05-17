@@ -45,6 +45,7 @@ public class productionOrdersDAO implements IDAODetails {
     List<IProductionOrder> pOrders = new ArrayList<>();
     String sql = "SELECT ProductionOrders.OrderNumber, CustomerID, DeliveryID FROM ProductionOrders,DepartmentTasks,Departments WHERE ProductionOrders.OrderNumber = DepartmentTasks.OrderNumber AND Departments.ID = DepartmentTasks.DepartmentID AND Departments.Name = ?";
     PreparedStatement ppst = con.prepareStatement(sql);
+    System.out.println(department.getName());
     ppst.setString(1, department.getName());
     ResultSet rs = ppst.executeQuery();
     while (rs.next()) {

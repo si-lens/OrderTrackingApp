@@ -38,7 +38,7 @@ public class Model {
     return mlc;
   }
 
-  public List<IProductionOrder> getProductionOrders() throws SQLException {
+  public List<IProductionOrder> getProductionOrdersFromDB() throws SQLException {
     return mlc.getProducionOrdersByDepartment(getDepartment());
   }
 
@@ -76,4 +76,12 @@ public void changeStatus(IProductionOrder prodOrd) throws SQLException {
     public void setSelectedOrderNumber(IOrder order) throws SQLException {
       mlc.getDepartmentTaskByOrderNumber(order);
     }
+
+    public void readFile(String path) throws IOException, SQLException {
+     mlc.readFile(path);
+    }
+
+  public List<IDepartment> getDepartments() {
+    return mlc.getDepartments();
+  }
 }
