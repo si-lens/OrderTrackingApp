@@ -24,14 +24,16 @@ public class loginWindowController implements Initializable {
     public Button loginButton;
     public ComboBox departmentSelection;
     private mainLogicClass mainLogic;
+    private Model model;
     private List<IDepartment> departmentList;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         try {
-            mainLogic = new mainLogicClass();
-            mainLogic.readFile("data.json");
-            departmentList = mainLogic.getDepartments();
+            //mainLogic = new mainLogicClass();
+            model = Model.getInstance();
+            model.readFile("data.json");
+            departmentList = model.getDepartments();
             loadDepartments();
         } catch (Exception e) {
             e.printStackTrace();
