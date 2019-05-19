@@ -38,9 +38,6 @@ public class ProductionOrder extends RecursiveTreeObject<ProductionOrder> implem
 
   @Override
   public List<IDepartmentTask> getDepartmentTasks() throws ParseException {
-    for(int i=0; i<departmentTaskList.size(); i++){
-      departmentTaskList.get(i).setProgressBar();
-    }
     return departmentTaskList;
   }
 
