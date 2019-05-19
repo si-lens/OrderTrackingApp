@@ -1,5 +1,6 @@
 package orderManager.be;
 
+import java.text.ParseException;
 import java.util.List;
 
 //Defines an interface of data from multiple data-sources.
@@ -17,7 +18,7 @@ public interface IProductionOrder {
     ICustomer getCustomer();
 
     //Defines tasks of departments.
-    List<IDepartmentTask> getDepartmentTasks();
+    List<IDepartmentTask> getDepartmentTasks() throws ParseException;
 
     //Adds a task to this production order.
     void addDepartmentTask(IDepartmentTask Task);

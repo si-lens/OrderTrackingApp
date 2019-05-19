@@ -17,10 +17,6 @@ public class windowOpener {
       stage.setMinWidth(minWidth);
       stage.setResizable(resizable);
       stage.setScene(new Scene(root));
-      stage.setOnCloseRequest((event) -> {
-         Platform.exit();
-         System.exit(0);
-      });
       stage.show();
    }
 

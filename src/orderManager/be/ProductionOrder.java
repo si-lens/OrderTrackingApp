@@ -1,6 +1,8 @@
 package orderManager.be;
 
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
+
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -35,7 +37,10 @@ public class ProductionOrder extends RecursiveTreeObject<ProductionOrder> implem
   }
 
   @Override
-  public List<IDepartmentTask> getDepartmentTasks() {
+  public List<IDepartmentTask> getDepartmentTasks() throws ParseException {
+    for(int i=0; i<departmentTaskList.size(); i++){
+      departmentTaskList.get(i).setProgressBar();
+    }
     return departmentTaskList;
   }
 

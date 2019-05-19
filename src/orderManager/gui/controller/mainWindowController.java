@@ -65,8 +65,6 @@ public class mainWindowController implements Initializable, Observer {
     private ObservableList<ProductionOrder> observableOrders;
     private IDepartment chosenDepartment;
     private Model model;
-    private Thread t;
-    private boolean jobDone = false;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -75,7 +73,6 @@ public class mainWindowController implements Initializable, Observer {
         chosenDepartment = model.getDepartment();
         departmentBtn.setText(chosenDepartment.getName());
         initialLoad();
-        //refresh();
     }
 
     private void initialLoad() {
@@ -84,7 +81,7 @@ public class mainWindowController implements Initializable, Observer {
             System.out.println("thread dziala");
             try {
                 observableOrders = (FXCollections.observableArrayList((List<ProductionOrder>) (List) model.getProductionOrdersFromDB()));
-            } catch (SQLException e) {
+            } catch (SQLException | ParseException e) {
                 e.printStackTrace();
             }
             Platform.runLater(() -> {
@@ -95,9 +92,6 @@ public class mainWindowController implements Initializable, Observer {
 
         });
         t.start();
-
-        //if(jobDone)
-        //   t.interrupt();
     }
 
 
@@ -113,7 +107,6 @@ public class mainWindowController implements Initializable, Observer {
         menuBar.setVisible(true);
         spinner.setVisible(false);
         logo.setVisible(false);
-        jobDone = true;
     }
 
 /*
@@ -165,40 +158,7 @@ public class mainWindowController implements Initializable, Observer {
         colName.setStyle("-fx-alignment: CENTER");
     }
 
-    public void calculateEstimatedProgress() throws ParseException {
 
-        //  its for later use when we will have start and end date
-    /*
-        ZoneId defaultZoneId = ZoneId.systemDefault();
-        Date sDate = actualDepartmentTask.getStartTime();
-        Date eDate = actualDepartmentTask.getEndDate();
-        Instant instant = sDate.toInstant();
-        Instant instant1 = eDate.toInstant();
-        LocalDate startDate = instant.atZone(defaultZoneId).toLocalDate();
-        LocalDate todaysDate = LocalDate.now();
-        LocalDate endDate = instant1.atZone(defaultZoneId).toLocalDate();
-        long daysBetweenStartAndEnd = ChronoUnit.DAYS.between(startDate, endDate);
-        long daysBetweenStartAndNow = ChronoUnit.DAYS.between(startDate, todaysDate);
-        double valOne = (double)daysBetweenStartAndEnd;
-        double valTwo = (double)daysBetweenStartAndNow;
-        double progress = valTwo/valOne;
-        estimatedProgressLabel.setText((int)(progress*100)+"%");
-        estimatedProgressBar.progressProperty().set(((double)progress));
-*/
-        //Its for now, raw data
-        String startDateS = "2019-04-23";
-        String endDateS = "2019-06-03";
-        LocalDate startDate = LocalDate.parse(startDateS);
-        LocalDate endDate = LocalDate.parse(endDateS);
-        LocalDate todaysDate = LocalDate.now();
-        long daysBetweenStartAndEnd = ChronoUnit.DAYS.between(startDate, endDate);
-        long daysBetweenStartAndNow = ChronoUnit.DAYS.between(startDate, todaysDate);
-        double valOne = (double) daysBetweenStartAndEnd;
-        double valTwo = (double) daysBetweenStartAndNow;
-        double progress = valTwo / valOne;
-        estimatedProgressBar.progressProperty().set(progress);
-
-    }
 
 
     @FXML
@@ -223,7 +183,6 @@ public class mainWindowController implements Initializable, Observer {
         Platform.runLater(() -> {
             try {
                 observableWorkers = (FXCollections.observableArrayList((List<Worker>) (List) model.getWorkers()));
-                calculateEstimatedProgress();
             } catch (Exception e) {
                 e.printStackTrace();
             }

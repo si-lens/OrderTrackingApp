@@ -2,6 +2,8 @@ package orderManager.gui.model;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
 
 import orderManager.be.*;
@@ -38,7 +40,7 @@ public class Model {
     return mlc;
   }
 
-  public List<IProductionOrder> getProductionOrdersFromDB() throws SQLException {
+  public List<IProductionOrder> getProductionOrdersFromDB() throws SQLException, ParseException {
     return mlc.getProducionOrdersByDepartment(getDepartment());
   }
 
@@ -50,7 +52,7 @@ public class Model {
     return po;
   }
 
-public void changeStatus(IProductionOrder prodOrd) throws SQLException {
+public void changeStatus(IProductionOrder prodOrd) throws SQLException, ParseException {
   mlc.changeStatus(prodOrd);
 }
 
@@ -73,7 +75,7 @@ public void changeStatus(IProductionOrder prodOrd) throws SQLException {
     this.po=po;
   }
 
-    public void setSelectedOrderNumber(IOrder order) throws SQLException {
+    public void setSelectedOrderNumber(IOrder order) throws SQLException, ParseException {
       mlc.getDepartmentTaskByOrderNumber(order);
     }
 
@@ -84,4 +86,9 @@ public void changeStatus(IProductionOrder prodOrd) throws SQLException {
   public List<IDepartment> getDepartments() {
     return mlc.getDepartments();
   }
+
+  public double getEstimatedProgress(Date startDate, Date endDate) throws ParseException {
+    return mlc.calculateEstimatedProgress(startDate,endDate);
+  }
+
 }

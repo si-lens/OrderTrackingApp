@@ -8,6 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,7 +41,7 @@ public class productionOrdersDAO {
     return departments;
   }
 
-  public List<IProductionOrder> getDepartmentContent(IDepartment department) throws SQLException {
+  public List<IProductionOrder> getDepartmentContent(IDepartment department) throws SQLException, ParseException {
     con = cp.checkOut();
     List<IProductionOrder> pOrders = new ArrayList<>();
     String sql = "SELECT ProductionOrders.OrderNumber, CustomerID, DeliveryID FROM ProductionOrders,DepartmentTasks,Departments WHERE ProductionOrders.OrderNumber = DepartmentTasks.OrderNumber AND Departments.ID = DepartmentTasks.DepartmentID AND Departments.Name = ?";
@@ -86,7 +87,7 @@ public class productionOrdersDAO {
   }
 
 
-  public IProductionOrder getDepartmentTasks(String orderNumber, IProductionOrder po) throws SQLException {
+  public IProductionOrder getDepartmentTasks(String orderNumber, IProductionOrder po) throws SQLException, ParseException {
     con = cp.checkOut();
     String sql = "SELECT * FROM DepartmentTasks WHERE OrderNumber = ?";
     PreparedStatement ppst = con.prepareStatement(sql);
@@ -136,7 +137,7 @@ public class productionOrdersDAO {
     return workers;
   }
 
-  public List<DepartmentTask> getDepartmentTasksByOrderNumber(IOrder order) throws SQLException {
+  public List<DepartmentTask> getDepartmentTasksByOrderNumber(IOrder order) throws SQLException, ParseException {
     con = cp.checkOut();
     List<DepartmentTask> dp = new ArrayList<>();
     String sql = "SELECT StartDate, EndDate, FinishedOrder, DepartmentID FROM DepartmentTasks " +
@@ -157,7 +158,7 @@ public class productionOrdersDAO {
     return dp;
   }
 
-  public void changeStatus(IProductionOrder prodOrd) throws SQLException {
+  public void changeStatus(IProductionOrder prodOrd) throws SQLException, ParseException {
     con = cp.checkOut();
     String sql =  "UPDATE DepartmentTasks SET DepartmentTasks.FinishedOrder = 1 FROM DepartmentTasks join Departments on DepartmentID=Departments.ID \n" +
             "join ProductionOrders on DepartmentTasks.OrderNumber=ProductionOrders.OrderNumber \n" +

@@ -2,6 +2,7 @@ package orderManager.gui.controller;
 
 import com.jfoenix.controls.*;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -9,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.cell.TreeItemPropertyValueFactory;
 import orderManager.be.DepartmentTask;
@@ -19,6 +21,7 @@ import orderManager.gui.model.Model;
 
 import java.net.URL;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -40,7 +43,11 @@ public class taskWindowController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         model = Model.getInstance();
         selectedOrder = model.getSelectedProductionOrder();
-        observableTasks = (FXCollections.observableArrayList((List<DepartmentTask>) (List) selectedOrder.getDepartmentTasks()));
+        try {
+            observableTasks = (FXCollections.observableArrayList((List<DepartmentTask>) (List) selectedOrder.getDepartmentTasks()));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         try {
             loadWorkers();
             observableWorkers = (FXCollections.observableArrayList((List<Worker>) (List) model.getWorkers()));
@@ -63,15 +70,15 @@ public class taskWindowController implements Initializable {
             }
         } catch (SQLException e) {
             e.printStackTrace();
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
     }
 
     private void setOrderNumber() {
-        System.out.println(selectedOrder.getOrderNumber());
         orderNumberLabel.setText("Order: " + selectedOrder.getOrderNumber());
     }
-
-
+    
     private void loadWorkers() throws SQLException {
         for (IWorker w : model.getWorkers()) {
             addWorkersBox.getItems().add(w.getName());
@@ -87,11 +94,14 @@ public class taskWindowController implements Initializable {
 
         JFXTreeTableColumn<DepartmentTask, Date> endDate = new JFXTreeTableColumn<>("End Date");
         prepareColumn(endDate, "endDate", 94);
-
+/*
         JFXTreeTableColumn<DepartmentTask, Boolean> status = new JFXTreeTableColumn<>("Status");
         prepareColumn(status, "finishedOrder", 94);
+*/
+        JFXTreeTableColumn<DepartmentTask, ProgressBar> progress = new JFXTreeTableColumn<>("Progress");
+        prepareColumn(progress, "progressBar", 94);
 
-        orderTasksTable.getColumns().addAll(department, startDate, endDate, status);
+        orderTasksTable.getColumns().addAll(department, startDate, endDate,progress);
 
         setTaskTable();
     }

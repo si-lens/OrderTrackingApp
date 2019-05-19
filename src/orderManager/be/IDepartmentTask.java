@@ -1,5 +1,6 @@
 package orderManager.be;
 
+import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
@@ -37,4 +38,6 @@ public interface IDepartmentTask {
   List<IWorker> getActiveWorkers();
 
   String getDepartmentName();
+
+  void setProgressBar() throws ParseException;
 }
