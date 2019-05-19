@@ -15,7 +15,7 @@ import orderManager.be.*;
 import orderManager.dal.Connection.ConnectionPool;
 import orderManager.dal.Connection.ConnectionProvider;
 
-public class productionOrdersDAO implements IDAODetails {
+public class productionOrdersDAO {
 
   private ConnectionPool cp;
   private Connection con = null;
@@ -138,7 +138,9 @@ public class productionOrdersDAO implements IDAODetails {
   public List<DepartmentTask> getDepartmentTasksByOrderNumber(IOrder order) throws SQLException {
     con = cp.checkOut();
     List<DepartmentTask> dp = new ArrayList<>();
-    String sql = "SELECT StartDate, EndDate, FinishedOrder, DepartmentID FROM DepartmentTasks join ProductionOrders on DepartmentTasks.ProductionOrderID=ProductionOrders.ID join Orders on ProductionOrders.OrderID=Orders.ID WHERE OrderNumber=?";
+    String sql = "SELECT StartDate, EndDate, FinishedOrder, DepartmentID FROM DepartmentTasks " +
+            "join ProductionOrders on DepartmentTasks.ProductionOrderID=ProductionOrders.ID " +
+            "join Orders on ProductionOrders.OrderID=Orders.ID WHERE OrderNumber=?";
     PreparedStatement ppst = con.prepareStatement(sql);
     ppst.setString(1, order.getOrderNumber());
     ResultSet rs = ppst.executeQuery();
@@ -156,13 +158,9 @@ public class productionOrdersDAO implements IDAODetails {
 
   public void changeStatus(IProductionOrder prodOrd) throws SQLException {
     con = cp.checkOut();
-    String sql =  "UPDATE DepartmentTasks \n" +
-            "SET DepartmentTasks.FinishedOrder = 1 \n" +
-            "FROM DepartmentTasks \n" +
-            "join Departments on DepartmentID=Departments.ID \n" +
-            "join ProductionOrders on DepartmentTasks.ProductionOrderID=ProductionOrders.ID \n" +
-            "join Orders on ProductionOrders.OrderID=Orders.ID\n" +
-            "WHERE Orders.OrderNumber=? and Departments.Name=?";
+    String sql =  "UPDATE DepartmentTasks SET DepartmentTasks.FinishedOrder = 1 FROM DepartmentTasks join Departments on DepartmentID=Departments.ID \n" +
+            "join ProductionOrders on DepartmentTasks.OrderNumber=ProductionOrders.OrderNumber \n" +
+            "WHERE ProductionOrders.OrderNumber=? and Departments.Name=?";
     PreparedStatement ppst = con.prepareStatement(sql);
     ppst.setString(1, prodOrd.getOrder().getOrderNumber());
     ppst.setString(2, prodOrd.getDepartmentTasks().get(1).getDepartment().getName());
@@ -171,17 +169,10 @@ public class productionOrdersDAO implements IDAODetails {
     setHasNewData(true);
   }
 
-  @Override
-  public List getDetails() throws SQLException {
-    return null;
-  }
-
-  @Override
   public boolean hasNewData() {
     return hasNewData;
   }
 
-  @Override
   public void setHasNewData(boolean hasNewData) {
     this.hasNewData = hasNewData;
   }

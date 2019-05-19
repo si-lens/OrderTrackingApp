@@ -7,6 +7,8 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.cell.TreeItemPropertyValueFactory;
 import orderManager.be.DepartmentTask;
@@ -53,7 +55,12 @@ public class taskWindowController implements Initializable {
     private void changeStatus(ActionEvent event)
     {
         try {
-            model.changeStatus(selectedOrder);
+            Alert a = new Alert(Alert.AlertType.CONFIRMATION, "Do you want to mark number '" + selectedOrder.getOrderNumber() + "' task as 'Done'?", ButtonType.YES, ButtonType.NO);
+            a.showAndWait();
+            if (a.getResult() == ButtonType.YES)
+            {
+                model.changeStatus(selectedOrder);
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
