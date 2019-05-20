@@ -37,5 +37,8 @@ public class Worker extends RecursiveTreeObject<Worker> implements IWorker {
     return id;
   }
 
-
+  @Override
+  public String toString() {
+    return name;
+  }
 }

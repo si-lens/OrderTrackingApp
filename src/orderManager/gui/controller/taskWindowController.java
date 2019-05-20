@@ -8,36 +8,36 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.control.TreeItem;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.TreeItemPropertyValueFactory;
-import orderManager.be.DepartmentTask;
-import orderManager.be.IWorker;
-import orderManager.be.ProductionOrder;
-import orderManager.be.Worker;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.StackPane;
+import orderManager.be.*;
 import orderManager.gui.model.Model;
-
+import javafx.scene.control.ComboBox;
 import java.net.URL;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
+import org.controlsfx.control.CheckComboBox;
 
 public class taskWindowController implements Initializable {
     public JFXButton departmentBtn;
     public JFXButton markAsDoneButt;
-    public JFXComboBox addWorkersBox;
+    public ComboBox<String> addWorkersBox;
     public JFXButton orderNumberLabel;
     public JFXButton activeWorkersLabel;
     public JFXTreeTableView orderTasksTable;
     public JFXTreeTableView activeWorkersTable;
+    public StackPane comboBoxPane;
     private Model model;
     private ProductionOrder selectedOrder;
     private ObservableList<DepartmentTask> observableTasks;
-    private ObservableList<Worker> observableWorkers;
+    private ObservableList<IWorker> observableWorkers;
+    private ObservableList<Worker> observableActiveWorkers;
+    private CheckComboBox checkComboBox;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -45,12 +45,12 @@ public class taskWindowController implements Initializable {
         selectedOrder = model.getSelectedProductionOrder();
         try {
             observableTasks = (FXCollections.observableArrayList((List<DepartmentTask>) (List) selectedOrder.getDepartmentTasks()));
-        } catch (ParseException e) {
+            observableWorkers = (FXCollections.observableArrayList(model.getWorkers()));
+        } catch (ParseException | SQLException e) {
             e.printStackTrace();
         }
         try {
             loadWorkers();
-            observableWorkers = (FXCollections.observableArrayList((List<Worker>) (List) model.getWorkers()));
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -80,9 +80,12 @@ public class taskWindowController implements Initializable {
     }
 
     private void loadWorkers() throws SQLException {
+        checkComboBox = new CheckComboBox();
+        checkComboBox.setMaxWidth(140);
         for (IWorker w : model.getWorkers()) {
-            addWorkersBox.getItems().add(w.getName());
+            checkComboBox.getItems().add(w);
         }
+        comboBoxPane.getChildren().add(checkComboBox);
     }
 
     public void prepareTasksTable() {
@@ -112,35 +115,69 @@ public class taskWindowController implements Initializable {
         orderTasksTable.setShowRoot(false);
     }
 
-    /*
-        public void prepareWorkersTable() {
-
-            JFXTreeTableColumn<Worker, String> idCol = new JFXTreeTableColumn<>("ID");
-            prepareColumn(idCol, "id", 33);
-
-            JFXTreeTableColumn<Worker, String> nameCol = new JFXTreeTableColumn<>("Name");
-            prepareColumn(nameCol, "name", 207);
-
-            JFXTreeTableColumn<Worker, String> initialsCol = new JFXTreeTableColumn<>("Initials");
-            prepareColumn(initialsCol, "initials", 44);
-
-            JFXTreeTableColumn<Worker, String> salaryCol = new JFXTreeTableColumn<>("SalaryNumber");
-            prepareColumn(salaryCol, "salary", 93);
-
-
-
-            activeWorkersTable.getColumns().addAll(idCol, nameCol, initialsCol, salaryCol);
-
-            TreeItem<Worker> root = new RecursiveTreeItem<>(observableWorkers, RecursiveTreeObject::getChildren);
-            activeWorkersTable.setRoot(root);
-            activeWorkersTable.setShowRoot(false);
-        }
-    */
     public void prepareColumn(JFXTreeTableColumn colName, String attributeName, int colWidth) {
         colName.setCellValueFactory(new TreeItemPropertyValueFactory<>(attributeName));
         colName.setMinWidth(colWidth);
         colName.setStyle("-fx-alignment: CENTER");
     }
 
+    public void loadActiveWorkers(MouseEvent mouseEvent) {
+        if(mouseEvent.getClickCount()>0 ) {
+            RecursiveTreeItem<DepartmentTask> dt = (RecursiveTreeItem<DepartmentTask>) orderTasksTable.getSelectionModel().getSelectedItem();
+            if (dt.getValue().getActiveWorkers() != null) {
+                observableActiveWorkers = (FXCollections.observableArrayList((List<Worker>) (List) dt.getValue().getActiveWorkers()));
+            } else observableActiveWorkers = null;
+            prepareWorkersTable(observableActiveWorkers);
+
+
+            if (observableActiveWorkers != null) {
+                checkComboBox.getCheckModel().clearChecks();
+                for (int i = 0; i < observableWorkers.size(); i++) {
+                    if (observableActiveWorkers.contains(checkComboBox.getItems().get(i)))
+                        checkComboBox.getCheckModel().check(i);
+                }
+            }
+        }
+    }
+
+
+
+    public void prepareWorkersTable(ObservableList<Worker> observableWorkers) {
+
+        JFXTreeTableColumn<Worker, String> idCol = new JFXTreeTableColumn<>("ID");
+        prepareColumn(idCol, "id", 33);
+
+        JFXTreeTableColumn<Worker, String> nameCol = new JFXTreeTableColumn<>("Name");
+        prepareColumn(nameCol, "name", 207);
+
+        JFXTreeTableColumn<Worker, String> initialsCol = new JFXTreeTableColumn<>("Initials");
+        prepareColumn(initialsCol, "initials", 44);
+
+        JFXTreeTableColumn<Worker, String> salaryCol = new JFXTreeTableColumn<>("SalaryNumber");
+        prepareColumn(salaryCol, "salary", 93);
+
+        activeWorkersTable.getColumns().addAll(idCol, nameCol, initialsCol, salaryCol);
+
+        setWorkersTable();
+    }
+
+    private void setWorkersTable() {
+        TreeItem<Worker> root = new RecursiveTreeItem<>(observableActiveWorkers, RecursiveTreeObject::getChildren);
+        activeWorkersTable.setRoot(root);
+        activeWorkersTable.setShowRoot(false);
+    }
+
+
+    public void addActiveWorkers(ActionEvent actionEvent) {
+        if(orderTasksTable.getSelectionModel().getSelectedItem()!=null){
+            RecursiveTreeItem<DepartmentTask> dt = (RecursiveTreeItem<DepartmentTask>) orderTasksTable.getSelectionModel().getSelectedItem();
+            observableActiveWorkers = checkComboBox.getCheckModel().getCheckedItems();
+            for(Worker w: observableActiveWorkers){
+                if(!(dt.getValue().getActiveWorkers().contains(w)))
+                    dt.getValue().addWorker(w);
+            }
+            prepareWorkersTable(observableActiveWorkers);
+        }
+    }
 }
 

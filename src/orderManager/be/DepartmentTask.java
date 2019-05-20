@@ -24,7 +24,7 @@ public class DepartmentTask extends RecursiveTreeObject<orderManager.be.Departme
         this.endDate = endDate;
         this.department = department;
         setProgressBar();
-
+        listOfWorkers=list;
     }
     public String getDepartmentName(){ return department.getName();}
 
