@@ -78,7 +78,7 @@ public class taskWindowController implements Initializable {
     private void setOrderNumber() {
         orderNumberLabel.setText("Order: " + selectedOrder.getOrderNumber());
     }
-    
+
     private void loadWorkers() throws SQLException {
         for (IWorker w : model.getWorkers()) {
             addWorkersBox.getItems().add(w.getName());
