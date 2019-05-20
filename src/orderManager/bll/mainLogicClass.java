@@ -2,7 +2,9 @@ package orderManager.bll;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -18,6 +20,9 @@ import orderManager.dal.availableWorkersDAO;
 import orderManager.dal.jsonReader;
 import orderManager.dal.jsonReaderMK2;
 import orderManager.dal.productionOrdersDAO;
+import sun.java2d.pipe.SpanShapeRenderer;
+
+import javax.swing.text.DateFormatter;
 
 public class mainLogicClass extends Observable {
 
@@ -97,23 +102,6 @@ public class mainLogicClass extends Observable {
     //Observable Design Pattern
     public void setIsRunning(boolean isRunning) {
         this.isRunning = isRunning;
-    }
-
-
-    public double calculateEstimatedProgress(Date sD, Date eD) throws ParseException {
-        String startDateS = sD.toString();
-        String endDateS = eD.toString();
-        LocalDate startDate = LocalDate.parse(startDateS);
-        LocalDate endDate = LocalDate.parse(endDateS);
-        LocalDate todaysDate = LocalDate.now();
-        long daysBetweenStartAndEnd = ChronoUnit.DAYS.between(startDate, endDate);
-        long daysBetweenStartAndNow = ChronoUnit.DAYS.between(startDate, todaysDate);
-        double valOne = (double) daysBetweenStartAndEnd;
-        double valTwo = (double) daysBetweenStartAndNow;
-        double progress = valTwo / valOne;
-        if(progress<0)
-            progress=0;
-        return progress;
     }
 
 }

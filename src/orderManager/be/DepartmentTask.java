@@ -1,19 +1,9 @@
 package orderManager.be;
 
-import com.jfoenix.controls.JFXProgressBar;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
-import javafx.application.Platform;
-import javafx.concurrent.Worker;
 import javafx.event.EventHandler;
-import javafx.scene.control.ProgressBar;
 import javafx.scene.control.ProgressIndicator;
-import orderManager.gui.model.Model;
 
-import java.text.ParseException;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
 
@@ -25,30 +15,24 @@ public class DepartmentTask extends RecursiveTreeObject<orderManager.be.Departme
     private Date startDate;
     private Date endDate;
     private List<IWorker> listOfWorkers;
-    private ProgressBar progressBar;
+    private CustomProgressBar progressBar;
     private ProgressIndicator progressIndicator;
-    private Double progressBarValue;
-    private Model model;
 
-    public DepartmentTask(Date startDate, Date endDate, boolean orderState, IDepartment department, List<IWorker> list) throws ParseException {
+    public DepartmentTask(Date startDate, Date endDate, boolean orderState, IDepartment department, List<IWorker> list) {
         this.orderState = orderState;
         this.startDate = startDate;
         this.endDate = endDate;
         this.department = department;
-        model=Model.getInstance();
         setProgressBar();
 
     }
     public String getDepartmentName(){ return department.getName();}
 
-    public void setProgressBar() throws ParseException {
-        progressBarValue = model.getEstimatedProgress(this.startDate,this.endDate);
-        progressBar = new ProgressBar();
-        progressBar.progressProperty().set(progressBarValue);
+    public void setProgressBar(){
+        progressBar = new CustomProgressBar(startDate, endDate);
     }
 
-
-    public ProgressBar getProgressBar(){
+    public CustomProgressBar getProgressBar(){
         return progressBar;
     }
 

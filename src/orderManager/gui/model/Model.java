@@ -87,8 +87,4 @@ public void changeStatus(IProductionOrder prodOrd) throws SQLException, ParseExc
     return mlc.getDepartments();
   }
 
-  public double getEstimatedProgress(Date startDate, Date endDate) throws ParseException {
-    return mlc.calculateEstimatedProgress(startDate,endDate);
-  }
-
 }
