@@ -31,7 +31,7 @@
                   </JFXButton>
                </children>
             </StackPane>
-            <StackPane fx:id="comboBoxPane1" layoutX="301.0" layoutY="449.0" prefHeight="48.0" prefWidth="91.0">
+            <StackPane fx:id="comboBoxPane1" layoutX="301.0" layoutY="449.0" prefHeight="48.0" prefWidth="91.0" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="9.0">
                <children>
                   <JFXButton fx:id="addWorkersButton" onAction="#addActiveWorkers" prefHeight="25.0" prefWidth="117.0" ripplerFill="#d3cece" style="-fx-background-color: #d3cece;" text="Add workers" />
                </children>
