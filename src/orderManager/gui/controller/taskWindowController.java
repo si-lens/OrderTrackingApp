@@ -26,12 +26,12 @@ import org.controlsfx.control.CheckComboBox;
 public class taskWindowController implements Initializable {
     public JFXButton departmentBtn;
     public JFXButton markAsDoneButt;
-    public ComboBox<String> addWorkersBox;
     public JFXButton orderNumberLabel;
     public JFXButton activeWorkersLabel;
     public JFXTreeTableView orderTasksTable;
     public JFXTreeTableView activeWorkersTable;
     public StackPane comboBoxPane;
+    public JFXButton addWorkersButton;
     private Model model;
     private ProductionOrder selectedOrder;
     private ObservableList<DepartmentTask> observableTasks;
@@ -121,28 +121,48 @@ public class taskWindowController implements Initializable {
         colName.setStyle("-fx-alignment: CENTER");
     }
 
-    public void loadActiveWorkers(MouseEvent mouseEvent) {
-        if(mouseEvent.getClickCount()>0 ) {
+    public void loadClickedContent(MouseEvent mouseEvent) {
+        if (mouseEvent.getClickCount() > 0) {
             RecursiveTreeItem<DepartmentTask> dt = (RecursiveTreeItem<DepartmentTask>) orderTasksTable.getSelectionModel().getSelectedItem();
-            if (dt.getValue().getActiveWorkers() != null) {
+            if(dt.getValue().getDepartment().getName().equals(model.getDepartment().getName())){
+                disableFunctionality(false);
+                loadActiveWorkers();
+        }else{
+                disableFunctionality(true);
                 observableActiveWorkers = (FXCollections.observableArrayList((List<Worker>) (List) dt.getValue().getActiveWorkers()));
-            } else observableActiveWorkers = null;
-            prepareWorkersTable(observableActiveWorkers);
-
-
-            if (observableActiveWorkers != null) {
-                checkComboBox.getCheckModel().clearChecks();
-                for (int i = 0; i < observableWorkers.size(); i++) {
-                    if (observableActiveWorkers.contains(checkComboBox.getItems().get(i)))
-                        checkComboBox.getCheckModel().check(i);
-                }
+                prepareWorkersTable(observableActiveWorkers);
             }
+    }
+    }
+
+    private void loadActiveWorkers(){
+        RecursiveTreeItem<DepartmentTask> dt = (RecursiveTreeItem<DepartmentTask>) orderTasksTable.getSelectionModel().getSelectedItem();
+        if (dt.getValue().getActiveWorkers() != null) {
+            observableActiveWorkers = (FXCollections.observableArrayList((List<Worker>) (List) dt.getValue().getActiveWorkers()));
+        } else observableActiveWorkers = null;
+        prepareWorkersTable(observableActiveWorkers);
+        if (observableActiveWorkers != null) {
+            loadComboBoxChecks();
+        }
+    }
+
+    private void disableFunctionality(boolean b) {
+        markAsDoneButt.setDisable(b);
+        checkComboBox.setDisable(b);
+        addWorkersButton.setDisable(b);
+    }
+
+    public void loadComboBoxChecks(){
+        checkComboBox.getCheckModel().clearChecks();
+        for (int i = 0; i < observableWorkers.size(); i++) {
+            if (observableActiveWorkers.contains(checkComboBox.getItems().get(i)))
+                checkComboBox.getCheckModel().check(i);
         }
     }
 
 
 
-    public void prepareWorkersTable(ObservableList<Worker> observableWorkers) {
+    public void prepareWorkersTable(ObservableList<Worker> ow) {
 
         JFXTreeTableColumn<Worker, String> idCol = new JFXTreeTableColumn<>("ID");
         prepareColumn(idCol, "id", 33);
@@ -158,11 +178,11 @@ public class taskWindowController implements Initializable {
 
         activeWorkersTable.getColumns().addAll(idCol, nameCol, initialsCol, salaryCol);
 
-        setWorkersTable();
+        setWorkersTable(ow);
     }
 
-    private void setWorkersTable() {
-        TreeItem<Worker> root = new RecursiveTreeItem<>(observableActiveWorkers, RecursiveTreeObject::getChildren);
+    private void setWorkersTable(ObservableList<Worker> ow) {
+        TreeItem<Worker> root = new RecursiveTreeItem<>(ow, RecursiveTreeObject::getChildren);
         activeWorkersTable.setRoot(root);
         activeWorkersTable.setShowRoot(false);
     }

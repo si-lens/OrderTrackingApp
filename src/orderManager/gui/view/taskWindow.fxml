@@ -12,7 +12,7 @@
    <items>
       <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="200.0">
          <children>
-            <JFXTreeTableView fx:id="orderTasksTable" layoutX="14.0" layoutY="81.0" onMouseClicked="#loadActiveWorkers" prefHeight="351.0" prefWidth="359.0" AnchorPane.bottomAnchor="62.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="9.0" AnchorPane.topAnchor="81.0">
+            <JFXTreeTableView fx:id="orderTasksTable" layoutX="14.0" layoutY="81.0" onMouseClicked="#loadClickedContent" prefHeight="351.0" prefWidth="359.0" AnchorPane.bottomAnchor="62.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="9.0" AnchorPane.topAnchor="81.0">
                <columnResizePolicy>
                   <TreeTableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                </columnResizePolicy></JFXTreeTableView>
@@ -33,7 +33,7 @@
             </StackPane>
             <StackPane fx:id="comboBoxPane1" layoutX="301.0" layoutY="449.0" prefHeight="48.0" prefWidth="91.0">
                <children>
-                  <JFXButton onAction="#addActiveWorkers" prefHeight="25.0" prefWidth="117.0" ripplerFill="#d3cece" style="-fx-background-color: #d3cece;" text="Add workers" />
+                  <JFXButton fx:id="addWorkersButton" onAction="#addActiveWorkers" prefHeight="25.0" prefWidth="117.0" ripplerFill="#d3cece" style="-fx-background-color: #d3cece;" text="Add workers" />
                </children>
             </StackPane>
          </children>
