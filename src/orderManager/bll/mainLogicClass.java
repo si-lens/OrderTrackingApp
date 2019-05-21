@@ -2,27 +2,14 @@ package orderManager.bll;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Observable;
 
 import orderManager.be.*;
 import orderManager.dal.availableWorkersDAO;
-import orderManager.dal.jsonReader;
 import orderManager.dal.jsonReaderMK2;
 import orderManager.dal.productionOrdersDAO;
-import sun.java2d.pipe.SpanShapeRenderer;
-
-import javax.swing.text.DateFormatter;
 
 public class mainLogicClass extends Observable {
 
@@ -68,8 +55,8 @@ public class mainLogicClass extends Observable {
         return pDAO.getDepartmentContent(department);
     }
 
-    public void changeStatus(IProductionOrder prodOrd) throws SQLException, ParseException {
-        pDAO.changeStatus(prodOrd);
+    public void changeStatus(IProductionOrder prodOrd, IDepartment department) throws SQLException, ParseException {
+        pDAO.changeStatus(prodOrd, department);
     }
 
     /*

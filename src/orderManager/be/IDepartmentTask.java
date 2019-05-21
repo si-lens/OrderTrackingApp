@@ -1,11 +1,9 @@
 package orderManager.be;
 
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
-
-import javafx.concurrent.Worker;
-import javafx.event.EventHandler;
 
 //Defines a task for a given department.
 public interface IDepartmentTask {
@@ -23,16 +21,16 @@ public interface IDepartmentTask {
   Date getEndDate();
 
   //Adds a worker as an active worker on this department task.
-  void addWorker(IWorker worker);
+  void addWorker(IWorker worker) throws SQLException;
 
   //Removes a worker form this department task active workers.
-  void removeWorker(IWorker worker);
+  void removeWorker(IWorker worker) throws SQLException;
 
   //Raised when a worker has been added to this order.
-  EventHandler workerAdded();
+  void workerAdded(IWorker worker) throws SQLException;
 
   //Raised when a worker has been removed from this order.
-  EventHandler workerRemoved();
+  void workerRemoved(IWorker worker) throws SQLException;
 
   //Defines the active workers on this given production order.
   List<IWorker> getActiveWorkers();

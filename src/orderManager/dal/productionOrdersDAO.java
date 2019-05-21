@@ -1,6 +1,7 @@
 package orderManager.dal;
 
 import com.microsoft.sqlserver.jdbc.SQLServerException;
+import com.sun.xml.internal.bind.v2.model.core.ID;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.Date;
@@ -99,7 +100,7 @@ public class productionOrdersDAO {
       Date startDate = rs.getDate("StartDate");
       boolean finishedOrder = rs.getBoolean("FinishedOrder");
       int departmentID = rs.getInt("DepartmentID");
-      IDepartmentTask department = new DepartmentTask(startDate, endDate, finishedOrder, getDepartment(departmentID), getWorkers(id));
+      IDepartmentTask department = new DepartmentTask(id, startDate, endDate, finishedOrder, getDepartment(departmentID), getWorkers(id));
       po.addDepartmentTask(department);
     }
     cp.checkIn(con);
@@ -140,32 +141,33 @@ public class productionOrdersDAO {
   public List<DepartmentTask> getDepartmentTasksByOrderNumber(IOrder order) throws SQLException, ParseException {
     con = cp.checkOut();
     List<DepartmentTask> dp = new ArrayList<>();
-    String sql = "SELECT StartDate, EndDate, FinishedOrder, DepartmentID FROM DepartmentTasks " +
+    String sql = "SELECT  ID, StartDate, EndDate, FinishedOrder, DepartmentID FROM DepartmentTasks " +
             "join ProductionOrders on DepartmentTasks.ProductionOrderID=ProductionOrders.ID " +
             "join Orders on ProductionOrders.OrderID=Orders.ID WHERE OrderNumber=?";
     PreparedStatement ppst = con.prepareStatement(sql);
     ppst.setString(1, order.getOrderNumber());
     ResultSet rs = ppst.executeQuery();
     while (rs.next()) {
+      int id = rs.getInt("ID");
       Date startDate = rs.getDate("StartDate");
       Date endDate = rs.getDate("EndDate");
       boolean finishedOrder = rs.getBoolean("FinishedOrder");
       int departmentID = rs.getInt("DepartmentID");
-      DepartmentTask dt = new DepartmentTask(startDate, endDate, finishedOrder, getDepartment(departmentID), null);
+      DepartmentTask dt = new DepartmentTask(id, startDate, endDate, finishedOrder, getDepartment(departmentID), null);
       dp.add(dt);
     }
     cp.checkIn(con);
     return dp;
   }
 
-  public void changeStatus(IProductionOrder prodOrd) throws SQLException, ParseException {
+  public void changeStatus(IProductionOrder prodOrd, IDepartment department) throws SQLException {
     con = cp.checkOut();
     String sql =  "UPDATE DepartmentTasks SET DepartmentTasks.FinishedOrder = 1 FROM DepartmentTasks join Departments on DepartmentID=Departments.ID \n" +
             "join ProductionOrders on DepartmentTasks.OrderNumber=ProductionOrders.OrderNumber \n" +
             "WHERE ProductionOrders.OrderNumber=? and Departments.Name=?";
     PreparedStatement ppst = con.prepareStatement(sql);
     ppst.setString(1, prodOrd.getOrder().getOrderNumber());
-    ppst.setString(2, prodOrd.getDepartmentTasks().get(1).getDepartment().getName());
+    ppst.setString(2, department.getName());
     ppst.execute();
     cp.checkIn(con);
     setHasNewData(true);

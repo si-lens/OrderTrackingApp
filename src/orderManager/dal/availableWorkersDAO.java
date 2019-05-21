@@ -1,6 +1,8 @@
 package orderManager.dal;
 
 import com.microsoft.sqlserver.jdbc.SQLServerException;
+import orderManager.be.IDepartment;
+import orderManager.be.IDepartmentTask;
 import orderManager.be.IWorker;
 import orderManager.be.Worker;
 import orderManager.dal.Connection.ConnectionPool;
@@ -12,15 +14,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class availableWorkersDAO implements IDAODetails {
-    private ConnectionPool cp;
-    private Connection con = null;
+    private static ConnectionPool cp;
+    private static Connection con;
     private boolean hasNewData;
 
-    public availableWorkersDAO() throws IOException, SQLServerException {
+    public availableWorkersDAO() {
         cp = new ConnectionPool();
     }
 
-    public List<IWorker> getWorkers() throws SQLException {
+    public static List<IWorker> getWorkers() throws SQLException {
         con = cp.checkOut();
         List<IWorker> workers = new ArrayList<>();
         String sql = "SELECT * FROM AvailableWorkers";
@@ -39,15 +41,25 @@ public class availableWorkersDAO implements IDAODetails {
         return workers;
     }
 
-      /*
-    public void setName(String name) throws SQLException {
+    public static void addWorkerToDepartmentTask(int departmentID, int workerID) throws SQLException {
         con = cp.checkOut();
-        String sql = "INSERT INTO AvailableWorkers()";
-        Statement st = con.createStatement();
-        ResultSet rs =  st.executeQuery(sql);
-        cp.checkIn(con);
+        String sql = "INSERT INTO TaskWorkers(DepartmentTaskID,WorkerID) SELECT ?,? WHERE NOT EXISTS(SELECT * FROM TaskWorkers WHERE DepartmentTaskID = ? AND WorkerID = ?)";
+        PreparedStatement ppst = con.prepareStatement(sql);
+        ppst.setInt(1, departmentID);
+        ppst.setInt(2, workerID);
+        ppst.setInt(3, departmentID);
+        ppst.setInt(4, workerID);
+        ppst.execute();
     }
-     */
+
+    public static void removeWorkerFromDepartmentTask(int departmentID, int workerID) throws SQLException {
+        con = cp.checkOut();
+        String sql = "DELETE FROM TaskWorkers WHERE DepartmentTaskID = ? AND WorkerID = ?";
+        PreparedStatement ppst = con.prepareStatement(sql);
+        ppst.setInt(1, departmentID);
+        ppst.setInt(2, workerID);
+        ppst.execute();
+    }
 
     @Override
     public List getDetails() throws SQLException {

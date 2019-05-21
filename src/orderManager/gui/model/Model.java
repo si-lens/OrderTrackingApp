@@ -53,7 +53,7 @@ public class Model {
   }
 
 public void changeStatus(IProductionOrder prodOrd) throws SQLException, ParseException {
-  mlc.changeStatus(prodOrd);
+  mlc.changeStatus(prodOrd, department);
 }
 
   public IDepartment getDepartment() {
