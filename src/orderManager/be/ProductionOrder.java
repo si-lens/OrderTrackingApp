@@ -21,6 +21,13 @@ public class ProductionOrder extends RecursiveTreeObject<ProductionOrder> implem
     departmentTaskList = new ArrayList<>();
   }
 
+  public CustomProgressBar getProgressBar()
+  {
+    Date startDate = departmentTaskList.get(0).getStartDate();
+    Date endDate = departmentTaskList.get(departmentTaskList.size()-1).getEndDate();
+    return new CustomProgressBar(startDate, endDate);
+  }
+
   @Override
   public IOrder getOrder() {
     return order;

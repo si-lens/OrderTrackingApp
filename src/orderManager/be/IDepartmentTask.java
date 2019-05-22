@@ -37,5 +37,5 @@ public interface IDepartmentTask {
 
   String getDepartmentName();
 
-  void setProgressBar() throws ParseException;
+  CustomProgressBar getProgressBar() throws ParseException;
 }
