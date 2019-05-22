@@ -18,10 +18,10 @@
                </columnResizePolicy></JFXTreeTableView>
             <StackPane alignment="CENTER_LEFT" layoutX="14.0" layoutY="449.0" prefHeight="48.0" prefWidth="178.0" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0">
                <children>
-                  <JFXButton fx:id="markAsDoneButt" onAction="#changeStatus" prefHeight="25.0" prefWidth="117.0" ripplerFill="#d3cece" style="-fx-background-color: #d3cece;" text="Mark as done" />
+                  <JFXButton fx:id="markAsDoneButt" onAction="#changeStatus" prefHeight="25.0" prefWidth="95.0" ripplerFill="#d3cece" style="-fx-background-color: #d3cece;" text="Mark as done" />
                </children>
             </StackPane>
-            <StackPane fx:id="comboBoxPane" alignment="CENTER_RIGHT" layoutX="211.0" layoutY="449.0" prefHeight="48.0" prefWidth="100.0" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="106.0" />
+            <StackPane fx:id="comboBoxPane" alignment="CENTER_RIGHT" layoutX="180.0" layoutY="449.0" prefHeight="48.0" prefWidth="103.0" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="118.0" />
             <StackPane layoutX="18.0" layoutY="33.0" prefHeight="48.0" prefWidth="359.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="9.0" AnchorPane.topAnchor="33.0">
                <children>
                   <JFXButton id="departmentDisplayer" fx:id="orderNumberLabel" alignment="CENTER" buttonType="RAISED" contentDisplay="CENTER" depthTest="DISABLE" disable="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" opacity="0.79" prefHeight="37.0" prefWidth="231.0" ripplerFill="WHITE" style="-fx-padding: 0 0 0 0;" text="Order Number" textAlignment="CENTER">
@@ -31,9 +31,9 @@
                   </JFXButton>
                </children>
             </StackPane>
-            <StackPane fx:id="comboBoxPane1" layoutX="301.0" layoutY="449.0" prefHeight="48.0" prefWidth="91.0" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="9.0">
+            <StackPane fx:id="comboBoxPane1" layoutX="301.0" layoutY="449.0" prefHeight="48.0" prefWidth="103.0" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="9.0">
                <children>
-                  <JFXButton fx:id="addWorkersButton" onAction="#addActiveWorkers" prefHeight="25.0" prefWidth="117.0" ripplerFill="#d3cece" style="-fx-background-color: #d3cece;" text="Add workers" />
+                  <JFXButton fx:id="addWorkersButton" onAction="#addRemoveButton" prefHeight="25.0" prefWidth="133.0" ripplerFill="#d3cece" style="-fx-background-color: #d3cece;" text="Change workers" />
                </children>
             </StackPane>
          </children>

@@ -67,7 +67,6 @@ public class DepartmentTask extends RecursiveTreeObject<orderManager.be.Departme
     listOfWorkers.add(worker);
     workerAdded(worker);
   }
-
   @Override
   public void removeWorker(IWorker worker) throws SQLException {
     listOfWorkers.remove(worker);
