@@ -39,6 +39,7 @@ import javax.swing.JFrame;
 
 import javafx.stage.Stage;
 import orderManager.be.Department;
+import orderManager.be.DepartmentTask;
 import orderManager.be.IDepartment;
 import orderManager.be.ProductionOrder;
 import orderManager.be.Worker;
@@ -138,7 +139,10 @@ public class mainWindowController implements Initializable, Observer {
             JFXTreeTableColumn<ProductionOrder, Date> deliveryDate = new JFXTreeTableColumn<>("Delivery Date");
             prepareColumn(deliveryDate, "deliveryDate", 145);
 
-            ordersTab.getColumns().addAll(orderNumber, customerName, deliveryDate);
+            JFXTreeTableColumn<ProductionOrder, ProgressBar> progress = new JFXTreeTableColumn<>("Progress");
+            prepareColumn(progress, "progressBar", 94);
+
+            ordersTab.getColumns().addAll(orderNumber, customerName, deliveryDate, progress);
 
         }
 
