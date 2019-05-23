@@ -3,9 +3,11 @@ package orderManager.bll;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Observable;
 
+import jdk.net.SocketFlow;
 import orderManager.be.*;
 import orderManager.dal.availableWorkersDAO;
 import orderManager.dal.jsonReaderMK2;
@@ -52,11 +54,60 @@ public class mainLogicClass extends Observable {
     }
 
     public List<IProductionOrder> getProducionOrdersByDepartment(IDepartment department) throws SQLException, ParseException {
-        return pDAO.getDepartmentContent(department);
+        List<IProductionOrder> poList = pDAO.getDepartmentContent(department);
+        for (IProductionOrder po : poList) {
+            for (int i = 0; i < po.getDepartmentTasks().size(); i++)
+            {
+                IDepartmentTask depFirst;
+                IDepartmentTask depSecond;
+                if (i == 0)
+                {
+                    depFirst = null;
+                    depSecond = po.getDepartmentTasks().get(i);
+                } else
+                {
+                    depFirst = po.getDepartmentTasks().get(i - 1);
+                    depSecond = po.getDepartmentTasks().get(i);
+                }
+                setColorsForProgressBar(depFirst, depSecond);
+            }
+        }
+        return poList;
     }
 
-    public void changeStatus(IProductionOrder prodOrd, IDepartment department) throws SQLException, ParseException {
+    public void changeStatus(IProductionOrder prodOrd, IDepartment department) throws SQLException {
         pDAO.changeStatus(prodOrd, department);
+    }
+
+    private void setColorsForProgressBar(IDepartmentTask depFirst, IDepartmentTask depSecond) throws ParseException {
+        if (depFirst != null) {
+            if (depSecond.getFinishedOrder() && depFirst.getProgressBar().getStatus() != CustomProgressBar.Status.BEHIND) {
+                depSecond.setProgressBar(CustomProgressBar.Status.DONE);
+            } else if (getBeforeNow(depSecond) && (depFirst.getProgressBar().getStatus() != CustomProgressBar.Status.BEHIND && depFirst.getProgressBar().getStatus() != CustomProgressBar.Status.NOT_STARTED) && !depSecond.getFinishedOrder()) {
+                depSecond.setProgressBar(CustomProgressBar.Status.ALL_GOOD);
+            } else if (getBeforeNow(depSecond) && (depFirst.getProgressBar().getStatus() == CustomProgressBar.Status.BEHIND || depFirst.getProgressBar().getStatus() == CustomProgressBar.Status.NOT_STARTED) && !depSecond.getFinishedOrder()) {
+                depSecond.setProgressBar(CustomProgressBar.Status.NOT_STARTED);
+            } else if (!getBeforeNow(depSecond) && !depSecond.getFinishedOrder()) {
+                depSecond.setProgressBar(CustomProgressBar.Status.BEHIND);
+            }
+        } else
+        {
+            if (depSecond.getFinishedOrder())
+            {
+                depSecond.setProgressBar(CustomProgressBar.Status.DONE);
+            } else if (getBeforeNow(depSecond) && !depSecond.getFinishedOrder())
+            {
+                depSecond.setProgressBar(CustomProgressBar.Status.ALL_GOOD);
+            } else if (!getBeforeNow(depSecond) && !depSecond.getFinishedOrder())
+            {
+                depSecond.setProgressBar(CustomProgressBar.Status.BEHIND);
+            }
+        }
+    }
+
+    private boolean getBeforeNow(IDepartmentTask dt)
+    {
+        return LocalDate.now().isBefore(LocalDate.parse(dt.getEndDate().toString()));
     }
 
     /*
@@ -87,8 +138,10 @@ public class mainLogicClass extends Observable {
 
  */
     //Observable Design Pattern
+    /*
     public void setIsRunning(boolean isRunning) {
         this.isRunning = isRunning;
     }
+    */
 
 }

@@ -17,7 +17,6 @@ public class DepartmentTask extends RecursiveTreeObject<orderManager.be.Departme
   private Date endDate;
   private List<IWorker> listOfWorkers;
   private CustomProgressBar progressBar;
-  private ProgressIndicator progressIndicator;
 
   public DepartmentTask(int id, Date startDate, Date endDate, boolean orderState, IDepartment department, List<IWorker> list) {
     this.id = id;
@@ -32,8 +31,15 @@ public class DepartmentTask extends RecursiveTreeObject<orderManager.be.Departme
     return department.getName();
   }
 
+  @Override
   public CustomProgressBar getProgressBar() {
-    return new CustomProgressBar(startDate, endDate);
+    return progressBar;
+  }
+
+  @Override
+  public void setProgressBar(CustomProgressBar.Status status)
+  {
+    this.progressBar = new CustomProgressBar(startDate, endDate, status);
   }
 
   @Override

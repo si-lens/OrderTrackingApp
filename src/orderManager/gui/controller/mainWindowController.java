@@ -38,11 +38,7 @@ import javafx.scene.text.Text;
 import javax.swing.JFrame;
 
 import javafx.stage.Stage;
-import orderManager.be.Department;
-import orderManager.be.DepartmentTask;
-import orderManager.be.IDepartment;
-import orderManager.be.ProductionOrder;
-import orderManager.be.Worker;
+import orderManager.be.*;
 import orderManager.gui.model.Model;
 import orderManager.windowOpener;
 
@@ -82,6 +78,7 @@ public class mainWindowController implements Initializable, Observer {
             System.out.println("thread dziala");
             try {
                 observableOrders = (FXCollections.observableArrayList((List<ProductionOrder>) (List) model.getProductionOrdersFromDB()));
+                setIndication();
             } catch (SQLException | ParseException e) {
                 e.printStackTrace();
             }
@@ -110,6 +107,18 @@ public class mainWindowController implements Initializable, Observer {
         logo.setVisible(false);
     }
 
+    private void setIndication() throws ParseException {
+        for (ProductionOrder p : observableOrders) {
+            for (IDepartmentTask depTask : p.getDepartmentTasks())
+            {
+                if (depTask.getDepartment().getName().equals(chosenDepartment.getName()))
+                {
+                    p.setIndication(depTask);
+                }
+            }
+        }
+    }
+
 /*
   private void refresh() {
     Runnable runnable = () -> Platform.runLater(() -> {
@@ -130,6 +139,9 @@ public class mainWindowController implements Initializable, Observer {
     public void prepareOrdersTable() {
         if (ordersTab.getColumns().isEmpty()) {
 
+            JFXTreeTableColumn<ProductionOrder, Label> indication = new JFXTreeTableColumn<>("Progress");
+            prepareColumn(indication, "indication", 45);
+
             JFXTreeTableColumn<ProductionOrder, String> orderNumber = new JFXTreeTableColumn<>("Order Number");
             prepareColumn(orderNumber, "orderNumber", 145);
 
@@ -139,10 +151,7 @@ public class mainWindowController implements Initializable, Observer {
             JFXTreeTableColumn<ProductionOrder, Date> deliveryDate = new JFXTreeTableColumn<>("Delivery Date");
             prepareColumn(deliveryDate, "deliveryDate", 145);
 
-            JFXTreeTableColumn<ProductionOrder, ProgressBar> progress = new JFXTreeTableColumn<>("Progress");
-            prepareColumn(progress, "progressBar", 94);
-
-            ordersTab.getColumns().addAll(orderNumber, customerName, deliveryDate, progress);
+            ordersTab.getColumns().addAll(indication, orderNumber, customerName, deliveryDate);
 
         }
 

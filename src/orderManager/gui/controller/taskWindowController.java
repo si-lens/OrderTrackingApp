@@ -53,6 +53,13 @@ public class taskWindowController implements Initializable {
         selectedOrder = model.getSelectedProductionOrder();
         try {
             observableTasks = (FXCollections.observableArrayList((List<DepartmentTask>) (List) selectedOrder.getDepartmentTasks()));
+            for (int i = 0; i < observableTasks.size(); i++)
+            {
+                if (observableTasks.get(i).getDepartmentName().equals(model.getDepartment().getName()))
+                {
+                    observableTasks.remove(i+1, observableTasks.size());
+                }
+            }
             observableWorkers = (FXCollections.observableArrayList((List<Worker>) (List) model.getWorkers()));
         } catch (ParseException | SQLException e) {
             e.printStackTrace();

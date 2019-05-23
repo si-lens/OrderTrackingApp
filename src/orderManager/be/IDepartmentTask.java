@@ -38,4 +38,6 @@ public interface IDepartmentTask {
   String getDepartmentName();
 
   CustomProgressBar getProgressBar() throws ParseException;
+
+  void setProgressBar(CustomProgressBar.Status status);
 }
