@@ -1,6 +1,7 @@
 package orderManager.be;
 
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
+import javafx.scene.control.Label;
 
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ public class ProductionOrder extends RecursiveTreeObject<ProductionOrder> implem
   private IDelivery delivery;
   private ICustomer customer;
   private List<IDepartmentTask> departmentTaskList;
+  private Label label;
 
   public ProductionOrder(ICustomer customer, IDelivery delivery, IOrder order) {
     this.delivery = delivery;
@@ -21,11 +23,12 @@ public class ProductionOrder extends RecursiveTreeObject<ProductionOrder> implem
     departmentTaskList = new ArrayList<>();
   }
 
-  public CustomProgressBar getProgressBar()
-  {
-    Date startDate = departmentTaskList.get(0).getStartDate();
-    Date endDate = departmentTaskList.get(departmentTaskList.size()-1).getEndDate();
-    return new CustomProgressBar(startDate, endDate);
+  public Label getIndication() {
+    return label;
+  }
+
+  public void setIndication(IDepartmentTask depTask) throws ParseException {
+      label = depTask.getProgressBar().getIndication();
   }
 
   @Override
