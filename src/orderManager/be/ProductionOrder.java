@@ -47,7 +47,7 @@ public class ProductionOrder extends RecursiveTreeObject<ProductionOrder> implem
   }
 
   @Override
-  public List<IDepartmentTask> getDepartmentTasks() throws ParseException {
+  public List<IDepartmentTask> getDepartmentTasks() {
     return departmentTaskList;
   }
 

@@ -36,9 +36,4 @@ public class Worker extends RecursiveTreeObject<Worker> implements IWorker {
   public int getId() {
     return id;
   }
-
-  @Override
-  public String toString() {
-    return name;
-  }
 }

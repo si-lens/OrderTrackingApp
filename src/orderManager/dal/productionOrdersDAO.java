@@ -1,27 +1,17 @@
 package orderManager.dal;
 
-import com.microsoft.sqlserver.jdbc.SQLServerException;
-import com.sun.xml.internal.bind.v2.model.core.ID;
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import orderManager.be.*;
+import orderManager.dal.Connection.ConnectionPool;
+
+import java.sql.*;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
-
-import orderManager.be.*;
-import orderManager.dal.Connection.ConnectionPool;
-import orderManager.dal.Connection.ConnectionProvider;
 
 public class productionOrdersDAO {
 
   private ConnectionPool cp;
   private Connection con = null;
-  private boolean hasNewData;
 
   public productionOrdersDAO() {
     cp = new ConnectionPool();
@@ -47,7 +37,6 @@ public class productionOrdersDAO {
     List<IProductionOrder> pOrders = new ArrayList<>();
     String sql = "SELECT ProductionOrders.OrderNumber, CustomerID, DeliveryID FROM ProductionOrders,DepartmentTasks,Departments WHERE ProductionOrders.OrderNumber = DepartmentTasks.OrderNumber AND Departments.ID = DepartmentTasks.DepartmentID AND Departments.Name = ?";
     PreparedStatement ppst = con.prepareStatement(sql);
-    System.out.println(department.getName());
     ppst.setString(1, department.getName());
     ResultSet rs = ppst.executeQuery();
     while (rs.next()) {
@@ -61,7 +50,7 @@ public class productionOrdersDAO {
     return pOrders;
   }
 
-  public ICustomer getCustomer(int customerID) throws SQLException {
+  private ICustomer getCustomer(int customerID) throws SQLException {
     con = cp.checkOut();
     String sql = "SELECT * FROM Customers WHERE ID = ?";
     PreparedStatement ppst = con.prepareStatement(sql);
@@ -74,7 +63,7 @@ public class productionOrdersDAO {
     return new Customer(id, name);
   }
 
-  public IDelivery getDelivery(int deliveryID) throws SQLException {
+  private IDelivery getDelivery(int deliveryID) throws SQLException {
     con = cp.checkOut();
     String sql = "SELECT * FROM Deliveries WHERE ID = ?";
     PreparedStatement ppst = con.prepareStatement(sql);
@@ -88,7 +77,7 @@ public class productionOrdersDAO {
   }
 
 
-  public IProductionOrder getDepartmentTasks(String orderNumber, IProductionOrder po) throws SQLException, ParseException {
+  private IProductionOrder getDepartmentTasks(String orderNumber, IProductionOrder po) throws SQLException, ParseException {
     con = cp.checkOut();
     String sql = "SELECT * FROM DepartmentTasks WHERE OrderNumber = ?";
     PreparedStatement ppst = con.prepareStatement(sql);
@@ -107,7 +96,7 @@ public class productionOrdersDAO {
     return po;
   }
 
-  public IDepartment getDepartment(int departmentID) throws SQLException {
+  private IDepartment getDepartment(int departmentID) throws SQLException {
     con = cp.checkOut();
     String sql = "SELECT * FROM Departments WHERE ID = ?";
     PreparedStatement ppst = con.prepareStatement(sql);
@@ -119,7 +108,7 @@ public class productionOrdersDAO {
     return dp;
   }
 
-  public List<IWorker> getWorkers(int id) throws SQLException {
+  private List<IWorker> getWorkers(int id) throws SQLException {
     con = cp.checkOut();
     List<IWorker> workers = new ArrayList<>();
     String sql = "SELECT * FROM AvailableWorkers,TaskWorkers WHERE AvailableWorkers.ID = TaskWorkers.WorkerID AND TaskWorkers.DepartmentTaskID = ?";
@@ -170,14 +159,5 @@ public class productionOrdersDAO {
     ppst.setString(2, department.getName());
     ppst.execute();
     cp.checkIn(con);
-    setHasNewData(true);
-  }
-
-  public boolean hasNewData() {
-    return hasNewData;
-  }
-
-  public void setHasNewData(boolean hasNewData) {
-    this.hasNewData = hasNewData;
   }
 }

@@ -16,23 +16,16 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.control.TreeItem;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.TreeItemPropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
-import orderManager.be.DepartmentTask;
-import orderManager.be.IWorker;
-import orderManager.be.ProductionOrder;
-import orderManager.be.Worker;
+import orderManager.be.*;
 import orderManager.gui.model.Model;
 import org.controlsfx.control.CheckComboBox;
 
 public class taskWindowController implements Initializable {
 
-    public JFXButton departmentBtn;
     public JFXButton markAsDoneButt;
     public JFXButton orderNumberLabel;
     public JFXButton activeWorkersLabel;
@@ -61,12 +54,14 @@ public class taskWindowController implements Initializable {
                 }
             }
             observableWorkers = (FXCollections.observableArrayList((List<Worker>) (List) model.getWorkers()));
-        } catch (ParseException | SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         loadWorkers();
         setOrderNumber();
         prepareTasksTable();
+        setActiveWorkersTable();
+        markAsDoneButt.setDisable(!isProgressBarClickable());
     }
 
     @FXML
@@ -104,10 +99,7 @@ public class taskWindowController implements Initializable {
 
         JFXTreeTableColumn<DepartmentTask, Date> endDate = new JFXTreeTableColumn<>("End Date");
         prepareColumn(endDate, "endDate", 94);
-/*
-        JFXTreeTableColumn<DepartmentTask, Boolean> status = new JFXTreeTableColumn<>("Status");
-        prepareColumn(status, "finishedOrder", 94);
-*/
+
         JFXTreeTableColumn<DepartmentTask, ProgressBar> progress = new JFXTreeTableColumn<>("Progress");
         prepareColumn(progress, "progressBar", 94);
 
@@ -128,7 +120,8 @@ public class taskWindowController implements Initializable {
         colName.setStyle("-fx-alignment: CENTER");
     }
 
-    public void loadClickedContent(MouseEvent mouseEvent) {
+    @FXML
+    private void loadClickedContent(MouseEvent mouseEvent) {
         if (mouseEvent.getClickCount() > 0) {
             RecursiveTreeItem<DepartmentTask> dt = (RecursiveTreeItem<DepartmentTask>) orderTasksTable.getSelectionModel().getSelectedItem();
             if (dt.getValue().getDepartment().getName().equals(model.getDepartment().getName())) {
@@ -141,6 +134,12 @@ public class taskWindowController implements Initializable {
         }
     }
 
+    private void setActiveWorkersTable()
+    {
+        RecursiveTreeItem<DepartmentTask> dt = (RecursiveTreeItem<DepartmentTask>) orderTasksTable.getTreeItem(observableTasks.size()-1);
+        loadActiveWorkers(dt, false);
+    }
+
     private void loadActiveWorkers(RecursiveTreeItem<DepartmentTask> dt, boolean disabled) {
         observableActiveWorkers = (FXCollections.observableArrayList((List<Worker>) (List) dt.getValue().getActiveWorkers()));
         prepareWorkersTable(observableActiveWorkers);
@@ -150,7 +149,6 @@ public class taskWindowController implements Initializable {
     }
 
     private void disableFunctionality(boolean b) {
-        markAsDoneButt.setDisable(b);
         checkComboBox.setDisable(b);
         addWorkersButton.setDisable(b);
     }
@@ -165,7 +163,6 @@ public class taskWindowController implements Initializable {
             }
         }
     }
-
 
     public void prepareWorkersTable(ObservableList<Worker> ow) {
 
@@ -204,8 +201,6 @@ public class taskWindowController implements Initializable {
             List<IWorker> toAdd = new ArrayList<>();
             removeActiveWorkers(dt, activeWorkers, toRemove);
             addActiveWorkers(dt, allWorkers, checkList, toAdd);
-
-
             loadActiveWorkers(dt, false);
         }
     }
@@ -238,46 +233,15 @@ public class taskWindowController implements Initializable {
         }
     }
 
-/*
-  public void addActiveWorkers(ActionEvent actionEvent) throws SQLException {
-    if (orderTasksTable.getSelectionModel().getSelectedItem() != null) {
-      RecursiveTreeItem<DepartmentTask> dt = (RecursiveTreeItem<DepartmentTask>) orderTasksTable.getSelectionModel().getSelectedItem();
-
-      List<Worker> checkList = checkComboBox.getCheckModel().getCheckedItems();
-      List<Worker> workers = (List<Worker>) (List) dt.getValue().getActiveWorkers();
-
-      try {
-        loop1:
-        for (Worker w : workers) {
-          for (Worker w1 : checkList) {
-            if (w.getId() == w1.getId()) {
-              continue loop1;
-            }
-          }
-
-          System.out.println("Remove " + w.getId());
-          dt.getValue().removeWorker(w);
-          System.out.println("Workers list: "+workers.size());
-          System.out.println("CheckList: "+checkList.size());
-
-        }
-
-        loop2:
-        for (Worker w : checkList) {
-          for (Worker w1 : workers) {
-            if (w.getId() == w1.getId()) {
-              continue loop2;
-            }
-          }
-          System.out.println("Add " + w.getId());
-          dt.getValue().addWorker(w);
-        }
-      } catch (Exception e) {
-          e.printStackTrace();
-      }
-      loadActiveWorkers(dt, false);
+    private Boolean isProgressBarClickable()
+    {
+        Boolean b = null;
+        CustomProgressBar.Status status = observableTasks.get(observableTasks.size()-1).getProgressBar().getStatus();
+        if (observableTasks.size() == 1)
+            b = true;
+        else if (observableTasks.size() > 1)
+            b = status == CustomProgressBar.Status.DONE;
+        return b;
     }
-  }
- */
 }
 

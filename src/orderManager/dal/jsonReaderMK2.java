@@ -1,32 +1,25 @@
 package orderManager.dal;
 
 import com.microsoft.sqlserver.jdbc.SQLServerException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.Date;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.text.SimpleDateFormat;
-import orderManager.be.Department;
-import orderManager.be.DepartmentTask;
-import orderManager.be.ProductionOrder;
 import orderManager.dal.Connection.ConnectionProvider;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
+import java.io.FileReader;
+import java.io.IOException;
+import java.sql.*;
+import java.text.SimpleDateFormat;
+
 public class jsonReaderMK2 {
 
-  static JSONParser parser;
-  static ConnectionProvider cp;
-  static Connection con;
-  static SimpleDateFormat sdf;
+  private static JSONParser parser;
+  private static Connection con;
+  private static SimpleDateFormat sdf;
 
-  public static void connect() throws SQLServerException, IOException {
+  private static void connect() throws SQLServerException, IOException {
     parser = new JSONParser();
-    cp = new ConnectionProvider();
+    ConnectionProvider cp = new ConnectionProvider();
     con = cp.getConnection();
     sdf = new SimpleDateFormat("dd-MM-yyyy");
   }
@@ -48,7 +41,7 @@ public class jsonReaderMK2 {
     }
   }
 
-  public static void loadWorkers(JSONObject object) throws SQLException {
+  private static void loadWorkers(JSONObject object) throws SQLException {
     JSONArray jArray = (JSONArray) object.get("AvailableWorkers");
     for (int i = 0; i < jArray.size(); i++) {
       JSONObject rec = (JSONObject) jArray.get(i);
@@ -62,7 +55,7 @@ public class jsonReaderMK2 {
     }
   }
 
-  public static void loadData(JSONObject object) throws SQLException {
+  private static void loadData(JSONObject object) throws SQLException {
     loadWorkers(object);
     JSONArray jArray = (JSONArray) object.get("ProductionOrders");
     for (int i = 0; i < jArray.size(); i++) {
@@ -75,7 +68,7 @@ public class jsonReaderMK2 {
     }
   }
 
-  public static int loadCustomers(JSONObject customer) throws SQLException {
+  private static int loadCustomers(JSONObject customer) throws SQLException {
     String name = (String) customer.get("Name");
 
     String sql =
@@ -90,8 +83,7 @@ public class jsonReaderMK2 {
     return rs.getInt(1);
   }
 
-
-  public static int loadDeliveries(JSONObject delivery) throws SQLException {
+  private static int loadDeliveries(JSONObject delivery) throws SQLException {
     String date = (String) delivery.get("DeliveryTime");
     date = date.replace("/Date(", "").replace("+0200)/", "");
     Date formattedDate = new Date(Long.valueOf(date));
@@ -108,7 +100,7 @@ public class jsonReaderMK2 {
     return rs.getInt(1);
   }
 
-  public static int loadProductionOrders(int customerID, int deliveryID, String orderNumber)
+  private static int loadProductionOrders(int customerID, int deliveryID, String orderNumber)
       throws SQLException {
     String sql = "INSERT INTO ProductionOrders(CustomerID, DeliveryID, OrderNumber) SELECT ?,?,? WHERE NOT EXISTS (SELECT OrderNumber from ProductionOrders WHERE OrderNumber = ?)";
     PreparedStatement ppst = con.prepareStatement(sql);
@@ -119,7 +111,7 @@ public class jsonReaderMK2 {
     return ppst.executeUpdate();
   }
 
-  public static void loadDepartmentTasks(JSONArray departmentTasks, String orderNumber) throws SQLException {
+  private static void loadDepartmentTasks(JSONArray departmentTasks, String orderNumber) throws SQLException {
     for (int i = 0; i < departmentTasks.size(); i++) {
       JSONObject departmentTask = (JSONObject) departmentTasks.get(i);
       JSONObject department = (JSONObject) departmentTask.get("Department");
@@ -144,7 +136,7 @@ public class jsonReaderMK2 {
     }
   }
 
-  public static int loadDepartment(JSONObject department) throws SQLException {
+  private static int loadDepartment(JSONObject department) throws SQLException {
     String name = (String) department.get("Name");
     String sql =
         "INSERT INTO Departments (Name) SELECT ? WHERE NOT EXISTS (SELECT Name from Departments WHERE Name = ?)"
@@ -158,7 +150,7 @@ public class jsonReaderMK2 {
     return rs.getInt(1);
   }
 
-  public static void resetTable(String table) throws SQLException {
+  private static void resetTable(String table) throws SQLException {
     String del = "DELETE FROM " + table + " DBCC CHECKIDENT (" + table + ", RESEED, 0)";
     PreparedStatement ppst = con.prepareStatement(del);
     ppst.execute();

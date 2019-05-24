@@ -1,14 +1,16 @@
 package orderManager.gui.model;
 
+import orderManager.be.IDepartment;
+import orderManager.be.IProductionOrder;
+import orderManager.be.IWorker;
+import orderManager.be.ProductionOrder;
+import orderManager.bll.mainLogicClass;
+import orderManager.dal.Properties.PropertyReader;
+
 import java.io.IOException;
 import java.sql.SQLException;
 import java.text.ParseException;
-import java.util.Date;
 import java.util.List;
-
-import orderManager.be.*;
-import orderManager.bll.mainLogicClass;
-import orderManager.dal.Properties.PropertyReader;
 
 public class Model {
 
@@ -16,15 +18,13 @@ public class Model {
   private IDepartment department;
   private mainLogicClass mlc;
   private ProductionOrder po;
-  private List<IProductionOrder> productionOrders;
-  private List<IWorker> workers;
   private PropertyReader pr;
 
   private Model() {
     try {
       mlc = new mainLogicClass();
       pr = new PropertyReader();
-    } catch (IOException | SQLException e) {
+    } catch (SQLException e) {
       e.printStackTrace();
     }
   }
@@ -52,7 +52,7 @@ public class Model {
     return po;
   }
 
-public void changeStatus(IProductionOrder prodOrd) throws SQLException, ParseException {
+public void changeStatus(IProductionOrder prodOrd) throws SQLException {
   mlc.changeStatus(prodOrd, department);
 }
 
@@ -74,10 +74,6 @@ public void changeStatus(IProductionOrder prodOrd) throws SQLException, ParseExc
   public void setSelectedProductionOrder(ProductionOrder po) {
     this.po=po;
   }
-
-    public void setSelectedOrderNumber(IOrder order) throws SQLException, ParseException {
-      mlc.getDepartmentTaskByOrderNumber(order);
-    }
 
     public void readFile(String path) throws IOException, SQLException {
      mlc.readFile(path);
