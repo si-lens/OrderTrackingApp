@@ -11,6 +11,10 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.*;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -39,29 +43,13 @@ public class taskWindowController implements Initializable {
     private ObservableList<IWorker> observableWorkers;
     private ObservableList<Worker> observableActiveWorkers;
     private CheckComboBox checkComboBox;
+    private ScheduledExecutorService s;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         model = Model.getInstance();
         selectedOrder = model.getSelectedProductionOrder();
-        try {
-            observableTasks = (FXCollections.observableArrayList((List<DepartmentTask>) (List) selectedOrder.getDepartmentTasks()));
-            for (int i = 0; i < observableTasks.size(); i++)
-            {
-                if (observableTasks.get(i).getDepartmentName().equals(model.getDepartment().getName()))
-                {
-                    observableTasks.remove(i+1, observableTasks.size());
-                }
-            }
-            observableWorkers = (FXCollections.observableArrayList((List<Worker>) (List) model.getWorkers()));
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        loadWorkers();
-        setOrderNumber();
-        prepareTasksTable();
-        setActiveWorkersTable();
-        markAsDoneButt.setDisable(!isProgressBarClickable());
+        refresh();
     }
 
     @FXML
@@ -75,6 +63,32 @@ public class taskWindowController implements Initializable {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void refresh() {
+        s = Executors.newSingleThreadScheduledExecutor();
+        s.scheduleAtFixedRate(() -> {
+                try {
+                    observableTasks = (FXCollections.observableArrayList((List<DepartmentTask>) (List) selectedOrder.getDepartmentTasks()));
+                    for (int i = 0; i < observableTasks.size(); i++)
+                    {
+                        if (observableTasks.get(i).getDepartmentName().equals(model.getDepartment().getName()))
+                        {
+                            observableTasks.remove(i+1, observableTasks.size());
+                        }
+                    }
+                    observableWorkers = (FXCollections.observableArrayList((List<Worker>) (List) model.getWorkers()));
+                Platform.runLater(() -> {
+                    loadWorkers();
+                    setOrderNumber();
+                    prepareTasksTable();
+                    setActiveWorkersTable();
+                    markAsDoneButt.setDisable(!isProgressBarClickable());
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }, 0, 5000, TimeUnit.MILLISECONDS);
     }
 
     private void setOrderNumber() {
@@ -91,20 +105,21 @@ public class taskWindowController implements Initializable {
     }
 
     public void prepareTasksTable() {
-        JFXTreeTableColumn<DepartmentTask, String> department = new JFXTreeTableColumn<>("Department");
-        prepareColumn(department, "department", 94);
+        if(orderTasksTable.getColumns().isEmpty()) {
+            JFXTreeTableColumn<DepartmentTask, String> department = new JFXTreeTableColumn<>("Department");
+            prepareColumn(department, "department", 94);
 
-        JFXTreeTableColumn<DepartmentTask, Date> startDate = new JFXTreeTableColumn<>("Start Date");
-        prepareColumn(startDate, "startDate", 94);
+            JFXTreeTableColumn<DepartmentTask, Date> startDate = new JFXTreeTableColumn<>("Start Date");
+            prepareColumn(startDate, "startDate", 94);
 
-        JFXTreeTableColumn<DepartmentTask, Date> endDate = new JFXTreeTableColumn<>("End Date");
-        prepareColumn(endDate, "endDate", 94);
+            JFXTreeTableColumn<DepartmentTask, Date> endDate = new JFXTreeTableColumn<>("End Date");
+            prepareColumn(endDate, "endDate", 94);
 
-        JFXTreeTableColumn<DepartmentTask, ProgressBar> progress = new JFXTreeTableColumn<>("Progress");
-        prepareColumn(progress, "progressBar", 94);
+            JFXTreeTableColumn<DepartmentTask, ProgressBar> progress = new JFXTreeTableColumn<>("Progress");
+            prepareColumn(progress, "progressBar", 94);
 
-        orderTasksTable.getColumns().addAll(department, startDate, endDate, progress);
-
+            orderTasksTable.getColumns().addAll(department, startDate, endDate, progress);
+        }
         setTaskTable();
     }
 
@@ -165,7 +180,8 @@ public class taskWindowController implements Initializable {
     }
 
     public void prepareWorkersTable(ObservableList<Worker> ow) {
-
+        
+        if(activeWorkersTable.getColumns().isEmpty()){
         JFXTreeTableColumn<Worker, String> idCol = new JFXTreeTableColumn<>("ID");
         prepareColumn(idCol, "id", 33);
 
@@ -180,6 +196,7 @@ public class taskWindowController implements Initializable {
 
         activeWorkersTable.getColumns().clear();
         activeWorkersTable.getColumns().addAll(idCol, nameCol, initialsCol, salaryCol);
+        }
 
         setWorkersTable(ow);
     }

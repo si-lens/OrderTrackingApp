@@ -1,16 +1,15 @@
 package orderManager.gui.model;
 
+import java.io.IOException;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.util.List;
 import orderManager.be.IDepartment;
 import orderManager.be.IProductionOrder;
 import orderManager.be.IWorker;
 import orderManager.be.ProductionOrder;
 import orderManager.bll.mainLogicClass;
 import orderManager.dal.Properties.PropertyReader;
-
-import java.io.IOException;
-import java.sql.SQLException;
-import java.text.ParseException;
-import java.util.List;
 
 public class Model {
 
@@ -24,7 +23,7 @@ public class Model {
     try {
       mlc = new mainLogicClass();
       pr = new PropertyReader();
-    } catch (SQLException e) {
+    } catch (Exception e) {
       e.printStackTrace();
     }
   }
@@ -36,12 +35,12 @@ public class Model {
     return model;
   }
 
-  public mainLogicClass getManager(){
+  public mainLogicClass getManager() {
     return mlc;
   }
 
-  public List<IProductionOrder> getProductionOrdersFromDB() throws SQLException, ParseException {
-    return mlc.getProducionOrdersByDepartment(getDepartment());
+  public List<IProductionOrder> getProductionOrders() throws SQLException, ParseException {
+    return mlc.getProducionOrdersByDepartment(department);
   }
 
   public List<IWorker> getWorkers() throws SQLException {
@@ -52,18 +51,19 @@ public class Model {
     return po;
   }
 
-public void changeStatus(IProductionOrder prodOrd) throws SQLException {
-  mlc.changeStatus(prodOrd, department);
-}
+  public void setSelectedProductionOrder(ProductionOrder po) {
+    this.po = po;
+  }
+
+  public void changeStatus(IProductionOrder prodOrd) throws SQLException {
+    mlc.changeStatus(prodOrd, department);
+  }
 
   public IDepartment getDepartment() {
-    if (department == null)
-    {
-      return pr.read();
-    } else
-    {
-      return department;
+    if (department == null) {
+      department = pr.read();
     }
+    return department;
   }
 
   public void setDepartment(IDepartment department) {
@@ -71,13 +71,9 @@ public void changeStatus(IProductionOrder prodOrd) throws SQLException {
     pr.write(department.getName());
   }
 
-  public void setSelectedProductionOrder(ProductionOrder po) {
-    this.po=po;
+  public void readFile(String path) throws IOException, SQLException {
+    mlc.readFile(path);
   }
-
-    public void readFile(String path) throws IOException, SQLException {
-     mlc.readFile(path);
-    }
 
   public List<IDepartment> getDepartments() {
     return mlc.getDepartments();

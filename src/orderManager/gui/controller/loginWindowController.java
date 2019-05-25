@@ -23,9 +23,7 @@ public class loginWindowController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         try {
-            //mainLogic = new mainLogicClass();
             Model model = Model.getInstance();
-            model.readFile("data.json");
             departmentList = model.getDepartments();
             loadDepartments();
         } catch (Exception e) {

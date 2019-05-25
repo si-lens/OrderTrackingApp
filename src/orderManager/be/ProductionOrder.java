@@ -27,8 +27,12 @@ public class ProductionOrder extends RecursiveTreeObject<ProductionOrder> implem
     return label;
   }
 
-  public void setIndication(IDepartmentTask depTask) throws ParseException {
-      label = depTask.getProgressBar().getIndication();
+  public void setIndication(IDepartment dep) throws ParseException {
+    for (IDepartmentTask dT : departmentTaskList) {
+      if(dT.getDepartment().getName().equals(dep.getName())) {
+        label = dT.getProgressBar().getIndication();
+      }
+    }
   }
 
   @Override
