@@ -1,11 +1,11 @@
 package orderManager.be;
 
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
+import orderManager.dal.availableWorkersDAO;
+
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
-import javafx.scene.control.ProgressIndicator;
-import orderManager.dal.availableWorkersDAO;
 
 public class DepartmentTask extends RecursiveTreeObject<orderManager.be.DepartmentTask> implements IDepartmentTask {
 

@@ -2,25 +2,6 @@ package orderManager.gui.controller;
 
 import com.jfoenix.controls.*;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
-
-import java.awt.FileDialog;
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-import java.sql.SQLException;
-import java.text.ParseException;
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
-import java.util.ResourceBundle;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -28,36 +9,40 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.TreeItemPropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.text.Text;
-
-import javax.swing.JFrame;
-
 import javafx.stage.Stage;
 import orderManager.be.*;
 import orderManager.gui.model.Model;
 import orderManager.windowOpener;
 
+import javax.swing.*;
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.util.List;
+import java.util.*;
+
 public class mainWindowController implements Initializable, Observer {
 
     public AnchorPane mainPane;
-    public Label dateLabel;
-    public JFXProgressBar estimatedProgressBar;
-    public Text estimatedProgressLabel;
     public JFXButton departmentBtn;
-    public JFXTreeTableView workersTab;
     public JFXTreeTableView ordersTab;
     public Menu changeDepartmentMenuItem;
     public JFXSpinner spinner;
     public MenuBar menuBar;
     public ImageView logo;
 
-
-    private ScheduledExecutorService executor;
     private ObservableList<Worker> observableWorkers;
     private ObservableList<ProductionOrder> observableOrders;
     private IDepartment chosenDepartment;
@@ -75,7 +60,6 @@ public class mainWindowController implements Initializable, Observer {
     private void initialLoad() {
 
         Thread t = new Thread(() -> {
-            System.out.println("thread dziala");
             try {
                 observableOrders = (FXCollections.observableArrayList((List<ProductionOrder>) (List) model.getProductionOrdersFromDB()));
                 setIndication();
@@ -119,24 +103,7 @@ public class mainWindowController implements Initializable, Observer {
         }
     }
 
-/*
-  private void refresh() {
-    Runnable runnable = () -> Platform.runLater(() -> {
-      try {
-        observableOrders = (FXCollections.observableArrayList((List<ProductionOrder>) (List) model.getProductionOrdersFromDB()));
-        prepareOrdersTable();
-      } catch (SQLException e) {
-        e.printStackTrace();
-      }
-    });
-    ScheduledExecutorService ses = Executors.newScheduledThreadPool(2);
-    ses.scheduleWithFixedDelay(runnable, 30, 6, TimeUnit.SECONDS);
-
-  }
-*/
-
-
-    public void prepareOrdersTable() {
+    private void prepareOrdersTable() {
         if (ordersTab.getColumns().isEmpty()) {
 
             JFXTreeTableColumn<ProductionOrder, Label> indication = new JFXTreeTableColumn<>("Progress");
@@ -165,14 +132,11 @@ public class mainWindowController implements Initializable, Observer {
     }
 
 
-    public void prepareColumn(JFXTreeTableColumn colName, String attributeName, int colWidth) {
+    private void prepareColumn(JFXTreeTableColumn colName, String attributeName, int colWidth) {
         colName.setCellValueFactory(new TreeItemPropertyValueFactory<>(attributeName));
         colName.setMinWidth(colWidth);
         colName.setStyle("-fx-alignment: CENTER");
     }
-
-
-
 
     @FXML
     private void clickToPickFile(ActionEvent event)

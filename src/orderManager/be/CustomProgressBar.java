@@ -5,7 +5,6 @@ import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 
-import java.text.Format;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
@@ -23,7 +22,7 @@ public class CustomProgressBar extends StackPane {
         DONE, BEHIND, NOT_STARTED, ALL_GOOD, DEFAULT
     }
 
-    public CustomProgressBar(Date startDate, Date endDate, Status status)
+    CustomProgressBar(Date startDate, Date endDate, Status status)
     {
         sDate = startDate;
         eDate = endDate;
@@ -43,7 +42,7 @@ public class CustomProgressBar extends StackPane {
         text.setText(daysPassed+" day(s)");
     }
 
-    public void setProgressBar()
+    private void setProgressBar()
     {
         String startDateS = sDate.toString();
         String endDateS = eDate.toString();
@@ -60,7 +59,7 @@ public class CustomProgressBar extends StackPane {
         pb.progressProperty().set(progress);
     }
 
-    public void setStatus(Status status)
+    private void setStatus(Status status)
     {
         switch (status)
         {
@@ -87,7 +86,7 @@ public class CustomProgressBar extends StackPane {
         return status;
     }
 
-    public Label getIndication()
+    Label getIndication()
     {
         Label label = new Label();
         switch (status)
