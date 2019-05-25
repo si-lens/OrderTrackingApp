@@ -200,33 +200,27 @@ public class taskWindowController implements Initializable {
             List<IWorker> checkList = checkComboBox.getCheckModel().getCheckedItems();
             List<IWorker> activeWorkers = dt.getValue().getActiveWorkers();
             List<IWorker> allWorkers = model.getWorkers();
-            List<IWorker> toRemove = new ArrayList<>();
-            List<IWorker> toAdd = new ArrayList<>();
-            removeActiveWorkers(dt, activeWorkers, toRemove);
-            addActiveWorkers(dt, allWorkers, checkList, toAdd);
+            removeActiveWorkers(dt, activeWorkers);
+            addActiveWorkers(dt, allWorkers, checkList);
 
 
             loadActiveWorkers(dt, false);
         }
     }
 
-    private void addActiveWorkers(RecursiveTreeItem<DepartmentTask> dt, List<IWorker> allWorkers, List<IWorker> checkList, List<IWorker> toAdd) throws SQLException {
+    private void addActiveWorkers(RecursiveTreeItem<DepartmentTask> dt, List<IWorker> allWorkers, List<IWorker> checkList) throws SQLException {
         for (IWorker w : checkList) {
             for (IWorker w1 : allWorkers) {
 
                 if (w.getId() == w1.getId()) {
-                    toAdd.add(w);
+                    dt.getValue().addWorker(w);
                 }
-            }
-        }
-        if (toAdd.size() > 0) {
-            for (IWorker w : toAdd) {
-                dt.getValue().addWorker(w);
             }
         }
     }
 
-    private void removeActiveWorkers(RecursiveTreeItem<DepartmentTask> dt, List<IWorker> workers, List<IWorker> toRemove) throws SQLException {
+    private void removeActiveWorkers(RecursiveTreeItem<DepartmentTask> dt, List<IWorker> workers) throws SQLException {
+        List<IWorker> toRemove = new ArrayList<>();
         for (IWorker w : workers) {
             toRemove.add(w);
         }
@@ -237,47 +231,5 @@ public class taskWindowController implements Initializable {
             }
         }
     }
-
-/*
-  public void addActiveWorkers(ActionEvent actionEvent) throws SQLException {
-    if (orderTasksTable.getSelectionModel().getSelectedItem() != null) {
-      RecursiveTreeItem<DepartmentTask> dt = (RecursiveTreeItem<DepartmentTask>) orderTasksTable.getSelectionModel().getSelectedItem();
-
-      List<Worker> checkList = checkComboBox.getCheckModel().getCheckedItems();
-      List<Worker> workers = (List<Worker>) (List) dt.getValue().getActiveWorkers();
-
-      try {
-        loop1:
-        for (Worker w : workers) {
-          for (Worker w1 : checkList) {
-            if (w.getId() == w1.getId()) {
-              continue loop1;
-            }
-          }
-
-          System.out.println("Remove " + w.getId());
-          dt.getValue().removeWorker(w);
-          System.out.println("Workers list: "+workers.size());
-          System.out.println("CheckList: "+checkList.size());
-
-        }
-
-        loop2:
-        for (Worker w : checkList) {
-          for (Worker w1 : workers) {
-            if (w.getId() == w1.getId()) {
-              continue loop2;
-            }
-          }
-          System.out.println("Add " + w.getId());
-          dt.getValue().addWorker(w);
-        }
-      } catch (Exception e) {
-          e.printStackTrace();
-      }
-      loadActiveWorkers(dt, false);
-    }
-  }
- */
 }
 

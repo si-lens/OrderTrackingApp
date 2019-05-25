@@ -20,13 +20,13 @@ public class CustomProgressBar extends StackPane {
 
     public enum Status
     {
-        DONE, BEHIND, NOT_STARTED, ALL_GOOD, DEFAULT;
+        DONE, BEHIND, NOT_STARTED, ALL_GOOD, DEFAULT
     }
 
     public CustomProgressBar(Date startDate, Date endDate, Status status)
     {
-        this.sDate = startDate;
-        this.eDate = endDate;
+        sDate = startDate;
+        eDate = endDate;
         this.status = status;
         pb = new ProgressBar();
         text = new Text();
@@ -52,8 +52,8 @@ public class CustomProgressBar extends StackPane {
         LocalDate todaysDate = LocalDate.now();
         long daysBetweenStartAndEnd = ChronoUnit.DAYS.between(startDate, endDate);
         long daysBetweenStartAndNow = ChronoUnit.DAYS.between(startDate, todaysDate);
-        double valOne = (double) daysBetweenStartAndEnd;
-        double valTwo = (double) daysBetweenStartAndNow;
+        double valOne = daysBetweenStartAndEnd;
+        double valTwo = daysBetweenStartAndNow;
         double progress = valTwo / valOne;
         if(progress<0)
             progress=0;
