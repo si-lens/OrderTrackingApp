@@ -24,6 +24,8 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.TreeItemPropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
+import javafx.stage.Window;
 import orderManager.be.*;
 import orderManager.gui.model.Model;
 import org.controlsfx.control.CheckComboBox;
@@ -44,18 +46,39 @@ public class taskWindowController implements Initializable {
     private ObservableList<Worker> observableActiveWorkers;
     private CheckComboBox checkComboBox;
     private ScheduledExecutorService s;
-
+    private int clickedTaskIndex;
+    private boolean selectionDone;
+    private boolean initialLoadDone;
+    RecursiveTreeItem<DepartmentTask> dt;
+    Stage stage;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         model = Model.getInstance();
         selectedOrder = model.getSelectedProductionOrder();
+        setOrderNumber();
+        try {
+            observableWorkers = (FXCollections.observableArrayList((List<Worker>) (List) model.getWorkers()));
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        loadWorkers();
         refresh();
+
     }
+
+    public void setStage(Stage stage){
+        this.stage=stage;
+        stage.setOnCloseRequest(event -> s.shutdown());
+    }
+
+
 
     @FXML
     private void changeStatus(ActionEvent event) {
         try {
             Alert a = new Alert(Alert.AlertType.CONFIRMATION, "Do you want to mark number '" + selectedOrder.getOrderNumber() + "' task as 'Done'?", ButtonType.YES, ButtonType.NO);
+            //RecursiveTreeItem<DepartmentTask> dt = (RecursiveTreeItem<DepartmentTask>) orderTasksTable.getSelectionModel().getSelectedItem();
+            dt.getValue().setProgressBar(CustomProgressBar.Status.DONE);
             a.showAndWait();
             if (a.getResult() == ButtonType.YES) {
                 model.changeStatus(selectedOrder);
@@ -69,26 +92,29 @@ public class taskWindowController implements Initializable {
         s = Executors.newSingleThreadScheduledExecutor();
         s.scheduleAtFixedRate(() -> {
                 try {
+                    System.out.println("task refresh leap");
                     observableTasks = (FXCollections.observableArrayList((List<DepartmentTask>) (List) selectedOrder.getDepartmentTasks()));
-                    for (int i = 0; i < observableTasks.size(); i++)
-                    {
-                        if (observableTasks.get(i).getDepartmentName().equals(model.getDepartment().getName()))
-                        {
-                            observableTasks.remove(i+1, observableTasks.size());
-                        }
-                    }
+                    selectUsefulTasks();
                     observableWorkers = (FXCollections.observableArrayList((List<Worker>) (List) model.getWorkers()));
                 Platform.runLater(() -> {
-                    loadWorkers();
-                    setOrderNumber();
                     prepareTasksTable();
-                    setActiveWorkersTable();
+                    if(!initialLoadDone)setInitialWorkersTable();
                     markAsDoneButt.setDisable(!isProgressBarClickable());
                 });
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }, 0, 5000, TimeUnit.MILLISECONDS);
+    }
+
+    private void selectUsefulTasks() {
+        for (int i = 0; i < observableTasks.size(); i++)
+        {
+            if (observableTasks.get(i).getDepartmentName().equals(model.getDepartment().getName()))
+            {
+                observableTasks.remove(i+1, observableTasks.size());
+            }
+        }
     }
 
     private void setOrderNumber() {
@@ -127,6 +153,7 @@ public class taskWindowController implements Initializable {
         TreeItem<DepartmentTask> root = new RecursiveTreeItem<>(observableTasks, RecursiveTreeObject::getChildren);
         orderTasksTable.setRoot(root);
         orderTasksTable.setShowRoot(false);
+        orderTasksTable.getSelectionModel().select(clickedTaskIndex);
     }
 
     public void prepareColumn(JFXTreeTableColumn colName, String attributeName, int colWidth) {
@@ -137,8 +164,9 @@ public class taskWindowController implements Initializable {
 
     @FXML
     private void loadClickedContent(MouseEvent mouseEvent) {
-        if (mouseEvent.getClickCount() > 0) {
-            RecursiveTreeItem<DepartmentTask> dt = (RecursiveTreeItem<DepartmentTask>) orderTasksTable.getSelectionModel().getSelectedItem();
+        if (mouseEvent.getClickCount() > 0 && orderTasksTable.getSelectionModel()!=null) {
+            dt = (RecursiveTreeItem<DepartmentTask>) orderTasksTable.getSelectionModel().getSelectedItem();
+            clickedTaskIndex= orderTasksTable.getSelectionModel().getSelectedIndex();
             if (dt.getValue().getDepartment().getName().equals(model.getDepartment().getName())) {
                 disableFunctionality(false);
                 loadActiveWorkers(dt, false);
@@ -149,10 +177,13 @@ public class taskWindowController implements Initializable {
         }
     }
 
-    private void setActiveWorkersTable()
+    private void setInitialWorkersTable()
     {
-        RecursiveTreeItem<DepartmentTask> dt = (RecursiveTreeItem<DepartmentTask>) orderTasksTable.getTreeItem(observableTasks.size()-1);
+        dt = (RecursiveTreeItem<DepartmentTask>) orderTasksTable.getTreeItem(observableTasks.size()-1);
+        clickedTaskIndex = observableTasks.size()-1;
+        orderTasksTable.getSelectionModel().select(clickedTaskIndex);
         loadActiveWorkers(dt, false);
+        initialLoadDone=true;
     }
 
     private void loadActiveWorkers(RecursiveTreeItem<DepartmentTask> dt, boolean disabled) {
@@ -205,6 +236,7 @@ public class taskWindowController implements Initializable {
         TreeItem<Worker> root = new RecursiveTreeItem<>(ow, RecursiveTreeObject::getChildren);
         activeWorkersTable.setRoot(root);
         activeWorkersTable.setShowRoot(false);
+        orderTasksTable.getSelectionModel().select(clickedTaskIndex);
     }
 
     public void addRemoveButton(ActionEvent actionEvent) throws SQLException {
