@@ -1,13 +1,31 @@
 package orderManager.gui.controller;
 
-import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXSpinner;
-import com.jfoenix.controls.JFXTreeTableColumn;
-import com.jfoenix.controls.JFXTreeTableView;
-import com.jfoenix.controls.RecursiveTreeItem;
+import com.jfoenix.controls.*;
 import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.TreeItemPropertyValueFactory;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
+import orderManager.be.Department;
+import orderManager.be.IDepartment;
+import orderManager.be.ProductionOrder;
+import orderManager.gui.model.Model;
+import orderManager.windowOpener;
 
-import java.awt.FileDialog;
+import javax.swing.*;
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -19,29 +37,6 @@ import java.util.ResourceBundle;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-
-import javafx.application.Platform;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.scene.control.*;
-import javafx.scene.control.cell.TreeItemPropertyValueFactory;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
-
-import javax.swing.JFrame;
-
-import orderManager.be.Department;
-import orderManager.be.IDepartment;
-import orderManager.be.ProductionOrder;
-import orderManager.gui.model.Model;
-import orderManager.windowOpener;
 
 public class mainWindowController implements Initializable {
 
@@ -71,6 +66,7 @@ public class mainWindowController implements Initializable {
         departmentBtn.setText(chosenDepartment.getName());
         loadDepartmentsItems();
         refresh();
+        ordersTab.widthProperty().addListener((observable, oldValue, newValue) -> ordersTab.setStyle("-fx-font-size: " + newValue.doubleValue()/40));
     }
 
     private void refresh() {
@@ -115,7 +111,7 @@ public class mainWindowController implements Initializable {
         if (ordersTab.getColumns().isEmpty()) {
 
             JFXTreeTableColumn<ProductionOrder, Label> indication = new JFXTreeTableColumn<>("Progress");
-            prepareColumn(indication, "indication", 45);
+            prepareColumn(indication, "indication", 30);
 
             JFXTreeTableColumn<ProductionOrder, String> orderNumber = new JFXTreeTableColumn<>("Order Number");
             prepareColumn(orderNumber, "orderNumber", 145);
@@ -138,6 +134,7 @@ public class mainWindowController implements Initializable {
 
     private void setOrdersTable() {
         TreeItem<ProductionOrder> root = new RecursiveTreeItem<>(observableOrders, RecursiveTreeObject::getChildren);
+       // ordersTab.setStyle("-fx-font-size: 25");
         ordersTab.setRoot(root);
         ordersTab.setShowRoot(false);
         if (selectionDone)
@@ -154,8 +151,7 @@ public class mainWindowController implements Initializable {
     }
 
     @FXML
-    private void clickToPickFile(ActionEvent event)
-            throws IOException, SQLException // While creating/editing a song we are using this button to pick path of the song.
+    private void clickToPickFile(ActionEvent event) throws IOException, SQLException
     {
         FileDialog fd = new FileDialog(new JFrame());
         fd.setFile("*.json");

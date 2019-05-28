@@ -63,6 +63,8 @@ public class taskWindowController implements Initializable {
         }
         loadWorkers();
         refresh();
+        orderTasksTable.widthProperty().addListener((observable, oldValue, newValue) -> orderTasksTable.setStyle("-fx-font-size: " + newValue.doubleValue()/32));
+        activeWorkersTable.widthProperty().addListener((observable, oldValue, newValue) -> activeWorkersTable.setStyle("-fx-font-size: " + newValue.doubleValue()/30));
 
     }
 

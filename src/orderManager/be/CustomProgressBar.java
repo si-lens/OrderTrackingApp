@@ -28,6 +28,8 @@ public class CustomProgressBar extends StackPane {
         eDate = endDate;
         this.status = status;
         pb = new ProgressBar();
+        pb.setMaxWidth(200);
+        pb.setMaxHeight(20);
         text = new Text();
         setProgressBar();
         setStatus(status);
