@@ -50,6 +50,7 @@ public class taskWindowController implements Initializable {
     private boolean selectionDone;
     private boolean initialLoadDone;
     RecursiveTreeItem<DepartmentTask> dt;
+    private boolean taskCanBeMarked;
     Stage stage;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -101,12 +102,13 @@ public class taskWindowController implements Initializable {
                 Platform.runLater(() -> {
                     prepareTasksTable();
                     if(!initialLoadDone)setInitialWorkersTable();
-                    markAsDoneButt.setDisable(!isProgressBarClickable());
+                    taskCanBeMarked = isProgressBarClickable();
+                    markAsDoneButt.setDisable(!taskCanBeMarked);
                 });
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }, 0, 5000, TimeUnit.MILLISECONDS);
+        }, 0, 25000, TimeUnit.MILLISECONDS);
     }
 
     private void selectUsefulTasks() {
@@ -199,6 +201,8 @@ public class taskWindowController implements Initializable {
     private void disableFunctionality(boolean b) {
         checkComboBox.setDisable(b);
         addWorkersButton.setDisable(b);
+        if(taskCanBeMarked)
+        markAsDoneButt.setDisable(b);
     }
 
     public void loadComboBoxChecks() {
@@ -287,11 +291,13 @@ public class taskWindowController implements Initializable {
     private Boolean isProgressBarClickable()
     {
         Boolean b = null;
-        CustomProgressBar.Status status = observableTasks.get(observableTasks.size()-1).getProgressBar().getStatus();
+        CustomProgressBar.Status status = null;
         if (observableTasks.size() == 1)
             b = true;
-        else if (observableTasks.size() > 1)
+        else if (observableTasks.size() > 1) {
+            status = observableTasks.get(observableTasks.size() - 2).getProgressBar().getStatus();
             b = status == CustomProgressBar.Status.DONE;
+        }
         return b;
     }
 }

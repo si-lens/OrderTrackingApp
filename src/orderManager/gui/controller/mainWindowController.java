@@ -83,7 +83,7 @@ public class mainWindowController implements Initializable {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }, 0, 5000, TimeUnit.MILLISECONDS);
+        }, 0, 25000, TimeUnit.MILLISECONDS);
     }
 
 
@@ -111,13 +111,13 @@ public class mainWindowController implements Initializable {
         if (ordersTab.getColumns().isEmpty()) {
 
             JFXTreeTableColumn<ProductionOrder, Label> indication = new JFXTreeTableColumn<>("Progress");
-            prepareColumn(indication, "indication", 30);
+            prepareColumn(indication, "indication", 70);
 
             JFXTreeTableColumn<ProductionOrder, String> orderNumber = new JFXTreeTableColumn<>("Order Number");
-            prepareColumn(orderNumber, "orderNumber", 145);
+            prepareColumn(orderNumber, "orderNumber", 125);
 
             JFXTreeTableColumn<ProductionOrder, String> customerName = new JFXTreeTableColumn<>("Customer Name");
-            prepareColumn(customerName, "customerName", 145);
+            prepareColumn(customerName, "customerName", 125);
 
             JFXTreeTableColumn<ProductionOrder, Date> deliveryDate = new JFXTreeTableColumn<>("Delivery Date");
             prepareColumn(deliveryDate, "deliveryDate", 145);
