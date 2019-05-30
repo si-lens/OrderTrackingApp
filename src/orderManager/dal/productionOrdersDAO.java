@@ -1,12 +1,29 @@
 package orderManager.dal;
 
-import orderManager.be.*;
-import orderManager.dal.Connection.ConnectionPool;
-
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import orderManager.be.Customer;
+import orderManager.be.Delivery;
+import orderManager.be.Department;
+import orderManager.be.DepartmentTask;
+import orderManager.be.ICustomer;
+import orderManager.be.IDelivery;
+import orderManager.be.IDepartment;
+import orderManager.be.IDepartmentTask;
+import orderManager.be.IOrder;
+import orderManager.be.IProductionOrder;
+import orderManager.be.IWorker;
+import orderManager.be.Order;
+import orderManager.be.ProductionOrder;
+import orderManager.be.Worker;
+import orderManager.dal.Connection.ConnectionPool;
 
 public class productionOrdersDAO {
 
@@ -35,7 +52,9 @@ public class productionOrdersDAO {
   public List<IProductionOrder> getDepartmentContent(IDepartment department) throws SQLException, ParseException {
     con = cp.checkOut();
     List<IProductionOrder> pOrders = new ArrayList<>();
-    String sql = "SELECT ProductionOrders.OrderNumber, CustomerID, DeliveryID FROM ProductionOrders,DepartmentTasks,Departments WHERE ProductionOrders.OrderNumber = DepartmentTasks.OrderNumber AND Departments.ID = DepartmentTasks.DepartmentID AND Departments.Name = ?";
+    String sql = "SELECT ProductionOrders.OrderNumber, CustomerID, DeliveryID FROM ProductionOrders,DepartmentTasks,Departments "
+        + "WHERE ProductionOrders.OrderNumber = DepartmentTasks.OrderNumber"
+        + " AND Departments.ID = DepartmentTasks.DepartmentID AND Departments.Name = ?";
     PreparedStatement ppst = con.prepareStatement(sql);
     ppst.setString(1, department.getName());
     ResultSet rs = ppst.executeQuery();
@@ -114,13 +133,13 @@ public class productionOrdersDAO {
     String sql = "SELECT * FROM AvailableWorkers,TaskWorkers WHERE AvailableWorkers.ID = TaskWorkers.WorkerID AND TaskWorkers.DepartmentTaskID = ?";
     PreparedStatement ppst = con.prepareStatement(sql);
     ppst.setInt(1, id);
-    ResultSet rs =  ppst.executeQuery();
+    ResultSet rs = ppst.executeQuery();
     while (rs.next()) {
       int workerID = rs.getInt(1);
       String name = rs.getString(2);
       String initials = rs.getString(3);
       long salary = rs.getLong(4);
-      IWorker w = new Worker(workerID,name,initials,salary);
+      IWorker w = new Worker(workerID, name, initials, salary);
       workers.add(w);
     }
     cp.checkIn(con);
@@ -131,8 +150,8 @@ public class productionOrdersDAO {
     con = cp.checkOut();
     List<DepartmentTask> dp = new ArrayList<>();
     String sql = "SELECT  ID, StartDate, EndDate, FinishedOrder, DepartmentID FROM DepartmentTasks " +
-            "join ProductionOrders on DepartmentTasks.ProductionOrderID=ProductionOrders.ID " +
-            "join Orders on ProductionOrders.OrderID=Orders.ID WHERE OrderNumber=?";
+        "join ProductionOrders on DepartmentTasks.ProductionOrderID=ProductionOrders.ID " +
+        "join Orders on ProductionOrders.OrderID=Orders.ID WHERE OrderNumber=?";
     PreparedStatement ppst = con.prepareStatement(sql);
     ppst.setString(1, order.getOrderNumber());
     ResultSet rs = ppst.executeQuery();
@@ -151,13 +170,32 @@ public class productionOrdersDAO {
 
   public void changeStatus(IProductionOrder prodOrd, IDepartment department) throws SQLException {
     con = cp.checkOut();
-    String sql =  "UPDATE DepartmentTasks SET DepartmentTasks.FinishedOrder = 1 FROM DepartmentTasks join Departments on DepartmentID=Departments.ID \n" +
-            "join ProductionOrders on DepartmentTasks.OrderNumber=ProductionOrders.OrderNumber \n" +
-            "WHERE ProductionOrders.OrderNumber=? and Departments.Name=?";
+    String sql = "UPDATE DepartmentTasks SET DepartmentTasks.FinishedOrder = 1 FROM DepartmentTasks join Departments on DepartmentID=Departments.ID \n" +
+        "join ProductionOrders on DepartmentTasks.OrderNumber=ProductionOrders.OrderNumber \n" +
+        "WHERE ProductionOrders.OrderNumber=? and Departments.Name=?";
     PreparedStatement ppst = con.prepareStatement(sql);
     ppst.setString(1, prodOrd.getOrder().getOrderNumber());
     ppst.setString(2, department.getName());
     ppst.execute();
     cp.checkIn(con);
+  }
+
+  public IProductionOrder refreshOneOrder(ProductionOrder selectedOrder) {
+    IProductionOrder po = null;
+    try {
+      con = cp.checkOut();
+      String sql = "SELECT * FROM ProductionOrders WHERE OrderNumber = ?";
+      PreparedStatement ppst = con.prepareStatement(sql);
+      ppst.setString(1, selectedOrder.getOrderNumber());
+      ResultSet rs = ppst.executeQuery();
+      rs.next();
+      int customerID = rs.getInt("CustomerID");
+      int deliveryID = rs.getInt("DeliveryID");
+      String orderNumber = rs.getString("OrderNumber");
+      po = getDepartmentTasks(orderNumber, new ProductionOrder(getCustomer(customerID), getDelivery(deliveryID), new Order(orderNumber)));
+    } catch (SQLException|ParseException e) {
+      e.printStackTrace();
+    }
+    return po;
   }
 }

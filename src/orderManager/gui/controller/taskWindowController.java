@@ -55,8 +55,6 @@ public class taskWindowController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         model = Model.getInstance();
-        selectedOrder = model.getSelectedProductionOrder();
-        setOrderNumber();
         try {
             observableWorkers = (FXCollections.observableArrayList((List<Worker>) (List) model.getWorkers()));
         } catch (SQLException e) {
@@ -95,11 +93,13 @@ public class taskWindowController implements Initializable {
         s = Executors.newSingleThreadScheduledExecutor();
         s.scheduleAtFixedRate(() -> {
                 try {
+                    selectedOrder = model.refreshOneOrder(model.getSelectedProductionOrder());
                     System.out.println("task refresh leap");
                     observableTasks = (FXCollections.observableArrayList((List<DepartmentTask>) (List) selectedOrder.getDepartmentTasks()));
                     selectUsefulTasks();
                     observableWorkers = (FXCollections.observableArrayList((List<Worker>) (List) model.getWorkers()));
                 Platform.runLater(() -> {
+                    setOrderNumber();
                     prepareTasksTable();
                     if(!initialLoadDone)setInitialWorkersTable();
                     taskCanBeMarked = isProgressBarClickable();

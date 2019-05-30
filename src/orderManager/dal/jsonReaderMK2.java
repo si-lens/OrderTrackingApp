@@ -26,12 +26,7 @@ public class jsonReaderMK2 {
 
   public static void readFile(String json) throws SQLException, IOException {
     connect();
-    resetTable("DepartmentTasks");
-    resetTable("Departments");
-    resetTable("ProductionOrders");
-    resetTable("AvailableWorkers");
-    resetTable("Customers");
-    resetTable("Deliveries");
+
 
     try {
       JSONObject object = (JSONObject) parser.parse(new FileReader(json));
@@ -45,11 +40,12 @@ public class jsonReaderMK2 {
     JSONArray jArray = (JSONArray) object.get("AvailableWorkers");
     for (int i = 0; i < jArray.size(); i++) {
       JSONObject rec = (JSONObject) jArray.get(i);
-      String sql = "INSERT INTO AvailableWorkers(Name,Initials,SalaryNumber) VALUES (?,?,?)";
+      String sql = "INSERT INTO AvailableWorkers(Name,Initials,SalaryNumber) SELECT ?,?,? WHERE NOT EXISTS(SELECT SalaryNumber FROM AvailableWorkers WHERE SalaryNumber = ?)";
       PreparedStatement ppst = con.prepareStatement(sql);
       ppst.setString(1, (String) rec.get("Name"));
       ppst.setString(2, (String) rec.get("Initials"));
       ppst.setLong(3, (long) rec.get("SalaryNumber"));
+      ppst.setLong(4, (long) rec.get("SalaryNumber"));
       ppst.execute();
 
     }
@@ -72,7 +68,7 @@ public class jsonReaderMK2 {
     String name = (String) customer.get("Name");
 
     String sql =
-        "INSERT INTO Customers (Name) SELECT (?) WHERE NOT EXISTS (SELECT Name from Customers WHERE Name = ?)"
+        "INSERT INTO Customers (Name) SELECT ? WHERE NOT EXISTS (SELECT Name from Customers WHERE Name = ?)"
             + " SELECT * FROM Customers WHERE Name = ?";
     PreparedStatement ppst = con.prepareStatement(sql);
     ppst.setString(1, name);
@@ -148,11 +144,5 @@ public class jsonReaderMK2 {
     ResultSet rs = ppst.executeQuery();
     rs.next();
     return rs.getInt(1);
-  }
-
-  private static void resetTable(String table) throws SQLException {
-    String del = "DELETE FROM " + table + " DBCC CHECKIDENT (" + table + ", RESEED, 0)";
-    PreparedStatement ppst = con.prepareStatement(del);
-    ppst.execute();
   }
 }

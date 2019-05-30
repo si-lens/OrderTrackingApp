@@ -54,12 +54,11 @@ public class mainLogicClass extends Observable {
                 if (i == 0)
                 {
                     depFirst = null;
-                    depSecond = po.getDepartmentTasks().get(i);
                 } else
                 {
                     depFirst = po.getDepartmentTasks().get(i - 1);
-                    depSecond = po.getDepartmentTasks().get(i);
                 }
+                depSecond = po.getDepartmentTasks().get(i);
                 setColorsForProgressBar(depFirst, depSecond);
             }
         }
@@ -99,5 +98,25 @@ public class mainLogicClass extends Observable {
     private boolean getBeforeNow(IDepartmentTask dt)
     {
         return LocalDate.now().isBefore(LocalDate.parse(dt.getEndDate().toString()));
+    }
+
+    public IProductionOrder refreshOneOrder(ProductionOrder selectedOrder) throws ParseException {
+
+        IProductionOrder po = pDAO.refreshOneOrder(selectedOrder);
+        for (int i = 0; i < po.getDepartmentTasks().size(); i++)
+        {
+            IDepartmentTask depFirst;
+            IDepartmentTask depSecond;
+            if (i == 0)
+            {
+                depFirst = null;
+            } else
+            {
+                depFirst = po.getDepartmentTasks().get(i - 1);
+            }
+            depSecond = po.getDepartmentTasks().get(i);
+            setColorsForProgressBar(depFirst, depSecond);
+        }
+        return po;
     }
 }

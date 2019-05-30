@@ -39,7 +39,7 @@ public class DepartmentTask extends RecursiveTreeObject<orderManager.be.Departme
   @Override
   public void setProgressBar(CustomProgressBar.Status status)
   {
-    this.progressBar = new CustomProgressBar(startDate, endDate, status);
+    progressBar = new CustomProgressBar(startDate, endDate, status);
   }
 
   @Override

@@ -134,7 +134,6 @@ public class mainWindowController implements Initializable {
 
     private void setOrdersTable() {
         TreeItem<ProductionOrder> root = new RecursiveTreeItem<>(observableOrders, RecursiveTreeObject::getChildren);
-       // ordersTab.setStyle("-fx-font-size: 25");
         ordersTab.setRoot(root);
         ordersTab.setShowRoot(false);
         if (selectionDone)
