@@ -25,9 +25,9 @@
          </children>
       </StackPane>
       <MenuBar fx:id="menuBar" layoutY="2.0" prefHeight="25.0" prefWidth="631.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
-        <menus>
-          <Menu fx:id="changeDepartmentMenuItem" mnemonicParsing="false" text="Change department" />
-        </menus>
+         <menus>
+            <Menu fx:id="changeDepartmentMenuItem" mnemonicParsing="false" text="Change department" />
+         </menus>
       </MenuBar>
       <JFXTreeTableView fx:id="ordersTab" layoutX="44.0" layoutY="88.0" onMouseClicked="#doubleClickDetails" prefHeight="339.0" prefWidth="546.0" AnchorPane.bottomAnchor="26.0" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="88.0">
          <columnResizePolicy>

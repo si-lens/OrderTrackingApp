@@ -79,12 +79,4 @@ public class Model {
     return mlc.getDepartments();
   }
 
-  public ProductionOrder refreshOneOrder(ProductionOrder selectedOrder) {
-    try {
-      return (ProductionOrder) mlc.refreshOneOrder(selectedOrder);
-    } catch (ParseException e) {
-      e.printStackTrace();
-    }
-    return null;
-  }
 }
