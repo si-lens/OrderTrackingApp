@@ -61,7 +61,7 @@ public class CustomProgressBar extends StackPane {
         pb.progressProperty().set(progress);
     }
 
-    private void setStatus(Status status)
+    public void setStatus(Status status)
     {
         switch (status)
         {

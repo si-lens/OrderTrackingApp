@@ -14,6 +14,7 @@ import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -52,6 +53,7 @@ public class taskWindowController implements Initializable {
     RecursiveTreeItem<DepartmentTask> dt;
     private boolean taskCanBeMarked;
     Stage stage;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         model = Model.getInstance();
@@ -62,45 +64,44 @@ public class taskWindowController implements Initializable {
         }
         loadWorkers();
         refresh();
-        orderTasksTable.widthProperty().addListener((observable, oldValue, newValue) -> orderTasksTable.setStyle("-fx-font-size: " + newValue.doubleValue()/32));
-        activeWorkersTable.widthProperty().addListener((observable, oldValue, newValue) -> activeWorkersTable.setStyle("-fx-font-size: " + newValue.doubleValue()/30));
+        orderTasksTable.widthProperty().addListener((observable, oldValue, newValue) -> orderTasksTable.setStyle("-fx-font-size: " + newValue.doubleValue() / 32));
+        activeWorkersTable.widthProperty().addListener((observable, oldValue, newValue) -> activeWorkersTable.setStyle("-fx-font-size: " + newValue.doubleValue() / 30));
 
     }
 
-    public void setStage(Stage stage){
-        this.stage=stage;
+    public void setStage(Stage stage) {
+        this.stage = stage;
         stage.setOnCloseRequest(event -> s.shutdown());
     }
 
 
-
     @FXML
     private void changeStatus(ActionEvent event) {
-        try {
-            Alert a = new Alert(Alert.AlertType.CONFIRMATION, "Do you want to mark number '" + selectedOrder.getOrderNumber() + "' task as 'Done'?", ButtonType.YES, ButtonType.NO);
-            //RecursiveTreeItem<DepartmentTask> dt = (RecursiveTreeItem<DepartmentTask>) orderTasksTable.getSelectionModel().getSelectedItem();
-            dt.getValue().setProgressBar(CustomProgressBar.Status.DONE);
-            a.showAndWait();
-            if (a.getResult() == ButtonType.YES) {
-                model.changeStatus(selectedOrder);
+            try {
+                Alert a = new Alert(Alert.AlertType.CONFIRMATION, "Do you want to mark number '" + selectedOrder.getOrderNumber() + "' task as 'Done'?", ButtonType.YES, ButtonType.NO);
+                  dt.getValue().setProgressBar(CustomProgressBar.Status.DONE);
+                a.showAndWait();
+                if (a.getResult() == ButtonType.YES) {
+                    model.changeStatus(selectedOrder);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
     }
 
     private void refresh() {
         s = Executors.newSingleThreadScheduledExecutor();
         s.scheduleAtFixedRate(() -> {
-                try {
-                    selectedOrder = model.refreshOneOrder(model.getSelectedProductionOrder());
-                    observableTasks = (FXCollections.observableArrayList((List<DepartmentTask>) (List) selectedOrder.getDepartmentTasks()));
-                    selectUsefulTasks();
-                    observableWorkers = (FXCollections.observableArrayList((List<Worker>) (List) model.getWorkers()));
+            try {
+                selectedOrder = model.refreshOneOrder(model.getSelectedProductionOrder());
+                observableTasks = (FXCollections.observableArrayList((List<DepartmentTask>) (List) selectedOrder.getDepartmentTasks()));
+                selectUsefulTasks();
+                observableWorkers = (FXCollections.observableArrayList((List<Worker>) (List) model.getWorkers()));
                 Platform.runLater(() -> {
                     setOrderNumber();
                     prepareTasksTable();
-                    if(!initialLoadDone)setInitialWorkersTable();
+                    if (!initialLoadDone) setInitialWorkersTable();
                     taskCanBeMarked = isProgressBarClickable();
                     markAsDoneButt.setDisable(!taskCanBeMarked);
                 });
@@ -111,11 +112,9 @@ public class taskWindowController implements Initializable {
     }
 
     private void selectUsefulTasks() {
-        for (int i = 0; i < observableTasks.size(); i++)
-        {
-            if (observableTasks.get(i).getDepartmentName().equals(model.getDepartment().getName()))
-            {
-                observableTasks.remove(i+1, observableTasks.size());
+        for (int i = 0; i < observableTasks.size(); i++) {
+            if (observableTasks.get(i).getDepartmentName().equals(model.getDepartment().getName())) {
+                observableTasks.remove(i + 1, observableTasks.size());
             }
         }
     }
@@ -134,7 +133,7 @@ public class taskWindowController implements Initializable {
     }
 
     public void prepareTasksTable() {
-        if(orderTasksTable.getColumns().isEmpty()) {
+        if (orderTasksTable.getColumns().isEmpty()) {
             JFXTreeTableColumn<DepartmentTask, String> department = new JFXTreeTableColumn<>("Department");
             prepareColumn(department, "department", 94);
 
@@ -167,9 +166,9 @@ public class taskWindowController implements Initializable {
 
     @FXML
     private void loadClickedContent(MouseEvent mouseEvent) {
-        if (mouseEvent.getClickCount() > 0 && orderTasksTable.getSelectionModel()!=null) {
+        if (mouseEvent.getClickCount() > 0 && orderTasksTable.getSelectionModel() != null) {
             dt = (RecursiveTreeItem<DepartmentTask>) orderTasksTable.getSelectionModel().getSelectedItem();
-            clickedTaskIndex= orderTasksTable.getSelectionModel().getSelectedIndex();
+            clickedTaskIndex = orderTasksTable.getSelectionModel().getSelectedIndex();
             if (dt.getValue().getDepartment().getName().equals(model.getDepartment().getName())) {
                 disableFunctionality(false);
                 loadActiveWorkers(dt, false);
@@ -180,13 +179,12 @@ public class taskWindowController implements Initializable {
         }
     }
 
-    private void setInitialWorkersTable()
-    {
-        dt = (RecursiveTreeItem<DepartmentTask>) orderTasksTable.getTreeItem(observableTasks.size()-1);
-        clickedTaskIndex = observableTasks.size()-1;
+    private void setInitialWorkersTable() {
+        dt = (RecursiveTreeItem<DepartmentTask>) orderTasksTable.getTreeItem(observableTasks.size() - 1);
+        clickedTaskIndex = observableTasks.size() - 1;
         orderTasksTable.getSelectionModel().select(clickedTaskIndex);
         loadActiveWorkers(dt, false);
-        initialLoadDone=true;
+        initialLoadDone = true;
     }
 
     private void loadActiveWorkers(RecursiveTreeItem<DepartmentTask> dt, boolean disabled) {
@@ -200,8 +198,8 @@ public class taskWindowController implements Initializable {
     private void disableFunctionality(boolean b) {
         checkComboBox.setDisable(b);
         addWorkersButton.setDisable(b);
-        if(taskCanBeMarked)
-        markAsDoneButt.setDisable(b);
+        if (taskCanBeMarked)
+            markAsDoneButt.setDisable(b);
     }
 
     public void loadComboBoxChecks() {
@@ -216,22 +214,22 @@ public class taskWindowController implements Initializable {
     }
 
     public void prepareWorkersTable(ObservableList<Worker> ow) {
-        
-        if(activeWorkersTable.getColumns().isEmpty()){
-        JFXTreeTableColumn<Worker, String> idCol = new JFXTreeTableColumn<>("ID");
-        prepareColumn(idCol, "id", 33);
 
-        JFXTreeTableColumn<Worker, String> nameCol = new JFXTreeTableColumn<>("Name");
-        prepareColumn(nameCol, "name", 207);
+        if (activeWorkersTable.getColumns().isEmpty()) {
+            JFXTreeTableColumn<Worker, String> idCol = new JFXTreeTableColumn<>("ID");
+            prepareColumn(idCol, "id", 33);
 
-        JFXTreeTableColumn<Worker, String> initialsCol = new JFXTreeTableColumn<>("Initials");
-        prepareColumn(initialsCol, "initials", 44);
+            JFXTreeTableColumn<Worker, String> nameCol = new JFXTreeTableColumn<>("Name");
+            prepareColumn(nameCol, "name", 187);
 
-        JFXTreeTableColumn<Worker, String> salaryCol = new JFXTreeTableColumn<>("SalaryNumber");
-        prepareColumn(salaryCol, "salary", 93);
+            JFXTreeTableColumn<Worker, String> initialsCol = new JFXTreeTableColumn<>("Initials");
+            prepareColumn(initialsCol, "initials", 54);
 
-        activeWorkersTable.getColumns().clear();
-        activeWorkersTable.getColumns().addAll(idCol, nameCol, initialsCol, salaryCol);
+            JFXTreeTableColumn<Worker, String> salaryCol = new JFXTreeTableColumn<>("SalaryNumber");
+            prepareColumn(salaryCol, "salary", 103);
+
+            activeWorkersTable.getColumns().clear();
+            activeWorkersTable.getColumns().addAll(idCol, nameCol, initialsCol, salaryCol);
         }
 
         setWorkersTable(ow);
@@ -290,12 +288,21 @@ public class taskWindowController implements Initializable {
     private Boolean isProgressBarClickable()
     {
         Boolean b = null;
-        CustomProgressBar.Status status = null;
+        CustomProgressBar.Status previousOrderStatus = null;
+        CustomProgressBar.Status currentOrderStatus = observableTasks.get(observableTasks.size() - 1).getProgressBar().getStatus();
         if (observableTasks.size() == 1)
-            b = true;
+        {
+            if(currentOrderStatus!= CustomProgressBar.Status.DONE)
+                b=true;
+            else
+                b=false;
+        }
         else if (observableTasks.size() > 1) {
-            status = observableTasks.get(observableTasks.size() - 2).getProgressBar().getStatus();
-            b = status == CustomProgressBar.Status.DONE;
+            previousOrderStatus = observableTasks.get(observableTasks.size() - 2).getProgressBar().getStatus();
+            if(currentOrderStatus!=CustomProgressBar.Status.DONE && previousOrderStatus== CustomProgressBar.Status.DONE)
+                b=true;
+            else
+                b=false;
         }
         return b;
     }
