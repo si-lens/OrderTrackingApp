@@ -29,7 +29,8 @@ public void start() {
 
         public void observe(){
             // get path object pointing to the directory we wish to monitor
-            Path path = Paths.get("C:\\Users\\Szymon\\IdeaProjects\\CSe2018B_Exam_1sty_Grp2");
+            String userPath = System.getProperty("user.home");
+            Path path = Paths.get(userPath + "\\IdeaProjects\\CSe2018B_Exam_1sty_Grp2");
             try {
                 // get watch service which will monitor the directory
                 WatchService watcher = path.getFileSystem().newWatchService();
@@ -51,7 +52,7 @@ public void start() {
                         String fullPath = event.context().toString();
                         int index = fullPath.lastIndexOf('.');
                         String finalPath = fullPath.substring(index + 1);
-                        if (finalPath.equals("json")) {
+                        if (finalPath.endsWith(".json")) {
                             System.out.println("New json file detected: "+ event.context().toString()+" - Loading...");
                             model.getManager().readFile(fullPath);
                         } else
@@ -59,9 +60,7 @@ public void start() {
 
                     }
                 }
-            } catch (IOException | SQLException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
+            } catch (IOException | SQLException | InterruptedException e) {
                 e.printStackTrace();
             }
         }
