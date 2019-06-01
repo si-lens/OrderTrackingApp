@@ -1,6 +1,6 @@
 package orderManager.be;
 
-import java.util.Date;
+import java.sql.Date;
 
 //Defines the delivery terms.
 public interface IDelivery {

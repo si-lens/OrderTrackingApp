@@ -1,6 +1,6 @@
 package orderManager.be;
 
-import java.util.Date;
+import java.sql.Date;
 
 public class Delivery implements IDelivery {
     private Date deliveryTime;

@@ -5,7 +5,7 @@ import javafx.scene.control.Label;
 
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 
 public class ProductionOrder extends RecursiveTreeObject<ProductionOrder> implements IProductionOrder {

@@ -5,13 +5,7 @@ import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Label;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.TreeItemPropertyValueFactory;
 import javafx.scene.image.ImageView;
@@ -24,13 +18,12 @@ import orderManager.be.ProductionOrder;
 import orderManager.gui.model.Model;
 import orderManager.windowOpener;
 
-import javax.swing.*;
-import java.awt.*;
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -69,12 +62,19 @@ public class mainWindowController implements Initializable {
         ordersTab.widthProperty().addListener((observable, oldValue, newValue) -> ordersTab.setStyle("-fx-font-size: " + newValue.doubleValue()/40));
     }
 
+    public void cutDone()
+    {
+        LocalDate ld = LocalDate.now();
+        observableOrders.removeIf(productionOrder -> productionOrder.getIndication().getText().equals("\u2713") && ChronoUnit.DAYS.between(productionOrder.getDelivery().getDeliveryTime().toLocalDate(), ld) > 7);
+    }
+
     private void refresh() {
         ScheduledExecutorService s = Executors.newSingleThreadScheduledExecutor();
         s.scheduleAtFixedRate(() -> {
             try {
                 observableOrders = (FXCollections.observableArrayList((List<ProductionOrder>) (List) model.getProductionOrders()));
                 setIndication();
+                cutDone();
                 Platform.runLater(() -> {
                     prepareOrdersTable();
                     endSpinning();
