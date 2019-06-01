@@ -94,7 +94,6 @@ public class taskWindowController implements Initializable {
         s.scheduleAtFixedRate(() -> {
                 try {
                     selectedOrder = model.refreshOneOrder(model.getSelectedProductionOrder());
-                    System.out.println("task refresh leap");
                     observableTasks = (FXCollections.observableArrayList((List<DepartmentTask>) (List) selectedOrder.getDepartmentTasks()));
                     selectUsefulTasks();
                     observableWorkers = (FXCollections.observableArrayList((List<Worker>) (List) model.getWorkers()));
@@ -108,7 +107,7 @@ public class taskWindowController implements Initializable {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }, 0, 25000, TimeUnit.MILLISECONDS);
+        }, 0, 5000, TimeUnit.MILLISECONDS);
     }
 
     private void selectUsefulTasks() {

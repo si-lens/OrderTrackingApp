@@ -29,6 +29,7 @@ public class jsonReaderMK2 {
 
 
     try {
+
       JSONObject object = (JSONObject) parser.parse(new FileReader(json));
       loadData(object);
     } catch (Exception e) {

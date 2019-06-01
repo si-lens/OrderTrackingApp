@@ -5,7 +5,6 @@
 <?import com.jfoenix.controls.JFXTreeTableView?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.TreeTableView?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -27,11 +26,6 @@
       </StackPane>
       <MenuBar fx:id="menuBar" layoutY="2.0" prefHeight="25.0" prefWidth="631.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
         <menus>
-          <Menu mnemonicParsing="false" text="File">
-            <items>
-              <MenuItem mnemonicParsing="false" onAction="#clickToPickFile" text="Load new file" />
-            </items>
-          </Menu>
           <Menu fx:id="changeDepartmentMenuItem" mnemonicParsing="false" text="Change department" />
         </menus>
       </MenuBar>

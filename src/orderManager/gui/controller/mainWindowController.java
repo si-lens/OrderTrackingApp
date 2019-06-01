@@ -73,7 +73,6 @@ public class mainWindowController implements Initializable {
         ScheduledExecutorService s = Executors.newSingleThreadScheduledExecutor();
         s.scheduleAtFixedRate(() -> {
             try {
-                System.out.println("main window refresh leap");
                 observableOrders = (FXCollections.observableArrayList((List<ProductionOrder>) (List) model.getProductionOrders()));
                 setIndication();
                 Platform.runLater(() -> {
@@ -83,7 +82,7 @@ public class mainWindowController implements Initializable {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }, 0, 25000, TimeUnit.MILLISECONDS);
+        }, 0, 5000, TimeUnit.MILLISECONDS);
     }
 
 
@@ -148,7 +147,7 @@ public class mainWindowController implements Initializable {
         colName.setMinWidth(colWidth);
         colName.setStyle("-fx-alignment: CENTER");
     }
-
+/*
     @FXML
     private void clickToPickFile(ActionEvent event) throws IOException, SQLException
     {
@@ -160,11 +159,12 @@ public class mainWindowController implements Initializable {
             String fullPath = f[0].toString();
             int index = f[0].toString().lastIndexOf('\\');
             String finalPath = fullPath.substring(index + 1);
+            System.out.println(fullPath);
             model.getManager().readFile(finalPath);
 
         }
     }
-
+*/
     public void doubleClickDetails(MouseEvent mouseEvent) throws IOException {
         if (mouseEvent.getClickCount() == 2) {
             clickedOrder = (RecursiveTreeItem<ProductionOrder>) ordersTab.getSelectionModel().getSelectedItem();
