@@ -1,16 +1,10 @@
 package orderManager;
 
-import javafx.application.Platform;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 import orderManager.gui.controller.taskWindowController;
-import sun.nio.ch.ThreadPool;
-
-import java.awt.event.WindowEvent;
 import java.io.IOException;
 
 public class windowOpener {

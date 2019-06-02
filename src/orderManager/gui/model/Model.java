@@ -9,21 +9,22 @@ import orderManager.be.IProductionOrder;
 import orderManager.be.IWorker;
 import orderManager.be.ProductionOrder;
 import orderManager.bll.mainLogicClass;
+import orderManager.bll.mainLogicFacade;
 import orderManager.dal.Properties.PropertyReader;
 
 public class Model {
 
   private static Model model;
   private IDepartment department;
-  private mainLogicClass mlc;
+  private mainLogicFacade mlf;
   private ProductionOrder po;
   private PropertyReader pr;
 
   private Model() {
     try {
-      mlc = new mainLogicClass();
+      mlf = new mainLogicClass();
       pr = new PropertyReader();
-    } catch (Exception e) {
+    } catch (SQLException e) {
       e.printStackTrace();
     }
   }
@@ -35,16 +36,16 @@ public class Model {
     return model;
   }
 
-  public mainLogicClass getManager() {
-    return mlc;
+  public mainLogicFacade getManager() {
+    return mlf;
   }
 
   public List<IProductionOrder> getProductionOrders() throws SQLException, ParseException {
-    return mlc.getProducionOrdersByDepartment(department);
+    return mlf.getProducionOrdersByDepartment(department);
   }
 
   public List<IWorker> getWorkers() throws SQLException {
-    return mlc.getWorkers();
+    return mlf.getWorkers();
   }
 
   public ProductionOrder getSelectedProductionOrder() {
@@ -56,7 +57,7 @@ public class Model {
   }
 
   public void changeStatus(IProductionOrder prodOrd) throws SQLException {
-    mlc.changeStatus(prodOrd, department);
+    mlf.changeStatus(prodOrd, department);
   }
 
   public IDepartment getDepartment() {
@@ -72,11 +73,11 @@ public class Model {
   }
 
   public void readFile(String path) throws IOException, SQLException {
-    mlc.readFile(path);
+    mlf.readFile(path);
   }
 
   public List<IDepartment> getDepartments() {
-    return mlc.getDepartments();
+    return mlf.getDepartments();
   }
 
 }

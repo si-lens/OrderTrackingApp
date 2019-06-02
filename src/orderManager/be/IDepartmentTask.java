@@ -2,7 +2,7 @@ package orderManager.be;
 
 import java.sql.SQLException;
 import java.text.ParseException;
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 
 //Defines a task for a given department.
@@ -40,4 +40,6 @@ public interface IDepartmentTask {
   CustomProgressBar getProgressBar() throws ParseException;
 
   void setProgressBar(CustomProgressBar.Status status);
+  
+  void setTestProgressBar(CustomProgressBar.Status status);
 }

@@ -79,7 +79,7 @@ public class mainWindowController implements Initializable {
                     prepareOrdersTable();
                     endSpinning();
                 });
-            } catch (Exception e) {
+            } catch (SQLException | ParseException e) {
                 e.printStackTrace();
             }
         }, 0, 5000, TimeUnit.MILLISECONDS);
@@ -147,24 +147,7 @@ public class mainWindowController implements Initializable {
         colName.setMinWidth(colWidth);
         colName.setStyle("-fx-alignment: CENTER");
     }
-/*
-    @FXML
-    private void clickToPickFile(ActionEvent event) throws IOException, SQLException
-    {
-        FileDialog fd = new FileDialog(new JFrame());
-        fd.setFile("*.json");
-        fd.setVisible(true);
-        File[] f = fd.getFiles();
-        if (f.length > 0) {
-            String fullPath = f[0].toString();
-            int index = f[0].toString().lastIndexOf('\\');
-            String finalPath = fullPath.substring(index + 1);
-            System.out.println(fullPath);
-            model.getManager().readFile(finalPath);
 
-        }
-    }
-*/
     public void doubleClickDetails(MouseEvent mouseEvent) throws IOException {
         if (mouseEvent.getClickCount() == 2) {
             clickedOrder = (RecursiveTreeItem<ProductionOrder>) ordersTab.getSelectionModel().getSelectedItem();

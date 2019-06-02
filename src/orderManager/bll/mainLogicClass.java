@@ -12,41 +12,56 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Observable;
 
-public class mainLogicClass extends Observable {
+public class mainLogicClass extends Observable implements mainLogicFacade
+{
 
     private availableWorkersDAO awDAO;
     private productionOrdersDAO pDAO;
     private List<IDepartment> departments;
 
-    public mainLogicClass() throws SQLException {
+    public mainLogicClass() throws SQLException
+    {
         awDAO = new availableWorkersDAO();
         pDAO = new productionOrdersDAO();
         setDepartments();
     }
 
-    public void readFile(String path) throws IOException, SQLException {
+    @Override
+    public void readFile(String path) throws IOException, SQLException
+    {
         jsonReaderMK2.readFile(path);
     }
 
-    public List<IWorker> getWorkers() throws SQLException {
+    @Override
+    public List<IWorker> getWorkers() throws SQLException
+    {
         return awDAO.getWorkers();
     }
 
-    public void setDepartments() throws SQLException {
+    @Override
+    public void setDepartments() throws SQLException
+    {
         departments = pDAO.getDepartments();
     }
 
-    public List<DepartmentTask> getDepartmentTaskByOrderNumber(IOrder order) throws SQLException, ParseException {
+    @Override
+    public List<DepartmentTask> getDepartmentTaskByOrderNumber(IOrder order) throws SQLException, ParseException
+    {
         return pDAO.getDepartmentTasksByOrderNumber(order);
     }
 
-    public List<IDepartment> getDepartments() {
+    @Override
+    public List<IDepartment> getDepartments()
+    {
         return departments;
     }
 
-    public List<IProductionOrder> getProducionOrdersByDepartment(IDepartment department) throws SQLException, ParseException {
+    @Override
+    public List<IProductionOrder> getProducionOrdersByDepartment(IDepartment department) throws SQLException, ParseException
+    {
         List<IProductionOrder> poList = pDAO.getDepartmentContent(department);
-        for (IProductionOrder po : poList) {
+        for (IProductionOrder po : poList)
+        {
             for (int i = 0; i < po.getDepartmentTasks().size(); i++)
             {
                 IDepartmentTask depFirst;
@@ -60,44 +75,85 @@ public class mainLogicClass extends Observable {
                     depFirst = po.getDepartmentTasks().get(i - 1);
                     depSecond = po.getDepartmentTasks().get(i);
                 }
-                setColorsForProgressBar(depFirst, depSecond);
+                setColorsForProgressBar(depFirst, depSecond, false);
             }
         }
         return poList;
     }
 
-    public void changeStatus(IProductionOrder prodOrd, IDepartment department) throws SQLException {
+    @Override
+    public void changeStatus(IProductionOrder prodOrd, IDepartment department) throws SQLException
+    {
         pDAO.changeStatus(prodOrd, department);
     }
 
-    private void setColorsForProgressBar(IDepartmentTask depFirst, IDepartmentTask depSecond) throws ParseException {
-        if (depFirst != null) {
-            if (depSecond.getFinishedOrder() && depFirst.getProgressBar().getStatus() != CustomProgressBar.Status.BEHIND) {
-                depSecond.setProgressBar(CustomProgressBar.Status.DONE);
-            } else if (getBeforeNow(depSecond) && (depFirst.getProgressBar().getStatus() != CustomProgressBar.Status.BEHIND && depFirst.getProgressBar().getStatus() != CustomProgressBar.Status.NOT_STARTED) && !depSecond.getFinishedOrder()) {
-                depSecond.setProgressBar(CustomProgressBar.Status.ALL_GOOD);
-            } else if (getBeforeNow(depSecond) && (depFirst.getProgressBar().getStatus() == CustomProgressBar.Status.BEHIND || depFirst.getProgressBar().getStatus() == CustomProgressBar.Status.NOT_STARTED) && !depSecond.getFinishedOrder()) {
-                depSecond.setProgressBar(CustomProgressBar.Status.NOT_STARTED);
-            } else if (!getBeforeNow(depSecond) && !depSecond.getFinishedOrder()) {
-                depSecond.setProgressBar(CustomProgressBar.Status.BEHIND);
-            }
-        } else
+    public void setColorsForProgressBar(IDepartmentTask depFirst, IDepartmentTask depSecond, boolean isTest) throws ParseException
+    {
+        if (!isTest)
         {
-            if (depSecond.getFinishedOrder())
+            if (depFirst != null)
             {
-                depSecond.setProgressBar(CustomProgressBar.Status.DONE);
-            } else if (getBeforeNow(depSecond) && !depSecond.getFinishedOrder())
+                if (depSecond.getFinishedOrder() && depFirst.getProgressBar().getStatus() != CustomProgressBar.Status.BEHIND)
+                {
+                    depSecond.setProgressBar(CustomProgressBar.Status.DONE);
+                } else if (getBeforeNow(depSecond) && (depFirst.getProgressBar().getStatus() != CustomProgressBar.Status.BEHIND && depFirst.getProgressBar().getStatus() != CustomProgressBar.Status.NOT_STARTED) && !depSecond.getFinishedOrder())
+                {
+                    depSecond.setProgressBar(CustomProgressBar.Status.ALL_GOOD);
+                } else if (getBeforeNow(depSecond) && (depFirst.getProgressBar().getStatus() == CustomProgressBar.Status.BEHIND || depFirst.getProgressBar().getStatus() == CustomProgressBar.Status.NOT_STARTED) && !depSecond.getFinishedOrder())
+                {
+                    depSecond.setProgressBar(CustomProgressBar.Status.NOT_STARTED);
+                } else if (!getBeforeNow(depSecond) && !depSecond.getFinishedOrder())
+                {
+                    depSecond.setProgressBar(CustomProgressBar.Status.BEHIND);
+                }
+            } else
             {
-                depSecond.setProgressBar(CustomProgressBar.Status.ALL_GOOD);
-            } else if (!getBeforeNow(depSecond) && !depSecond.getFinishedOrder())
+                if (depSecond.getFinishedOrder())
+                {
+                    depSecond.setProgressBar(CustomProgressBar.Status.DONE);
+                } else if (getBeforeNow(depSecond) && !depSecond.getFinishedOrder())
+                {
+                    depSecond.setProgressBar(CustomProgressBar.Status.ALL_GOOD);
+                } else if (!getBeforeNow(depSecond) && !depSecond.getFinishedOrder())
+                {
+                    depSecond.setProgressBar(CustomProgressBar.Status.BEHIND);
+                }
+            }
+        } else if (isTest)
+        {
+            if (depFirst != null)
             {
-                depSecond.setProgressBar(CustomProgressBar.Status.BEHIND);
+                if (depSecond.getFinishedOrder() && depFirst.getProgressBar().getStatus() != CustomProgressBar.Status.BEHIND)
+                {
+                    depSecond.setTestProgressBar(CustomProgressBar.Status.DONE);
+                } else if (getBeforeNow(depSecond) && (depFirst.getProgressBar().getStatus() != CustomProgressBar.Status.BEHIND && depFirst.getProgressBar().getStatus() != CustomProgressBar.Status.NOT_STARTED) && !depSecond.getFinishedOrder())
+                {
+                    depSecond.setTestProgressBar(CustomProgressBar.Status.ALL_GOOD);
+                } else if (getBeforeNow(depSecond) && (depFirst.getProgressBar().getStatus() == CustomProgressBar.Status.BEHIND || depFirst.getProgressBar().getStatus() == CustomProgressBar.Status.NOT_STARTED) && !depSecond.getFinishedOrder())
+                {
+                    depSecond.setTestProgressBar(CustomProgressBar.Status.NOT_STARTED);
+                } else if (!getBeforeNow(depSecond) && !depSecond.getFinishedOrder())
+                {
+                    depSecond.setTestProgressBar(CustomProgressBar.Status.BEHIND);
+                }
+            } else
+            {
+                if (depSecond.getFinishedOrder())
+                {
+                    depSecond.setTestProgressBar(CustomProgressBar.Status.DONE);
+                } else if (getBeforeNow(depSecond) && !depSecond.getFinishedOrder())
+                {
+                    depSecond.setTestProgressBar(CustomProgressBar.Status.ALL_GOOD);
+                } else if (!getBeforeNow(depSecond) && !depSecond.getFinishedOrder())
+                {
+                    depSecond.setTestProgressBar(CustomProgressBar.Status.BEHIND);
+                }
             }
         }
     }
 
     private boolean getBeforeNow(IDepartmentTask dt)
     {
-        return LocalDate.now().isBefore(LocalDate.parse(dt.getEndDate().toString()));
+        return LocalDate.now().isBefore(dt.getEndDate().toLocalDate());
     }
 }

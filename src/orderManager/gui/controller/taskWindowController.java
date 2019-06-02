@@ -8,7 +8,6 @@ import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 
 import java.net.URL;
 import java.sql.SQLException;
-import java.text.ParseException;
 import java.util.*;
 
 import java.util.concurrent.Executors;
@@ -25,7 +24,6 @@ import javafx.scene.control.cell.TreeItemPropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 import orderManager.be.*;
 import orderManager.gui.model.Model;
 import org.controlsfx.control.CheckComboBox;
@@ -49,9 +47,10 @@ public class taskWindowController implements Initializable {
     private int clickedTaskIndex;
     private boolean selectionDone;
     private boolean initialLoadDone;
-    RecursiveTreeItem<DepartmentTask> dt;
+    private RecursiveTreeItem<DepartmentTask> dt;
     private boolean taskCanBeMarked;
-    Stage stage;
+    private Stage stage;
+    
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         model = Model.getInstance();
@@ -80,10 +79,9 @@ public class taskWindowController implements Initializable {
     private void changeStatus(ActionEvent event) {
         try {
             Alert a = new Alert(Alert.AlertType.CONFIRMATION, "Do you want to mark number '" + selectedOrder.getOrderNumber() + "' task as 'Done'?", ButtonType.YES, ButtonType.NO);
-            //RecursiveTreeItem<DepartmentTask> dt = (RecursiveTreeItem<DepartmentTask>) orderTasksTable.getSelectionModel().getSelectedItem();
-            dt.getValue().setProgressBar(CustomProgressBar.Status.DONE);
             a.showAndWait();
             if (a.getResult() == ButtonType.YES) {
+                dt.getValue().setProgressBar(CustomProgressBar.Status.DONE);
                 model.changeStatus(selectedOrder);
             }
         } catch (Exception e) {
@@ -102,13 +100,12 @@ public class taskWindowController implements Initializable {
                 Platform.runLater(() -> {
                     prepareTasksTable();
                     if(!initialLoadDone)setInitialWorkersTable();
-                    taskCanBeMarked = isProgressBarClickable();
-                    markAsDoneButt.setDisable(!taskCanBeMarked);
+                    markAsDoneButt.setDisable(isProgressBarClickable());
                 });
-            } catch (Exception e) {
+            } catch (SQLException e) {
                 e.printStackTrace();
             }
-        }, 0, 25000, TimeUnit.MILLISECONDS);
+        }, 0, 2500, TimeUnit.MILLISECONDS);
     }
 
     private void selectUsefulTasks() {
@@ -296,16 +293,16 @@ public class taskWindowController implements Initializable {
         if (observableTasks.size() == 1)
         {
             if(currentOrderStatus!= CustomProgressBar.Status.DONE)
-                b=true;
+                b = false;
             else
-                b=false;
+                b = true;
         }
         else if (observableTasks.size() > 1) {
             previousOrderStatus = observableTasks.get(observableTasks.size() - 2).getProgressBar().getStatus();
-            if(currentOrderStatus!=CustomProgressBar.Status.DONE && previousOrderStatus== CustomProgressBar.Status.DONE)
-                b=true;
+            if(currentOrderStatus != CustomProgressBar.Status.DONE && previousOrderStatus == CustomProgressBar.Status.DONE)
+                b = false;
             else
-                b=false;
+                b = true;
         }
         return b;
     }

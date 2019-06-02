@@ -7,7 +7,7 @@ import javafx.scene.text.Text;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
+import java.sql.Date;
 
 public class CustomProgressBar extends StackPane {
 
@@ -35,10 +35,16 @@ public class CustomProgressBar extends StackPane {
         setStatus(status);
         getChildren().addAll(pb, text);
     }
+    
+    CustomProgressBar(Status status)
+    {
+        System.out.println("Test!");
+        this.status = status;
+    }
 
     private void setTextLabel()
     {
-        LocalDate endDate = LocalDate.parse(eDate.toString());
+        LocalDate endDate = eDate.toLocalDate();
         LocalDate cDate = LocalDate.now();
         long daysPassed = ChronoUnit.DAYS.between(endDate, cDate);
         text.setText(daysPassed+" day(s)");
@@ -46,10 +52,8 @@ public class CustomProgressBar extends StackPane {
 
     private void setProgressBar()
     {
-        String startDateS = sDate.toString();
-        String endDateS = eDate.toString();
-        LocalDate startDate = LocalDate.parse(startDateS);
-        LocalDate endDate = LocalDate.parse(endDateS);
+        LocalDate startDate = sDate.toLocalDate();
+        LocalDate endDate = eDate.toLocalDate();
         LocalDate todaysDate = LocalDate.now();
         long daysBetweenStartAndEnd = ChronoUnit.DAYS.between(startDate, endDate);
         long daysBetweenStartAndNow = ChronoUnit.DAYS.between(startDate, todaysDate);

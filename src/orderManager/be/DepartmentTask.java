@@ -4,7 +4,7 @@ import com.jfoenix.controls.datamodels.treetable.RecursiveTreeObject;
 import orderManager.dal.availableWorkersDAO;
 
 import java.sql.SQLException;
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 
 public class DepartmentTask extends RecursiveTreeObject<orderManager.be.DepartmentTask> implements IDepartmentTask {
@@ -27,6 +27,7 @@ public class DepartmentTask extends RecursiveTreeObject<orderManager.be.Departme
     listOfWorkers = list;
   }
 
+  @Override
   public String getDepartmentName() {
     return department.getName();
   }
@@ -86,6 +87,12 @@ public class DepartmentTask extends RecursiveTreeObject<orderManager.be.Departme
   @Override
   public List<IWorker> getActiveWorkers() {
     return listOfWorkers;
+  }
+
+  @Override
+  public void setTestProgressBar(CustomProgressBar.Status status)
+  {
+      progressBar = new CustomProgressBar(status);
   }
 
 }
